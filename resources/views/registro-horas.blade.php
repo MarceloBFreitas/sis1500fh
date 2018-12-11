@@ -12,7 +12,7 @@
         function addhoras($idoed) {
 
             var idod = $idoed;
-            alert(idod);
+
             $('#help').val(idod);
 
             $('#adddet').modal('toggle')
@@ -125,7 +125,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Criação de  Escopo</h4>
+                <h4 class="modal-title" id="myModalLabel">Adicionar Hora</h4>
             </div>
             <div class="modal-body clientebody">
 
@@ -144,7 +144,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                 @if(Auth::user()->nivelacesso <3)
-                    <button type="button" onclick="salvar()" class="btn btn-primary">Criar Escopo</button>
+                    <button type="button" onclick="salvar()" class="btn btn-primary">Salvar</button>
                 @endif
 
             </div>
