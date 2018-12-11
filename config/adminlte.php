@@ -108,6 +108,15 @@ return [
     */
 
     'menu' => [
+        'REGISTROS DE HORAS',
+
+        [
+            'text' => 'Registrar Horas',
+            'url'  => '/registro-horas',
+            'icon'    => 'hourglass-half',
+        ],
+
+
 
 
         'BUSINESS',
@@ -172,7 +181,7 @@ return [
         [
             'text'        => 'Registrar Atividade',
             'url'         => '/atividades',
-            'icon'        => 'hourglass-half',
+            'icon'        => 'address-card',
             // 'label'       => 4,
             'label_color' => 'success',
         ],
@@ -245,7 +254,7 @@ return [
         'RELATÓRIOS',
         [
             'text' => 'Horas',
-            'url'  => '/registro-horas',
+            'url'  => '',
             'icon' => 'info-circle',
         ],
         [
