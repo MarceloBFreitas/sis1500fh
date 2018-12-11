@@ -1,0 +1,29 @@
+.login-page{
+    background: #004260   !important;
+
+}
+.login-page b{
+    color: #ffffff !important;
+}
+div.dataTables_wrapper div.dataTables_filter {
+    text-align: left !important;
+}
+div.dataTables_wrapper div.dataTables_paginate{
+    text-align: left !important;
+}
+.modal-header{
+    background: #004260   !important;
+    color: #ffffff !important;
+}
+.input-group .input-group-addon {
+    background: #004260   !important;
+    color: #ffffff !important;
+}
+
+.topodetalhes h2{
+    top: 0px !important;
+    position: absolute;
+}
+.cabecalhodet ul{
+    list-style: none;
+}
