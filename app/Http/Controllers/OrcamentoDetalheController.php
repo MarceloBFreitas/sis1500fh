@@ -25,7 +25,7 @@ class OrcamentoDetalheController extends Controller
         return view("orcamento-detalhe",['atv'=>$atv,'eod'=>$eod,'user'=>$user,'eo'=>$eo]);
     }
     public function salvar(Request $request){
-        $teste ='a';
+        $teste ="marcelo";
         $od = new OrcamentoDetalhe();
         $tipo = "error";
 
