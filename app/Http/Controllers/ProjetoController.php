@@ -50,7 +50,7 @@ class ProjetoController extends Controller
 
            foreach ($orcamentoDetalhes as $orc_det){
                $pdetalhe = new ProjetoDetalhe();
-               $pdetalhe->id_tpatv = $orc_det->atvid;
+               $pdetalhe->id_tpatv = $orc_det->id_atv;
                $pdetalhe->id_projeto = $projeto->id;
                $pdetalhe->descricao = $orc_det->descricao;
                $pdetalhe->horas_estimadas = $orc_det->horas_estimadas;

@@ -199,9 +199,9 @@
             })
         }
 
-        function converteremProjeto($id){
+        function converteremProjeto(id){
             $.ajax({
-                type:'put',
+                type:'post',
                 url:'/criar-projeto/'+ id ,
                 headers: {
                     'X-CSRF-Token': '{{ csrf_token() }}',
@@ -215,7 +215,7 @@
                         timer: 2000
                     });
 
-                    location.reload();
+                    //location.reload();
 
                 }
             });
@@ -275,11 +275,11 @@
         </table>
 
         <a href="/"><button class="btn btn-default">Voltar</button></a>
-        <a href="/"><button onclick="converteremProjeto(<?php echo $idorcamentoescopo?>)" class="btn btn-success" <?php
+        <button onclick="converteremProjeto(<?php echo $idorcamentoescopo?>)" class="btn btn-success" <?php
                 if($status==1){
                     echo "disabled";
                 }
-                ?>> Converter em Projeto</button></a>
+                ?>> Converter em Projeto</button>
 
     </div>
 

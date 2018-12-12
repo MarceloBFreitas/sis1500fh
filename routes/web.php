@@ -57,7 +57,7 @@ Route::post('/atualizar-atividade-orcamento/{id}','OrcamentoController@atualizar
 Route::delete('/excluir-detalhe-orcamento/{id}','OrcamentoController@RemoverAtividadeEscopoOrcamento')->name('remover.atividade.escopo');
 
 
-Route::put('/criar-projeto/{id}','ProjetoController@criarProjeto')->name('criar.projeto');
+Route::post('/criar-projeto/{id}','ProjetoController@criarProjeto')->name('criar.projeto');
 
 
 
