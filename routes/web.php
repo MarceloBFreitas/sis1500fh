@@ -57,6 +57,9 @@ Route::post('/atualizar-atividade-orcamento/{id}','OrcamentoController@atualizar
 Route::delete('/excluir-detalhe-orcamento/{id}','OrcamentoController@RemoverAtividadeEscopoOrcamento')->name('remover.atividade.escopo');
 
 
+Route::put('/criar-projeto/{id}','ProjetoController@criarProjeto')->name('criar.projeto');
+
+
 
 // chamar view orçamento
 Route::get('/orcamento/{id}','OrcamentoController@show')->name('home.orcamentos');

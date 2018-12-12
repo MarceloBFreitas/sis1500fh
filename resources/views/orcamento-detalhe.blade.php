@@ -90,8 +90,6 @@
             $("#modaladicionarAtividade").modal('toggle');
         }
 
-
-
         function adicionarAtividadeCreate(){
 
             var atvid = $('#tipoatividademodal').val();
@@ -167,41 +165,6 @@
             });
         }
 
-
-
-        function atualizarAtividade(){
-
-            var nome = $('#nomee').val();
-            var sigla = $('#siglae').val().toUpperCase();
-            var descricao = $('#descricaoe').val();
-            var idatividade= $('#idatividade').val();
-            var tipo = $('#tipoide').val();
-
-
-            $.ajax({
-                type:'POST',
-                url:'/atualizar-atividade/'+ idatividade ,
-                headers: {
-                    'X-CSRF-Token': '{{ csrf_token() }}',
-                },
-                data:{
-                    nome:nome,
-                    sigla:sigla,
-                    descricao: descricao,
-                    tipo:tipo
-                },
-                success:function(data){
-                    swal({
-                        title: data.msg,
-                        // text: 'Do you want to continue',
-                        type: data.tipo,
-                        timer: 2000
-                    });
-                    console.log(data);
-                }
-            });
-        }
-
         function removerDetalhe($id) {
             swal({
                 title: 'Confirmar Exclusão da Atividade?',
@@ -234,6 +197,28 @@
 
                 }
             })
+        }
+
+        function converteremProjeto($id){
+            $.ajax({
+                type:'put',
+                url:'/criar-projeto/'+ id ,
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                success:function(data){
+                    console.log(data);
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+
+                    location.reload();
+
+                }
+            });
         }
 
     </script>
@@ -290,7 +275,7 @@
         </table>
 
         <a href="/"><button class="btn btn-default">Voltar</button></a>
-        <a href="/"><button class="btn btn-success" <?php
+        <a href="/"><button onclick="converteremProjeto(<?php echo $idorcamentoescopo?>)" class="btn btn-success" <?php
                 if($status==1){
                     echo "disabled";
                 }
