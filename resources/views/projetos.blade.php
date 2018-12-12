@@ -8,11 +8,17 @@
 @stop
 
 @section('content')
+    <?php
+    function formatarDataFront($data){
+        $dataarray = explode("-",$data);
+        return $dataarray[2]."/".$dataarray[1]."/".$dataarray[0];
+    }
+    ?>
     <script>
         $(document).ready(function(){
-
-            $('#datainiciomodal').mask('00/00/0000');
-            $('#consultortable').DataTable(
+            $('.datainput').mask('99/99/9999'); //Máscara para Data
+            $('.valortable').mask("#.##0,00", {reverse: true});
+            $('#projetosdettable').DataTable(
                 {
                     "language": {
                         "sEmptyTable": "Nenhum registro encontrado",
@@ -42,42 +48,48 @@
 
         });
 
-        function addProjeto() {
-
-            $("#modalprojetos").modal('toggle');
+        function addOrcamentoEscopo() {
+            $("#modalCriarOrcamentoEscopo").modal('toggle');
         }
 
 
-        function salvarprojeto(){
-            var idcliente = $('#clientemodal').val();
-            var nomeprojeto =$('#nomeprojetomodal').val();
-            var objetivo =$('#objetivomodal').val();
-            var mensuracao =$('#mensuracaomodal').val();
-            var dtinicio =$('#datainiciomodal').val();
 
-            if(dtinicio==""){
+        function criarOrcamentoEscopo(){
+
+            var cliente = $('#addclientemodal').val();
+            var projeto = $('#addprojetomodal').val();
+            var objetivo = $('#addobjetivomodal').val();
+            var tarifatecn = $('#addtartecnmodal').val();
+            var tarifagestao = $('#addtargestaomodal').val();
+            var mensuracao = $('#addmensuracaotextmodal').val();
+            var mensuracaodata = $('#addmensuracaodatamodal').val();
+
+
+
+            if(cliente == "" || projeto=="" ||objetivo=="" ||tarifatecn=="" ||tarifagestao==""){
                 swal({
-                    title: 'Campo Obrigatório',
-                    text: 'Por favor, verifique se o campo de Data de Início do Projeto do Preenchido',
+                    title: "Campos não preenchidos",
+                    text: "Por favor, verifique se todos os campos foram preenchidos",
                     type: 'warning',
                     timer: 2000
-                });
+                })
             }else{
-                var dtini = dtinicio.split('/');
-                dtinicio = dtini[2]+'-'+dtini[1]+'-'+dtini[0];
 
                 $.ajax({
                     type:'POST',
-                    url:"{{URL::route('registrar.projeto')}}",
+                    url:"{{URL::route('criar.orcamento.escopo')}}",
                     headers: {
                         'X-CSRF-Token': '{{ csrf_token() }}',
                     },
                     data:{
-                        idcliente:idcliente,
-                        nomeprojeto:nomeprojeto,
-                        objetivo:objetivo,
-                        mensuracao:mensuracao,
-                        dtinicio:dtinicio
+                        cliente :cliente,
+                        projeto:projeto,
+                        objetivo :objetivo,
+                        tarifatecn :tarifatecn,
+                        tarifagestao :tarifagestao,
+                        mensuracao :mensuracao,
+                        mensuracaodata :mensuracaodata
+
                     },
                     success:function(data){
                         swal({
@@ -93,82 +105,62 @@
                     }
                 });
             }
-
         }
 
-
-
-
-        function editarProjeto(id) {
+        function editarAtividade(id) {
             $.ajax({
                 type:'get',
-                url:'/detalhes-projeto/'+ id ,
+                url:'/detalhes-atividade/'+ id ,
                 success:function(data){
+                    $('#nomee').val(data[0].nome);
+                    $('#siglae').val(data[0].sigla);
+                    $('#descricaoe').val(data[0].descricao);
+                    $('#idatividade').val(data[0].id);
+                    var tipo = $('#tipoide').val(data[0].tipo);
 
-                    console.log(data);
-                    $('#nomeprojetomodale').val(data[0].nome);
-                    $('#clientemodale').val(data[0].nomefantasia);
-                    $('#idprojetoe').val(data[0].id);
-                    $('#objetivomodale').val(data[0].objetivo);
-                    $('#mensuracaomodale').val(data[0].mensuracao);
-                    var dini = data[0].dt_inicio;
-                    dini = dini.split('-');
-                    $('#datainiciomodale').val(dini[2]+'/'+dini[1]+'/'+dini[0]);
-                    $("#modalEditaProjeto").modal('toggle');
+                    $("#modalEditaAtividade").modal('toggle');
+
+
                 }
             });
         }
-        function atualizarProjeto(){
+        function atualizarAtividade(){
 
-            var idprojeto = $('#idprojetoe').val();
-            var nomeprojeto =$('#nomeprojetomodale').val();
-            var objetivo =$('#objetivomodale').val();
-            var mensuracao =$('#mensuracaomodale').val();
-            var dtinicio =$('#datainiciomodale').val();
+            var nome = $('#nomee').val();
+            var sigla = $('#siglae').val().toUpperCase();
+            var descricao = $('#descricaoe').val();
+            var idatividade= $('#idatividade').val();
+            var tipo = $('#tipoide').val();
 
 
-
-            if(dtinicio==""){
-                swal({
-                    title: 'Campo Obrigatório',
-                    text: 'Por favor, verifique se o campo de Data de Início do Projeto do Preenchido',
-                    type: 'warning',
-                    timer: 2000
-                });
-            }else{
-                var dtini = dtinicio.split('/');
-                dtinicio = dtini[2]+'-'+dtini[1]+'-'+dtini[0];
-                $.ajax({
-                    type:'POST',
-                    url:'/atualizar-projeto/'+ idprojeto ,
-                    headers: {
-                        'X-CSRF-Token': '{{ csrf_token() }}',
-                    },
-                    data:{
-                        nomeprojeto:nomeprojeto,
-                        objetivo:objetivo,
-                        mensuracao:mensuracao,
-                        dtinicio:dtinicio
-                    },
-                    success:function(data){
-                        swal({
-                            title: data.msg,
-                            // text: 'Do you want to continue',
-                            type: data.tipo,
-                            timer: 2000
-                        });
-
-                        location.reload();
-                    }
-                });
-            }
-
+            $.ajax({
+                type:'POST',
+                url:'/atualizar-atividade/'+ idatividade ,
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                data:{
+                    nome:nome,
+                    sigla:sigla,
+                    descricao: descricao,
+                    tipo:tipo
+                },
+                success:function(data){
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+                    console.log(data);
+                }
+            });
         }
 
-        function removerProjeto($id) {
+        function removerAtividade($id) {
             swal({
-                title: 'Confirmar Exclusão do Projeto?',
-                text: 'Escopos, Orçamentos e Atividades relacionadas ao projeto também serão removidas,',
+                title: 'Confirmar Exclusão do Atividade?',
+                //text: 'Os projetos em que ele estiver envolvido também serão removidos, para desligamento de colaborador procure a guia Desligamento',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Confirmar',
@@ -177,7 +169,7 @@
                 if (result.value) {
                     $.ajax({
                         type:'DELETE',
-                        url:'/excluir-projeto/'+$id,
+                        url:'/excluir-atividade/'+$id,
                         data:{
                             _token : "<?php echo csrf_token() ?>"
                         },
@@ -205,40 +197,38 @@
 
     <div class="container">
         <br>
-        <button onclick="addProjeto()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Adicionar</button>
+        <button onclick="addOrcamentoEscopo()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Adicionar</button>
 
 
         <br><br>
 
-        <table class="table table-striped"  id="consultortable">
+        <table class="table table-striped"  id="projetosdettable">
             <thead>
             <tr>
-                <th class="text-center">Código</th>
-                <th class="text-center">Nome</th>
-                <th class="text-center">Objetivo</th>
-                <th class="text-center">Data Início</th>
+                <th class="text-center">Cliente</th>
+                <th class="text-center">Projeto</th>
+                <th class="text-center">Horas Totais</th>
+                <th class="text-center">Horas Estimadas</th>
+                <th class="text-center">Mensuração</th>
                 <th class="text-center">Ações</th>
             </tr>
             </thead>
             <tbody>
             @foreach($projetos as $projeto)
                 <tr class="item{{$projeto->id}}">
-                    <td>{{$projeto->id}}</td>
-                    <td>{{$projeto->nome}}</td>
-                    <td>{{$projeto->objetivo}}</td>
-                    <td><?php
-                        $data = explode('-',$projeto->dt_inicio);
-                        echo $data[2]."/".$data[1]."/".$data[0];
-                        ?></td>
+                    <td>{{$projeto->cliente}}</td>
+                    <td>{{$projeto->projeto}}</td>
+                    <td>{{$projeto->horas_totais}}</td>
+                    <td>{{$projeto->horas_estimadas}}</td>
+                    <td>{{formatarDataFront($projeto->mensuracao_data)}}</td>
 
-                    <td>
-                        <button class="edit-modal btn btn-default" title="Editar"
-                                data-info="{{$projeto->id}},{{$projeto->nome}}"
-                                data-toggle="modal" onclick="editarProjeto({{$projeto->id}})">
-                            <span class="glyphicon glyphicon-edit"></span>
-                        </button>
+                    <td><a href="/configurar-orcamento/{{$projeto->id}}">
+                            <button class="edit-modal btn btn-default" title="Detalhes"
+                                    data-toggle="modal">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </button></a>
                         <button class="delete-modal btn btn-danger" title="Remover"
-                                onclick="removerProjeto({{$projeto->id}})">
+                                onclick="removerAtividade({{$projeto->id}})">
                             <span  class="glyphicon glyphicon-trash"></span>
                         </button></td>
                 </tr>
@@ -251,105 +241,53 @@
     </div>
 
 
-
-
-
-
-
-
-
-
-
-    <!-- Modal Criar Projeto -->
-    <div class="modal fade" id="modalprojetos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <!-- Modal Criar Escopo -->
+    <div class="modal fade" id="modalCriarOrcamentoEscopo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Adicioanr Projeto</h4>
+                    <h4 class="modal-title" id="myModalLabel">Adicionar Escopo para Orçamento</h4>
                 </div>
-                <div class="modal-body clientebody">
+                <div class="modal-body">
+                    <label>Cliente</label>
+                    <input type="text" class="form-control" id="addclientemodal">
+                    <label>Nome do Projeto</label>
+                    <input type="text" class="form-control" id="addprojetomodal">
+                    <label>Objetivo</label>
+                    <input type="text" class="form-control" id="addobjetivomodal">
 
-                    <select class="form-control" name="" id="clientemodal">
-                        @foreach($clientes as $cliente)
-                            <option value="{{$cliente->id}}">{{$cliente->nomefantasia}}</option>
-                        @endforeach
-                    </select>
-                    <label for="">Nome</label>
-                    <input type="text" class="form-control" id="nomeprojetomodal">
-                    <label for="">Objetivo</label>
-                    <input type="text" class="form-control" id="objetivomodal">
-                    <label for="">Mensuração</label>
-                    <input type="text" class="form-control" id="mensuracaomodal">
-                    <label for="">Data Início</label>
-                    <input type="text" class="form-control" id="datainiciomodal">
-
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="">Tarifa Técnica</label>
+                            <input type="text" class="form-control" id="addtartecnmodal">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="">Tarifa Gestão</label>
+                            <input type="text" class="form-control" id="addtargestaomodal">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="">Mensuração</label>
+                            <input type="text" class="form-control" id="addmensuracaotextmodal">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="">Data Mensurada</label>
+                            <input type="date" class="form-control" id="addmensuracaodatamodal">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                     @if(Auth::user()->nivelacesso <3)
-                        <button type="button" onclick="salvarprojeto()" class="btn btn-primary">Salvar Alterações</button>
+                        <button type="button" onclick="criarOrcamentoEscopo()" class="btn btn-primary">Criar Escopo</button>
                     @endif
 
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
-    <!-- Modal Editar Perfil -->
-    <div class="modal fade" id="modalEditaProjeto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Editar Projeto</h4>
-                </div>
-                <div class="modal-body clientebody">
-                    <input type="hidden" id="idprojetoe">
-                    <label for="">Cliente</label>
-                    <input type="text" disabled class="form-control" id="clientemodale">
-                    <label for="">Nome</label>
-                    <input type="text" class="form-control" id="nomeprojetomodale">
-                    <label for="">Objetivo</label>
-                    <input type="text" class="form-control" id="objetivomodale">
-                    <label for="">Mensuração</label>
-                    <input type="text" class="form-control" id="mensuracaomodale">
-                    <label for="">Data Início</label>
-                    <input type="text" class="form-control" id="datainiciomodale">
-
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                    @if(Auth::user()->nivelacesso <3)
-                        <button type="button" onclick="atualizarProjeto()" class="btn btn-primary">Salvar Alterações</button>
-                    @endif
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

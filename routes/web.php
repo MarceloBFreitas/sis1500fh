@@ -55,9 +55,16 @@ Route::get('/configurar-orcamento/{id}','OrcamentoController@homeEditarOrcamento
 Route::post('/adicionar-atividade-orcamento','OrcamentoController@adicionarAtividadeEscopoOrcamento')->name('adicionar.atividade.escopo');
 Route::post('/atualizar-atividade-orcamento/{id}','OrcamentoController@atualizarAtividadeEscopoOrcamento')->name('atualizar.atividade.escopo');
 Route::delete('/excluir-detalhe-orcamento/{id}','OrcamentoController@RemoverAtividadeEscopoOrcamento')->name('remover.atividade.escopo');
-
-
 Route::post('/criar-projeto/{id}','ProjetoController@criarProjeto')->name('criar.projeto');
+
+Route::get('/projetos','ProjetoController@index')->name('home.projetos');
+
+
+
+
+
+
+
 
 
 
