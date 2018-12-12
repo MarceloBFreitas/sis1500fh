@@ -81,6 +81,15 @@
             var id = $('#idprodetalhe').val();
 
 
+            if(dia == ""){
+                swal({
+                    title: 'Campo vazio',
+                    text: 'Por favor, verificar se todos os campos estão preenchidos',
+                    type: 'warning',
+                    timer: 2000
+                });
+            }else{
+
 
             $.ajax({
                 type:'POST',
@@ -109,7 +118,7 @@
                 }
             });
 
-
+            }
 
         }
     </script>
