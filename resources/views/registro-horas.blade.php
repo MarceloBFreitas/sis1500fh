@@ -9,6 +9,40 @@
 
 @section('content')
     <script>
+
+        $(document).ready(function(){
+            $('.datainput').mask('99/99/9999'); //Máscara para Data
+            $('.valortable').mask("#.##0,00", {reverse: true});
+            $('#atividadetable').DataTable(
+                {
+                    "language": {
+                        "sEmptyTable": "Nenhum registro encontrado",
+                        "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                        "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                        "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                        "sInfoPostFix": "",
+                        "sInfoThousands": ".",
+                        "sLengthMenu": "_MENU_ resultados por página",
+                        "sLoadingRecords": "Carregando...",
+                        "sProcessing": "Processando...",
+                        "sZeroRecords": "Nenhum registro encontrado",
+                        "sSearch": "Pesquisar",
+                        "oPaginate": {
+                            "sNext": "Próximo",
+                            "sPrevious": "Anterior",
+                            "sFirst": "Primeiro",
+                            "sLast": "Último"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Ordenar colunas de forma ascendente",
+                            "sSortDescending": ": Ordenar colunas de forma descendente"
+                        }
+                    }
+                }
+            );
+
+        });
+
         function addhoras($idoed) {
 
             var idod = $idoed;
@@ -57,63 +91,64 @@
         }
     </script>
 
-<div class="container">
-    <div style="width: 20%">
+<div class="row">
 
-        <img src="{{ asset('img/1500-logo-completo.png') }}"  class="rounded" alt="Cinque Terre" style=" width:100%;
-    margin-left:-10%;" />
 
-    </div>
-    <table class="table table-striped" style="text-align: center" id="consultortable">
-        <thead>
-        <tr>
-            <th class="text-center">Código</th>
-            <th class="text-center">Cliente</th>
-            <th class="text-center">Projeto</th>
-            <th class="text-center">Sigla</th>
-            <th class="text-center">Descrição</th>
-        </tr>
-        </thead>
+    <div class="container">
 
-        <tbody>
+
+        <table  class="table table-striped"  id="atividadetable">
+            <thead>
+            <tr>
+                <th class="text-center">Projeto</th>
+                <th class="text-center">Cliente</th>
+                <th class="text-center">Atividade</th>
+                <th class="text-center">Sigla</th>
+                <th class="text-center">Detalhes</th>
+            </tr>
+            </thead>
+
+            <tbody>
             @foreach($od as $o)
-            <tr class="item">
-                <td>{{$o->id}}</td>
-                <td>@foreach($oe as $e)
-                        <?php
-                        if($o->id_eo == $e->id){
+                <tr class="item">
+                    <td>{{$o->id}}</td>
+                    <td>@foreach($oe as $e)
+                            <?php
+                            if($o->id_eo == $e->id){
 
-                            echo $e->cliente;
-                        }
-                        ?> @endforeach</td>
-                <td>@foreach($oe as $oee)
-                        <?php
-                        if($o->id_eo == $oee->id){
+                                echo $e->cliente;
+                            }
+                            ?> @endforeach</td>
+                    <td>@foreach($oe as $oee)
+                            <?php
+                            if($o->id_eo == $oee->id){
 
-                            echo $oee->projeto;
-                        }
-                        ?> @endforeach</td>
-                <td>@foreach($atv as $t)
-                        <?php
-                        if($o->id_atv == $t->id){
+                                echo $oee->projeto;
+                            }
+                            ?> @endforeach</td>
+                    <td>@foreach($atv as $t)
+                            <?php
+                            if($o->id_atv == $t->id){
 
-                            echo $t->sigla;
-                        }
-                        ?> @endforeach</td>
-                <td>{{$o->descricao}}</td>
+                                echo $t->sigla;
+                            }
+                            ?> @endforeach</td>
+                    <td>{{$o->descricao}}</td>
 
-                <td>
+                    <td>
 
 
                         <button class="edit-modal btn btn-default" title="Adicionar" onclick="addhoras({{$o->id}})">
                             <span class="glyphicon glyphicon-edit"></span>
                         </button>
 
-            </tr>
+                </tr>
 
-        @endforeach
-        </tbody>
-    </table>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+
 
 
 </div>
