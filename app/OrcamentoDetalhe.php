@@ -11,8 +11,5 @@ class OrcamentoDetalhe extends Model
     protected $fillable = [
         'id_atv','descricao','horas_estimadas',
 
-
-
-
     ];
 }

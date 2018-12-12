@@ -242,8 +242,8 @@
                 <div class="modal-body">
                     <label>Tipo</label>
                     <select title="Pick a number" class="form-control selectpicker" id="tipoid">
-                        <option value="gestao">Gestão</option>
-                        <option value="tecnica">Técnica</option>
+                        <option value="Gestão">Gestão</option>
+                        <option value="Técnica">Técnica</option>
                     </select> <br/>
 
                     <label>Sigla</label>
@@ -284,8 +284,8 @@
 
                     <label>Tipo</label>
                     <select title="Pick a number" class="form-control selectpicker" id="tipoide">
-                        <option value="gestao">Gestão</option>
-                        <option value="tecnica">Técnica</option>
+                        <option value="Gestão">Gestão</option>
+                        <option value="Técnica">Técnica</option>
                     </select> <br/>
 
 

@@ -19,11 +19,11 @@ class CriarTabelaEscopoOrcamentoDetalhe extends Migration
             $table->integer('id_eo')->unsigned();
             $table->String('descricao');
             $table->float('horas_estimadas');
-            $table->integer('id_user')->unsigned();
 
-           $table->foreign('id_atv')->references('id')->on('sisatividades');
+
+           $table->foreign('id_atv')->references('id')->on('sistipo_atividades');
            $table->foreign('id_eo')->references('id')->on('sisescopo_orcamento');
-           $table->foreign('id_user')->references('id')->on('sisusers');
+
 
             $table->timestamps();
         });

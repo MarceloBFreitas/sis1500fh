@@ -127,6 +127,21 @@ return [
             'icon'    => 'object-group',
         ],
 
+
+        [
+            'text'        => 'Projetos',
+            'url'         => '/projetos',
+            'icon'        => 'cloud',
+            // 'label'       => 4,
+            'label_color' => 'success',
+        ],
+
+
+        [
+            'text' => 'Orçamentos',
+            'url'  => '/orcamento-pesquisa',
+            'icon' => 'balance-scale',
+        ],
         [
             'text'    => 'Gestão',
             'icon' => 'balance-scale',
@@ -165,12 +180,6 @@ return [
             ],
 
         ],
-
-        [
-            'text' => 'Orçamentos',
-            'url'  => '/orcamento-pesquisa',
-            'icon' => 'balance-scale',
-        ],
         'CADASTROS',
        // [
        //     'text' => 'Sistema de Gestão 1500FH',
@@ -178,13 +187,7 @@ return [
        //     'can'  => 'manage-blog',
        // ],
 
-        [
-            'text'        => 'Registrar Atividade',
-            'url'         => '/atividades',
-            'icon'        => 'address-card',
-            // 'label'       => 4,
-            'label_color' => 'success',
-        ],
+
         [
             'text'    => 'Staff',
             'icon'    => 'users',
@@ -232,21 +235,21 @@ return [
             'label_color' => 'success',
         ],
 
-        [
-            'text'        => 'Clientes',
-            'url'         => '/clientes',
-            'icon'        => 'book',
-            // 'label'       => 4,
-            'label_color' => 'success',
-        ],
-
-        [
-            'text'        => 'Projetos',
-            'url'         => '/projetos',
-            'icon'        => 'cloud',
-            // 'label'       => 4,
-            'label_color' => 'success',
-        ],
+//        [
+//            'text'        => 'Clientes',
+//            'url'         => '/clientes',
+//            'icon'        => 'book',
+//            // 'label'       => 4,
+//            'label_color' => 'success',
+//        ],
+//
+//        [
+//            'text'        => 'Projetos',
+//            'url'         => '/projetos',
+//            'icon'        => 'cloud',
+//            // 'label'       => 4,
+//            'label_color' => 'success',
+//        ],
 
 
 

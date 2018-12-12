@@ -19,9 +19,10 @@ class CriarTabelaEscopoOrcamento extends Migration
             $table->string('projeto');
             $table->float('tecn');
             $table->float('gestao');
-            $table->date('mensuracao');
+            $table->string('mensuracao_descricao');
+            $table->date('mensuracao_data');
             $table->string('objetivo');
-            $table->string('status');
+            $table->integer('status');
             $table->float('valor_total');
             $table->float('horas_totais');
             $table->timestamps();

@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Atividade;
+use App\TipoAtividade;
 
-class AtividadesController extends Controller
+class TipoAtividadesController extends Controller
 {
     public function __construct()
     {
@@ -15,7 +15,7 @@ class AtividadesController extends Controller
 
     public function index()
     {
-        $atividades = Atividade::all();
+        $atividades = TipoAtividade::all();
         return view('atividades',['atividades'=>$atividades]);
     }
 
@@ -23,14 +23,14 @@ class AtividadesController extends Controller
     {
         $mensagem="Erro no Método de Persistência da API";
         $tipo="error";
-        $atividade= new Atividade();
+        $atividade= new TipoAtividade();
         $atividade->nome = $request->nome;
         $atividade->sigla = $request->sigla;
         $atividade->descricao = $request->descricao;
         $atividade->tipo = $request->tipo;
 
 
-        $sigla = DB::table('sisatividades')->where('sigla','=', $request->sigla)->get();
+        $sigla = DB::table('sistipo_atividades')->where('sigla','=', $request->sigla)->get();
         if ($sigla->isEmpty()) {
             if(\Auth::user()->nivelacesso <3){
                 $atividade->save();
@@ -53,8 +53,8 @@ class AtividadesController extends Controller
 
     public function show($id)
     {
-        $atividade = DB::table('sisatividades')
-            ->where('sisatividades.id','=',$id)
+        $atividade = DB::table('sistipo_atividades')
+            ->where('sistipo_atividades.id','=',$id)
             ->get();
         return $atividade;
     }
@@ -63,7 +63,7 @@ class AtividadesController extends Controller
     {
         $mensagem="";
         $tipo="error";
-        $atividade = Atividade::where('id', '=',$id)->first();
+        $atividade = TipoAtividade::where('id', '=',$id)->first();
         $atividade->sigla = $request->sigla;
         $atividade->nome = $request->nome;
         $atividade->descricao = $request->descricao;
@@ -104,7 +104,7 @@ class AtividadesController extends Controller
 
         if(\Auth::user()->nivelacesso <3){
             try{
-                $res = Atividade::where('id', '=',$id)->delete();
+                $res = TipoAtividade::where('id', '=',$id)->delete();
                 $mensagem="Atividade Removida com Sucesso";
                 $tipo="success";
             }

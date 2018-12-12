@@ -13,7 +13,7 @@ class CreateAtividadeTable extends Migration
      */
     public function up()
     {
-        Schema::create('sisatividades', function (Blueprint $table) {
+        Schema::create('sistipo_atividades', function (Blueprint $table) {
             $table->increments('id');
             $table->string('sigla');
             $table->string('nome');
@@ -30,6 +30,6 @@ class CreateAtividadeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sisatividades');
+        Schema::dropIfExists('sistipo_atividades');
     }
 }

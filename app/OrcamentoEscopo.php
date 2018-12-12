@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class orcamentoEscopo extends Model
+class OrcamentoEscopo extends Model
 {
     protected $table = 'sisescopo_orcamento';
 

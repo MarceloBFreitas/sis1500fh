@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Atividade extends Model
+class TipoAtividade extends Model
 {
-    protected $table = 'sisatividades';
+    protected $table = 'sistipo_atividades';
 
     protected $fillable = [
         'nome','sigla', 'descricao', 'tipo',

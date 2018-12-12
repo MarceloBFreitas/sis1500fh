@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Atividade;
+use App\TipoAtividade;
 use App\OrcamentoDetalhe;
 use App\orcamentoEscopo;
 use App\Registros;
@@ -22,7 +22,7 @@ class RegistroHorasController extends Controller
         $id = auth()->user()->id;
         $od = DB::select('select * from sisescopo_orcamento_detalhe where sisescopo_orcamento_detalhe.id_user ='.$id);
 
-        $atv = Atividade::all();
+        $atv = TipoAtividade::all();
         $oe = orcamentoEscopo::all();
 
 
