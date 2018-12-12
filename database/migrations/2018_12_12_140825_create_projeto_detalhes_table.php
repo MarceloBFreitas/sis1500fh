@@ -34,6 +34,6 @@ class CreateProjetoDetalhesTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('sisescopo_orcamento_detalhe');
+        Schema::dropIfExists('sisprojeto_detalhe');
     }
 }
