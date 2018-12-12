@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ProjetoDetalhe;
 use App\TipoAtividade;
 use App\OrcamentoDetalhe;
 use App\orcamentoEscopo;
@@ -19,14 +20,10 @@ class RegistroHorasController extends Controller
     public function index(){
 
 
-        $id = auth()->user()->id;
-        $od = DB::select('select * from sisescopo_orcamento_detalhe where sisescopo_orcamento_detalhe.id_user ='.$id);
-
-        $atv = TipoAtividade::all();
-        $oe = orcamentoEscopo::all();
+        $itensTabela = DB::select('select * from sisprojeto_detalhe inner join sisprojetos on sisprojeto_detalhe.id_projeto = sisprojetos.id');
 
 
-        return view('registro-horas',['od'=>$od,'atv'=>$atv,'oe'=>$oe]);
+        return view('registro-horas',['itensTabela'=>$itensTabela]);
     }
 
     public function  salvar(Request $request){
@@ -36,7 +33,8 @@ class RegistroHorasController extends Controller
         $re->dia = $request->dia;
         $re->descricao = $request->desc;
         $re->qtd_horas = $request->qtd;
-        $re->id_atv_ed = $request->idod;
+        $re->id_projetodetalhe = $request->id;
+        $re->horas_fim = $request->horaFim;
         $re->id_user =  auth()->user()->id;
 
 
@@ -60,6 +58,24 @@ class RegistroHorasController extends Controller
             'msg' => $mensagem,
         );
         return response()->json($response);
+
+
+    }
+
+    public function horafim(Request $request){
+        $id = $request->idprojetodet;
+
+
+        $prodet=ProjetoDetalhe::find($id);
+            //Db::Select('select * from sisprojeto_detalhe   where sisprojeto_detalhe.id='.$id);
+        $valdehr = $prodet->horas_reais;
+        $valdeestima = $prodet->horas_estimadas;
+        $horasFim =   $valdeestima - $valdehr;
+
+
+
+        return response()->json($horasFim);
+
 
 
     }

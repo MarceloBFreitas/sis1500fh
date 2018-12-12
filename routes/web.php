@@ -90,3 +90,7 @@ Route::post('/orcamento-detalhe','OrcamentoDetalheController@salvar')->name('sal
 Route::get('/registro-horas','RegistroHorasController@index')->name('home.horas');
 Route::post('/registro-horas','RegistroHorasController@salvar')->name('salvar.horas');
 Route::post('/orcamento-detalhe-final','orcamentoescopoController@salvarFinal')->name('registrar.escopo.final');
+
+
+
+Route::post('/aux','RegistroHorasController@horafim')->name('registrar.horasf');

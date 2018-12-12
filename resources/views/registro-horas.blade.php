@@ -13,7 +13,7 @@
         $(document).ready(function(){
             $('.datainput').mask('99/99/9999'); //Máscara para Data
             $('.valortable').mask("#.##0,00", {reverse: true});
-            $('#atividadetable').DataTable(
+            $('#atividadetablehoras').DataTable(
                 {
                     "language": {
                         "sEmptyTable": "Nenhum registro encontrado",
@@ -43,13 +43,31 @@
 
         });
 
-        function addhoras($idoed) {
+        function addhoras(id) {
 
-            var idod = $idoed;
+            $.ajax({
+                type:'POST',
+               url:"{{URL::route('registrar.horasf')}}",
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                data:{
+                    idprojetodet:id,
 
-            $('#help').val(idod);
+                },
+                success:function(data){
+                    console.log(data);
+                    $('#adddet').modal('toggle');
+                    $('#idhorasfim').val(data);
+                    $('#idprodetalhe').val(id);
 
-            $('#adddet').modal('toggle')
+
+
+
+                }
+            });
+
+
 
 
 
@@ -59,7 +77,11 @@
             var dia =  $('#iddia').val();
             var qtd  =$('#idqtd').val();
             var desc= $('#iddesc').val();
-            var idod = $('#help').val();
+            var horaFim = $('#idhorasfim').val();
+            var id = $('#idprodetalhe').val();
+
+
+
             $.ajax({
                 type:'POST',
                 url:"{{URL::route('salvar.horas')}}",
@@ -67,10 +89,11 @@
                     'X-CSRF-Token': '{{ csrf_token() }}',
                 },
                 data:{
-                    idod:idod,
+                    id:id,
                     dia:dia,
                     qtd:qtd,
                     desc:desc,
+                    horaFim:horaFim,
                 },
                 success:function(data){
                     swal({
@@ -90,71 +113,58 @@
 
         }
     </script>
+<div class="container">
 
-<div class="row">
-
-
-    <div class="container">
-
-
-        <table  class="table table-striped"  id="atividadetable">
+<div>
+        <table  class="table table-striped"  id="atividadetablehoras">
             <thead>
             <tr>
+
+                <th class="text-center">Clientes</th>
                 <th class="text-center">Projeto</th>
-                <th class="text-center">Cliente</th>
                 <th class="text-center">Atividade</th>
-                <th class="text-center">Sigla</th>
-                <th class="text-center">Detalhes</th>
+                <th class="text-center">Horas Estimadas</th>
+                <th class="text-center">Horas Fim</th>
+                <th class="text-center">Ação</th>
+
             </tr>
             </thead>
 
             <tbody>
-            @foreach($od as $o)
-                <tr class="item">
-                    <td>{{$o->id}}</td>
-                    <td>@foreach($oe as $e)
-                            <?php
-                            if($o->id_eo == $e->id){
-
-                                echo $e->cliente;
-                            }
-                            ?> @endforeach</td>
-                    <td>@foreach($oe as $oee)
-                            <?php
-                            if($o->id_eo == $oee->id){
-
-                                echo $oee->projeto;
-                            }
-                            ?> @endforeach</td>
-                    <td>@foreach($atv as $t)
-                            <?php
-                            if($o->id_atv == $t->id){
-
-                                echo $t->sigla;
-                            }
-                            ?> @endforeach</td>
-                    <td>{{$o->descricao}}</td>
+            @foreach($itensTabela as $itens)
+                <tr class="item{{$itens->id}}">
+                    <td>{{$itens->cliente}}</td>
+                    <td>{{$itens->projeto}}</td>
+                    <td>{{$itens->descricao}}</td>
+                    <td>{{$itens->horas_estimadas}}</td>
+                    <td>{{$itens->horas_fim}}</td>
 
                     <td>
-
-
-                        <button class="edit-modal btn btn-default" title="Adicionar" onclick="addhoras({{$o->id}})">
+                        <button class="edit-modal btn btn-default" title="Adicionar" onclick="addhoras({{$itens->id}})">
                             <span class="glyphicon glyphicon-edit"></span>
                         </button>
 
+                        <button class="edit-modal btn btn-default" title="Vizualizar" onclick="">
+                            <span class="glyphicon glyphicon-zoom-in"></span>
+                        </button>
+                    </td>
                 </tr>
-
             @endforeach
             </tbody>
         </table>
-    </div>
-
-
 
 </div>
 
 
-    <!-- Modal Adicionar Detalhes do Registro de Horas -->
+    <input type="hidden" id="idprodetalhe">
+</div>
+
+
+
+
+
+
+    <!-- Modal Adicionar Detalhes do Registro de Horas-->
     <div class="modal fade" id="adddet" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -162,7 +172,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Adicionar Hora</h4>
             </div>
-            <div class="modal-body clientebody">
+            <div class="modal-body ">
 
                 <div class="form-group">
                     <h2>Registro Detalhado:</h2>
@@ -170,6 +180,7 @@
 
                     <label for="comment">Dia</label><input class="form-control" type="date" id="iddia" > <br/>
                     <label for="comment">Quantidade de Horas</label><input class="form-control" type="Text" id="idqtd" > <br/>
+                    <label for="comment">Horas para Fim</label><input class="form-control" type="Text" id="idhorasfim" > <br/>
                     <label for="comment">Descrição:</label>
                     <textarea class="form-control" rows="5" id="iddesc"></textarea>
                 </div>
@@ -186,6 +197,7 @@
         </div>
     </div>
     </div>
+
 
 
 @stop
