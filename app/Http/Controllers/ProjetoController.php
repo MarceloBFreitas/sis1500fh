@@ -23,7 +23,7 @@ class ProjetoController extends Controller
         return view('projetos',['projetos' =>$projetos]);
     }
 
-   public function criarProjeto($id){
+    public function criarProjeto($id){
 
        $mensagem="Erro no Controller, favor consultar API";
        $tipo="error";
@@ -87,4 +87,10 @@ class ProjetoController extends Controller
        return response()->json($response);
 
    }
+
+    public function projetoDetalhes($id){
+        $projeto = Projeto::find($id);
+        //$projetodetalhes =
+
+    }
 }

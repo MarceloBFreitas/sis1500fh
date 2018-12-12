@@ -17,13 +17,14 @@ class CriarTabelaRegistros extends Migration
             Schema::create('sisregistros', function (Blueprint $table) {
                 $table->increments('id')->unsigned();
                 $table->date('dia');
-                $table->integer('id_user');
+                $table->integer('id_user')->unsigned();
+                $table->integer('id_projetodetalhe')->unsigned();
                 $table->string('descricao');
-                $table->integer('id_atv_ed');
                 $table->double('qtd_horas');
+                $table->double('horas_fim');
                 $table->timestamps();
                 $table->foreign('id_user')->references('id')->on('sisusers');
-                $table->foreign('id_atv_ed')->references('id')->on('sisescopo_orcamento_detalhe');
+                $table->foreign('id_projetodetalhe')->references('id')->on('sisprojeto_detalhe');
 
             });
     }

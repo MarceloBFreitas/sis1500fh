@@ -196,9 +196,6 @@
 
 
     <div class="container">
-        <br>
-        <button onclick="addOrcamentoEscopo()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Adicionar</button>
-
 
         <br><br>
 
@@ -222,7 +219,7 @@
                     <td>{{$projeto->horas_estimadas}}</td>
                     <td>{{formatarDataFront($projeto->mensuracao_data)}}</td>
 
-                    <td><a href="/configurar-orcamento/{{$projeto->id}}">
+                    <td><a href="/detalhe-projeto/{{$projeto->id}}">
                             <button class="edit-modal btn btn-default" title="Detalhes"
                                     data-toggle="modal">
                                 <span class="glyphicon glyphicon-edit"></span>

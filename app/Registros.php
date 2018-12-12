@@ -9,7 +9,7 @@ class Registros extends Model
 
     protected $table = 'sisregistros';
     protected $fillable = [
-        'dia','descricao','id_atv_ed','qtd_horas','id_user'
+        'dia','id_user','id_projetodetalhe','descricao','qtd_horas'
 
 
     ];
