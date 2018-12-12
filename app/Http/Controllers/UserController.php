@@ -100,6 +100,11 @@ class UserController extends Controller
         $user->name = $request->nome;
         $user->email = $request->email;
         $user->nivelacesso = $request->cargo;
+        $tratarespaco = str_replace(" ","",$request->novaSenha);
+
+        if($tratarespaco != ""){
+            $user->password = bcrypt($request->novaSenha);
+        }
 
         if(\Auth::user()->nivelacesso <3){
             try{

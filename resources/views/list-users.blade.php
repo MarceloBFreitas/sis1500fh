@@ -44,6 +44,8 @@
             $.ajax({
                 type:'get',
                 url:'/detalhes-usuario/'+iduser,
+
+
                 success:function(data){
                     //alert(data.name);
                     $('#myModalLabel').html(data.name).fadeIn('slow');
@@ -73,7 +75,8 @@
                     _token : "<?php echo csrf_token() ?>",
                     nome:$('#nomemodal').val(),
                     email:$('#emailmodal').val(),
-                    cargo: $('#cargomodal').val()
+                    cargo: $('#cargomodal').val(),
+                    novaSenha: $('#senhaalterar').val(),
                 },
                 success:function(data){
                     swal({
@@ -222,7 +225,15 @@
                     <p id="registradomodal" ></p>
                     <p id="atualizadomodal" ></p>
                     <input type="hidden" value="" id="idusermodal">
+                    <br/>
+                    <span class="input-group-addon" id="">Para manter a senha, por favor, deixar este campo vazio</span>
+                    <input type="text" id="senhaalterar" class="form-control" placeholder="Alterar Senha"
+                           @if(Auth::user()->nivelacesso ==3)
+                           disabled
+                           @endif
+                           aria-describedby="basic-addon1">
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                     @if(Auth::user()->nivelacesso <3)
