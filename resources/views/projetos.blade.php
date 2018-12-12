@@ -215,7 +215,7 @@
                 <tr class="item{{$projeto->id}}">
                     <td>{{$projeto->cliente}}</td>
                     <td>{{$projeto->projeto}}</td>
-                    <td>{{$projeto->horas_totais}}</td>
+                    <td><?php if(empty($projeto->totalhorasregistradas)){echo 0;}else{echo $projeto->totalhorasregistradas;}?></td>
                     <td>{{$projeto->horas_estimadas}}</td>
                     <td>{{formatarDataFront($projeto->mensuracao_data)}}</td>
 

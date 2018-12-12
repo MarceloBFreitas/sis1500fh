@@ -18,7 +18,11 @@ class ProjetoController extends Controller
     }
 
     public function index(){
-        $projetos = Projeto::all();
+        $projetos = DB::select('select 
+	 * ,
+	(select sum(sisregistros.qtd_horas) from sisregistros inner join sisprojeto_detalhe on sisprojeto_detalhe.id = sisregistros.id_projetodetalhe where sisprojeto_detalhe.id_projeto =  sisprojetos.id) as totalhorasregistradas
+	from  sisprojetos ;
+ ');
 
         return view('projetos',['projetos' =>$projetos]);
     }
@@ -90,7 +94,40 @@ class ProjetoController extends Controller
 
     public function projetoDetalhes($id){
         $projeto = Projeto::find($id);
-        //$projetodetalhes =
+        $projetodetalhesquery = DB::select('SELECT * ,(
+                      select sum(sisregistros.qtd_horas) from sisregistros 
+                      inner join sisprojeto_detalhe on sisprojeto_detalhe.id = sisregistros.id_projetodetalhe 
+                      where sisprojeto_detalhe.id_projeto =  sisprojeto_detalhe.id) as totalhorasregistradas,
+                      sisprojeto_detalhe.horas_estimadas - (
+                          select sum(sisregistros.qtd_horas) from sisregistros 
+                          inner join sisprojeto_detalhe on sisprojeto_detalhe.id = sisregistros.id_projetodetalhe 
+                          where sisprojeto_detalhe.id_projeto =  sisprojeto_detalhe.id) as horasfim
+                    from sisprojeto_detalhe 
+                    inner join sistipo_atividades on sistipo_atividades.id = sisprojeto_detalhe.id_tpatv
+                    inner join sisprojetos on sisprojetos.id = sisprojeto_detalhe.id_projeto
+                    where sisprojeto_detalhe.id_projeto='.$projeto->id);
+
+        foreach ($projetodetalhesquery as $query){
+            $projetodetalhe = ProjetoDetalhe::find($query->id);
+            $totalhoras = 0;
+            $horasfim = 0;
+            if(empty($query->totalhorasregistradas)){
+                $projetodetalhe->horas_reais = $totalhoras;
+            }else{
+                $projetodetalhe->horas_reais = $query->totalhorasregistradas;
+            }
+            if(empty($query->horasfim)){
+                $projetodetalhe->horas_reais = $horasfim;
+            }else{
+                $projetodetalhe->horas_reais = $query->totalhorasregistradas;
+            }
+            $projetodetalhe->save();
+        }
+
+        return view('projeto-detalhe',[
+            'projetodetalhesquery' => $projetodetalhesquery,
+            'projeto' =>$projeto
+        ]);
 
     }
 }

@@ -8,7 +8,7 @@
         $(document).ready(function(){
 
             $('#datainiciomodal').mask('00/00/0000');
-            $('#consultortable').DataTable(
+            $('#detalheprojetotable').DataTable(
                 {
                     "language": {
                         "sEmptyTable": "Nenhum registro encontrado",

@@ -58,7 +58,7 @@ Route::delete('/excluir-detalhe-orcamento/{id}','OrcamentoController@RemoverAtiv
 Route::post('/criar-projeto/{id}','ProjetoController@criarProjeto')->name('criar.projeto');
 
 Route::get('/projetos','ProjetoController@index')->name('home.projetos');
-Route::get('/detalhe-projeto/','ProjetoController@projetoDetalhes')->name('home.projetos');
+Route::get('/detalhe-projeto/{id}','ProjetoController@projetoDetalhes')->name('home.projetos');
 
 
 
