@@ -32,7 +32,7 @@ class RegistroHorasController extends Controller
         $re = new Registros();
         $re->dia = $request->dia;
         $re->descricao = $request->desc;
-        $re->qtd_horas = $request->qtd;
+        $re->qtd_horas = str_replace(',','.',$request->qtd);
         $re->id_projetodetalhe = $request->id;
         $re->horas_fim = $request->horaFim;
         $re->id_user =  auth()->user()->id;
