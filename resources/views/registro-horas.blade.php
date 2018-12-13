@@ -53,7 +53,6 @@
                 },
                 data:{
                     idprojetodet:id,
-
                 },
                 success:function(data){
                     console.log(data);
@@ -143,7 +142,12 @@
             @foreach($itensTabela as $itens)
                 <tr class="item{{$itens->id}}">
                     <td>{{$itens->cliente}}</td>
-                    <td>{{$itens->projeto}}</td>
+                    <td>
+                        {{$itens->sigla}}<br>
+                        {{$itens->projeto}}
+
+                    </td>
+
                     <td>{{$itens->descricao}}</td>
                     <td>{{$itens->horas_estimadas}}</td>
                     <td>{{$itens->horas_fim}}</td>
@@ -198,9 +202,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                @if(Auth::user()->nivelacesso <3)
+
                     <button type="button" onclick="salvar()" class="btn btn-primary">Registrar Horas</button>
-                @endif
+
 
             </div>
         </div>

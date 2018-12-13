@@ -253,7 +253,7 @@
                     <td>{{$projetodet->nome}}</td>
                     <td>{{$projetodet->tipo}}</td>
                     <td>
-                        <input id="descridettabela" type="text" class="form-control" value="{{$projetodet->horas_reais}}">
+                        {{$projetodet->horas_reais}}
                     </td>
                     <td>
                         <input id="horasdettabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas}}">

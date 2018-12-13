@@ -18,13 +18,19 @@ class ProjetoController extends Controller
     }
 
     public function index(){
-        $projetos = DB::select('select 
-	 * ,
-	(select sum(sisregistros.qtd_horas) from sisregistros inner join sisprojeto_detalhe on sisprojeto_detalhe.id = sisregistros.id_projetodetalhe where sisprojeto_detalhe.id_projeto =  sisprojetos.id) as totalhorasregistradas
-	from  sisprojetos ;
- ');
+        $projetosquery = DB::select('  select 
+	 b.* ,
+	(select sum(sisprojeto_detalhe.horas_reais) from sisprojeto_detalhe 
+	inner join sisprojetos a on sisprojeto_detalhe.id_projeto = b.id ) as totalhorasregistradas
+	from  sisprojetos b');
 
-        return view('projetos',['projetos' =>$projetos]);
+        foreach ($projetosquery as $p){
+            $projeto = Projeto::find($p->id);
+            $projeto->horas_totais = $p->totalhorasregistradas;
+            $projeto->save();
+        }
+
+        return view('projetos',['projetos' =>$projetosquery]);
     }
 
     public function criarProjeto($id){

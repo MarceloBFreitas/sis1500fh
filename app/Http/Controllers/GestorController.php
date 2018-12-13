@@ -53,7 +53,7 @@ class GestorController extends Controller
                 $gestor->save();
 
                 $tipo = "success";
-                $mensagem = "Consultor adicionado com Sucesso";
+                $mensagem = "Gestor adicionado com Sucesso";
             }else{
                 $mensagem = "Você não tem autorização para realizar essa ação";
             }

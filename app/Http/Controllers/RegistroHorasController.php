@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Consultor;
+use App\Gestor;
+use App\Projeto;
 use App\ProjetoDetalhe;
 use App\TipoAtividade;
 use App\OrcamentoDetalhe;
@@ -20,7 +23,9 @@ class RegistroHorasController extends Controller
     public function index(){
 
 
-        $itensTabela = DB::select('select * from sisprojeto_detalhe inner join sisprojetos on sisprojeto_detalhe.id_projeto = sisprojetos.id');
+        $itensTabela = DB::select('	select * from sisprojeto_detalhe 
+inner join sisprojetos on sisprojeto_detalhe.id_projeto = sisprojetos.id
+inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividades.id');
 
 
         return view('registro-horas',['itensTabela'=>$itensTabela]);
@@ -28,6 +33,29 @@ class RegistroHorasController extends Controller
 
     public function  salvar(Request $request){
 
+
+        $projetodetalhe = ProjetoDetalhe::find($request->id);
+
+        if($projetodetalhe->horas_fim !=$request->horaFim){
+            $projetodetalhe->horas_fim = $request->horaFim;
+        }else{
+            $projetodetalhe->horas_fim = $projetodetalhe->horas_fim - $request->qtd;
+        }
+
+        $projetodetalhe->save();
+
+        $projeto = Projeto::find($projetodetalhe->id_projeto);
+
+        $custo = 0;
+        if(\Auth::user()->nivelacesso ==3){
+            $consultor = Consultor::where('user_id','=',\Auth::user()->id);
+            $custo = $consultor->custohora *$request->qtd;
+        }else{
+            $gestor = Gestor::where('user_id','=',\Auth::user()->id);
+            $custo = $gestor->custohora *$request->qtd;
+        }
+        $projeto->custo_total = $projeto->custo_total + $custo;
+        $projeto->save();
 
         $re = new Registros();
         $re->dia = $request->dia;
@@ -47,7 +75,7 @@ class RegistroHorasController extends Controller
             $re->save();
 
             $tipo = "success";
-            $mensagem = "Plano Deletado com Sucesso";
+            $mensagem = "Registro realizado com Sucesso";
         }else{
             $mensagem = "Você não tem autorização para realizar essa ação";
             $tipo = "error";

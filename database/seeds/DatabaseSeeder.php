@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder
          $this->call(TipoAtividadeSeeder::class);
          $this->call(EscopoOrcamentoSeeder::class);
          $this->call(DetalheEscopoOrcamentoSeeder::class);
+         $this->call(ConsultorSeeder::class);
+         $this->call(GestorSeeder::class);
 
     }
 }

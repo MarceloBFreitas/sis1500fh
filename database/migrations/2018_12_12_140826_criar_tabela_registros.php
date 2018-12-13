@@ -21,7 +21,6 @@ class CriarTabelaRegistros extends Migration
                 $table->integer('id_projetodetalhe')->unsigned();
                 $table->string('descricao');
                 $table->double('qtd_horas');
-                $table->double('horas_fim');
                 $table->timestamps();
                 $table->foreign('id_user')->references('id')->on('sisusers');
                 $table->foreign('id_projetodetalhe')->references('id')->on('sisprojeto_detalhe');
