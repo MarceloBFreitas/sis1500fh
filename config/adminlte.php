@@ -115,7 +115,7 @@ return [
             'icon' => 'hourglass-half',
             'submenu' => [
                 [
-                    'text' => 'Semanal',
+                    'text' => 'Listagem de Registros',
                         // 'url'  => '/cadastrar-usuario',
                     'icon' => 'list-ul',
                 ],
