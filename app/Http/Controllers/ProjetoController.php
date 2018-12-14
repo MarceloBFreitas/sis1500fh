@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Cliente;
+use App\Consultor;
+use App\Gestor;
 use App\OrcamentoEscopo;
 use App\Projeto;
 use App\ProjetoDetalhe;
@@ -163,22 +165,40 @@ SELECT sisprojeto_detalhe.*,
             inner join sistipo_atividades on sistipo_atividades.id = sisprojeto_detalhe.id_tpatv
             where sisprojeto_detalhe.id_projeto = '.$id);
 
-        $valortotal = 0;
-        $cutototal = 0;
+        $valortotalatualizandogestaotecn = 0.0;
+        $valortotalhorasreais = 0.0;
+        $cutototal = 0.0;
+        $totalhorasreais = 0.0;
         foreach ($projetodetalhes as $projetodetalhe){
             if($projetodetalhe->tipo == "Técnica"){
-                $valortotal = $valortotal +($projetodetalhe->horas_estimadas *$projeto->tecn);
-                $cutototal = $cutototal + retornaCusto($projetodetalhe->id);
+                $valortotalatualizandogestaotecn = $valortotalatualizandogestaotecn +($projetodetalhe->horas_estimadas *$projeto->tecn);
+                $cutototal = $cutototal + ProjetoController::retornaCustopd($projetodetalhe->id);
+                $valortotalhorasreais = $projeto->tecn * ProjetoController::totalHorasReais($projetodetalhe->id);
             }else{
-                $valortotal = $valortotal +($projetodetalhe->horas_estimadas *$projeto->gestao);
+                $valortotalatualizandogestaotecn = $valortotalatualizandogestaotecn +($projetodetalhe->horas_estimadas *$projeto->gestao);
+                $cutototal = $cutototal + ProjetoController::retornaCustopd($projetodetalhe->id);
+                $valortotalhorasreais = $projeto->gestao * ProjetoController::totalHorasReais($projetodetalhe->id);
             }
+            $totalhorasreais = $totalhorasreais+ProjetoController::totalHorasReais($projetodetalhe->id);
         }
 
+        $projeto->custo_total = $cutototal;
+        if($projeto->horas_estimadas > $totalhorasreais){
+            $projeto->valor_total = $valortotalatualizandogestaotecn;
+        }else{
+            $projeto->valor_total = $valortotalhorasreais;
+        }
 
-//        $table->float('valor_total');
+        if(\Auth::user()->nivelacesso <3){
 
+            $projeto->save();
+            $mensagem="Projeto Atualizado com Sucesso";
+            $tipo="success";
+        }else{
+            $mensagem="Você não tem autorização para este recurso";
+            $tipo="error";
 
-
+        }
 
         $response = array(
             'tipo' => $tipo,
@@ -190,14 +210,33 @@ SELECT sisprojeto_detalhe.*,
     }
 
     //Passando ID do Projeto Detalhe = Vulgo Atividade
-    private function retornaCusto($id){
-        $projetodetalhe = ProjetoDetalhe::find($id);
-
+    public function retornaCustopd($id){
         $registrosdaatividade = DB::select('select * from sisregistros 
         where sisregistros.id_projetodetalhe = '.$id);
-
+        $custo = 0;
         foreach ($registrosdaatividade as $reg){
-            $user = User::find($reg->id_user);
+            $valorhora = 0;
+            $consultor = DB::select('select * from sisconsultores where sisconsultores.user_id = '.$reg->id_user);
+            $gestor= DB::select('select * from sisgestores where sisgestores.user_id = '.$reg->id_user);
+            if(empty($gestor)){
+                $consultor = Consultor::where('user_id','=',$reg->id_user);
+                $valorhora = $valorhora + $consultor->custohora;
+            }else{
+                $gestor = Gestor::where('user_id','=',$reg->id_user);
+                $valorhora = $valorhora + $consultor->custohora;
+            }
+            $custo = $custo + ($reg->qtd_horas *$valorhora);
         }
+        return $custo;
+    }
+
+    public function totalHorasReais($idatividade){
+        $registrosdaatividade = DB::select('select * from sisregistros 
+        where sisregistros.id_projetodetalhe = '.$idatividade);
+        $horas = 0;
+        foreach ($registrosdaatividade as $reg){
+            $horas = $horas+ $reg->qtd_horas;
+        }
+        return $horas;
     }
 }

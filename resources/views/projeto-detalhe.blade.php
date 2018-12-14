@@ -320,7 +320,11 @@
                                  data-toggle="modal">
                             <span class="glyphicon glyphicon-refresh"></span>
                         </button>
-
+                        <button class="edit-modal btn btn-success" title="Atribuir"
+                                onclick="atualizarDetalhe({{$projetodet->id}})"
+                                data-toggle="modal">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </button>
                         <button class="delete-modal btn btn-danger" title="Remover"
                                 onclick="removerDetalhe({{$projetodet->id}})">
                             <span  class="glyphicon glyphicon-trash"></span>
@@ -334,6 +338,7 @@
 
         <a href="/"><button class="btn btn-default">Voltar</button></a>
         <a href="/"><button class="btn btn-primary">Salvar baseline</button></a>
+        <a href="/"><button class="btn btn-success">Programar Atividades</button></a>
 
 
 
