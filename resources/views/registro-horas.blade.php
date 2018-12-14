@@ -44,27 +44,10 @@
         });
 
         function addhoras(id) {
-
-            $.ajax({
-                type:'POST',
-               url:"{{URL::route('registrar.horasf')}}",
-                headers: {
-                    'X-CSRF-Token': '{{ csrf_token() }}',
-                },
-                data:{
-                    idprojetodet:id,
-                },
-                success:function(data){
-                    console.log(data);
-                    $('#adddet').modal('toggle');
-                    $('#idhorasfim').val(data);
-                    $('#idprodetalhe').val(id);
+            $('#pegaid').val(id);
+            $('#adddet').modal('toggle');
 
 
-
-
-                }
-            });
 
 
 
@@ -76,8 +59,8 @@
             var dia =  $('#iddia').val();
             var qtd  =$('#idqtd').val();
             var desc= $('#iddesc').val();
-            var horaFim = $('#idhorasfim').val();
-            var id = $('#idprodetalhe').val();
+
+            var id = $('#pegaid').val();
 
 
             if(dia == ""){
@@ -101,7 +84,7 @@
                     dia:dia,
                     qtd:qtd,
                     desc:desc,
-                    horaFim:horaFim,
+
                 },
                 success:function(data){
                     swal({
@@ -122,6 +105,7 @@
         }
     </script>
 <div class="container">
+    <input type="hidden" id="pegaid">
 
 <div>
         <table  class="table table-striped"  id="atividadetablehoras">
@@ -156,10 +140,10 @@
                         <button class="edit-modal btn btn-default" title="Adicionar" onclick="addhoras({{$itens->id}})">
                             <span class="glyphicon glyphicon-edit"></span>
                         </button>
-
-                        <button class="edit-modal btn btn-default" title="Vizualizar" onclick="">
+                        <a href="/horas/{{$itens->id}}">
+                        <button  class="edit-modal btn btn-default" title="Vizualizar" >
                             <span class="glyphicon glyphicon-zoom-in"></span>
-                        </button>
+                        </button></a>
                     </td>
                 </tr>
             @endforeach
@@ -169,7 +153,6 @@
 </div>
 
 
-    <input type="hidden" id="idprodetalhe">
 </div>
 
 
@@ -193,7 +176,6 @@
 
                     <label for="comment">Dia</label><input class="form-control" type="date" id="iddia" > <br/>
                     <label for="comment">Quantidade de Horas</label><input class="form-control" type="Text" id="idqtd" > <br/>
-                    <label for="comment">Horas para Fim</label><input class="form-control" type="Text" id="idhorasfim" > <br/>
                     <label for="comment">Descrição:</label>
                     <textarea class="form-control" rows="5" id="iddesc"></textarea>
                 </div>

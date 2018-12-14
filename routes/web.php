@@ -101,3 +101,6 @@ Route::post('/orcamento-detalhe-final','orcamentoescopoController@salvarFinal')-
 
 
 Route::post('/aux','RegistroHorasController@horafim')->name('registrar.horasf');
+//Registros de horas por atividade
+Route::get('/horas/{id}','RegistroHorasController@resHorasDet')->name('detalhe.hora');
+Route::post('/horas-excluir/{id}','RegistroHorasController@delDet')->name('excluir.horas');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Consultor;
+
 use App\Gestor;
 use App\Projeto;
 use App\ProjetoDetalhe;
@@ -34,35 +35,22 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
     public function  salvar(Request $request){
 
 
-        $projetodetalhe = ProjetoDetalhe::find($request->id);
-
-        if($projetodetalhe->horas_fim !=$request->horaFim){
-            $projetodetalhe->horas_fim = $request->horaFim;
-        }else{
-            $projetodetalhe->horas_fim = $projetodetalhe->horas_fim - $request->qtd;
-        }
-
-        $projetodetalhe->save();
-
-        $projeto = Projeto::find($projetodetalhe->id_projeto);
-
-        $custo = 0;
-        if(\Auth::user()->nivelacesso ==3){
-            $consultor = Consultor::where('user_id','=',\Auth::user()->id);
-            $custo = $consultor->custohora *$request->qtd;
-        }else{
-            $gestor = Gestor::where('user_id','=',\Auth::user()->id);
-            $custo = $gestor->custohora *$request->qtd;
-        }
-        $projeto->custo_total = $projeto->custo_total + $custo;
-        $projeto->save();
-
         $re = new Registros();
         $re->dia = $request->dia;
         $re->descricao = $request->desc;
         $re->qtd_horas = str_replace(',','.',$request->qtd);
         $re->id_projetodetalhe = $request->id;
         $re->id_user =  auth()->user()->id;
+
+
+
+
+        $projetodetalhe = ProjetoDetalhe::find($request->id);
+
+        $projetodetalhe->horas_fim =  $projetodetalhe->horas_fim - $re->qtd_horas;
+        $projetodetalhe->horas_reais = $projetodetalhe->horas_reais + $re->qtd_horas;
+
+        $projetodetalhe->save();
 
 
         $mensagem = "Você não tem autorização para realizar essa ação";
@@ -106,4 +94,41 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
 
 
     }
+
+    /////////////Controles de Horas Detalhe
+
+    public function resHorasDet($idProjetoDet){
+
+
+        $todosRegistros = DB::select('select sisregistros.id idregistro, * from sisregistros inner join sisusers on
+sisregistros.id_user = sisusers.id where sisregistros.id_projetodetalhe ='.$idProjetoDet);
+
+        return view('horas-atividade',['todosRegistros'=>$todosRegistros]);
+    }
+
+
+    public function delDet($id){
+
+        $reg = Registros::find($id);
+
+
+        $prodet = ProjetoDetalhe::find($reg->id_projetodetalhe);
+
+        $prodet->horas_reais = $prodet->horas_reais - $reg->qtd_horas;
+        $prodet->horas_fim =  $prodet->horas_fim + $reg->qtd_horas;
+
+        $prodet->save();
+
+        $reg->delete();
+
+        $mensagem = "Registro Removido";
+        $tipo = "error";
+
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+        );
+        return response()->json($response);
+
+}
 }

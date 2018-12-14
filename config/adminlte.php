@@ -111,12 +111,22 @@ return [
         'REGISTROS DE HORAS',
 
         [
-            'text' => 'Registrar Horas',
-            'url'  => '/registro-horas',
-            'icon'    => 'hourglass-half',
+            'text'    => 'Balaço de Horas',
+            'icon' => 'hourglass-half',
+            'submenu' => [
+                [
+                    'text' => 'Semanal',
+                        // 'url'  => '/cadastrar-usuario',
+                    'icon' => 'list-ul',
+                ],
+
+                [
+                    'text' => 'Registrar Horas',
+                    'url'  => '/registro-horas',
+                    'icon'    => '',
+                ],
+            ],
         ],
-
-
 
 
         'BUSINESS',
