@@ -322,8 +322,49 @@ sisescopo_orcamento_detalhe.descricao as oed_decricao
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function atualizarOrcamentoEscopo(Request $request,$id)
     {
-        //
+        $mensagem="Erro no Controller, favor consultar API";
+        $tipo="error";
+        $orcamentoescopo = OrcamentoEscopo::find($id);
+
+        $orcamentoescopo->cliente = $request->cliente;
+        $orcamentoescopo->projeto= $request->nomeprojeto;
+        $orcamentoescopo->tecn= str_replace(',','.',str_replace('R$',"",str_replace(' ',"",$request->tecn)));
+        $orcamentoescopo->gestao= str_replace(',','.',str_replace('R$',"",str_replace(' ',"",$request->gestao)));
+        $orcamentoescopo->mensuracao_descricao= $request->mensuracao;
+        $orcamentoescopo->mensuracao_data= $request->dataproj;
+
+        $orcamementoDetalhe  = DB::select('select * from sisescopo_orcamento_detalhe where 
+                                sisescopo_orcamento_detalhe.id_eo = '.$id);
+        $vamortotal = 0;
+        foreach ($orcamementoDetalhe as $ocdet){
+            $tipoatividade = TipoAtividade::find($ocdet->id_atv);
+            if($tipoatividade->tipo =="Técnica"){
+                $vamortotal = $vamortotal+ ($ocdet->horas_estimadas *$orcamentoescopo->tecn);
+            }else{
+                $vamortotal = $vamortotal+ ($ocdet->horas_estimadas *$orcamentoescopo->gestao);
+            }
+        }
+
+        $orcamentoescopo->valor_total = $vamortotal;
+
+        if(\Auth::user()->nivelacesso <3){
+            $orcamentoescopo->save();
+            $mensagem="Orçamento Atualizado com Sucesso";
+            $tipo="success";
+        }else{
+            $mensagem="Você não tem autorização para este recurso";
+            $tipo="error";
+
+        }
+
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+        return response()->json($response);
+
     }
 }

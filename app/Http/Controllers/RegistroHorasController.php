@@ -62,7 +62,6 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
         $re->descricao = $request->desc;
         $re->qtd_horas = str_replace(',','.',$request->qtd);
         $re->id_projetodetalhe = $request->id;
-        $re->horas_fim = $request->horaFim;
         $re->id_user =  auth()->user()->id;
 
 

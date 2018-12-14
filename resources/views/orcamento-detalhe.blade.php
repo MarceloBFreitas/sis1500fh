@@ -4,41 +4,41 @@
 
 @section('content_header')
 
-    <h1><i class="glyphicon glyphicon-check"></i> Projeto <?php echo $projeto;?></h1>
+    <h1><i class="glyphicon glyphicon-check"></i> Orçamento: <?php echo $projeto;?></h1>
     <div class="container">
         <div class="col-md-6">
             <label for="">Nome do Projeto</label>
-            <input type="text" value="{{$projeto}}" class="form-control">
+            <input type="text" id="nomeprojetoheader" value="{{$projeto}}" class="form-control">
             <label for="">Cliente</label>
-            <input type="text" value="{{$cliente}}" class="form-control">
+            <input type="text" id="clienteprojetoheader" value="{{$cliente}}" class="form-control">
             <div class="row">
                 <div class="col-md-6">
                     <label for="">Mensuração</label>
-                    <input type="text" value="{{$mensuracaotexto}}" class="form-control">
+                    <input type="text" id="mensuracaoprojetoheader" value="{{$mensuracaotexto}}" class="form-control">
                 </div>
                 <div class="col-md-6">
                     <label for="">Data</label>
-                    <input type="date" value="{{$mensuracaodata}}" class="form-control">
+                    <input type="date" id="dataprojetoheader" value="{{$mensuracaodata}}" class="form-control">
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
                     <label for="">Tarifa Técnica</label>
-                    <input type="text" value="{{$tarifatecn}}" class="form-control">
+                    <input type="text" id="tecnprojetoheader" value="<?php echo "R$ ".  number_format ($tarifatecn,2);?>" class="form-control">
                 </div>
                 <div class="col-md-6">
                     <label for="">Tarifa Gestão</label>
-                    <input type="text" value="{{$tarifagestao}}" class="form-control">
+                    <input type="text" id="gestaoprojetoheader" value="<?php echo "R$ ".  number_format ($tarifagestao,2);?>" class="form-control">
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <label for="">Horas Totais</label>
-            <input type="text" value="{{$horastotais}}" class="form-control">
+            <input type="text" disabled value="<?php echo number_format ($horastotais,2);?>" class="form-control">
             <label for="">Valor</label>
-            <input type="text" value="{{$valortotal}}" class="form-control">
+            <input type="text" disabled value="<?php echo "R$ ".  number_format ($valortotal,2);?>" class="form-control">
             <br>
-            <button class="btn btn-warning form-control">Atualizar Dados</button>
+            <button onclick="atualizarHeader(<?php echo $idorcamentoescopo;?>)" class="btn btn-warning form-control">Atualizar Dados</button>
         </div>
 
     </div>
@@ -85,6 +85,54 @@
             );
 
         });
+        function atualizarHeader(id) {
+            var nomeprojeto = $('#nomeprojetoheader').val();
+            var cliente = $('#clienteprojetoheader').val();
+            var mensuracao = $('#mensuracaoprojetoheader').val();
+            var dataproj = $('#dataprojetoheader').val();
+            var tecn = $('#tecnprojetoheader').val();
+            var gestao = $('#gestaoprojetoheader').val();
+
+
+            if(nomeprojeto =="" ||cliente==""||mensuracao==""||dataproj==""||tecn==""||gestao==""){
+                swal({
+                    title: 'Campos Vazios',
+                    text: 'Por Favor, verifique se todos os campos foram preenchidos',
+                    type:'warning',
+                    timer: 2000
+                });
+            }else{
+                $.ajax({
+                    type:'post',
+                    url:'/atualizar-orcamento-escopo/'+ id ,
+                    headers: {
+                        'X-CSRF-Token': '{{ csrf_token() }}',
+                    },
+                    data:{
+                        nomeprojeto :nomeprojeto,
+                        cliente : cliente,
+                        mensuracao :mensuracao,
+                        dataproj : dataproj,
+                        tecn:tecn,
+                        gestao :gestao
+
+                    },
+                    success:function(data){
+                        console.log(data);
+                        swal({
+                            title: data.msg,
+                            // text: 'Do you want to continue',
+                            type: data.tipo,
+                            timer: 2000
+                        });
+
+                        location.reload();
+
+                    }
+                });
+            }
+
+        }
 
         function adicionaratividadeModal() {
             $("#modaladicionarAtividade").modal('toggle');
@@ -138,7 +186,7 @@
 
         function atualizarDetalhe(id) {
             var descricao =  $('#descridettabela').val();
-            var horas =  $('#horasdettabela').val();
+            var horas =  $('#'+id+'horasdettabela').val();
 
             $.ajax({
                 type:'post',
@@ -254,7 +302,7 @@
                         <input id="descridettabela" type="text" class="form-control" value="{{$atv->oed_decricao}}">
                     </td>
                     <td>
-                        <input id="horasdettabela" type="text" class="form-control" value="{{$atv->horas_estimadas}}">
+                        <input id="{{$atv->eod_id}}horasdettabela" type="text" class="form-control" value="<?php echo number_format ($atv->horas_estimadas,2);?>">
                     </td>
 
                     <td> <button class="edit-modal btn btn-primary" title="Atualizar"

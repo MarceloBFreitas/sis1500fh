@@ -8,39 +8,46 @@
     <div class="container">
         <div class="col-md-6">
             <label for="">Nome do Projeto</label>
-            <input type="text" value="{{$projeto->projeto}}" class="form-control">
+            <input type="text" id="nomeprojetoheader" value="{{$projeto->projeto}}" class="form-control">
             <label for="">Cliente</label>
-            <input type="text" value="{{$projeto->cliente}}" class="form-control">
+            <input type="text" id="clienteprojetoheader" value="{{$projeto->cliente}}" class="form-control">
             <div class="row">
                 <div class="col-md-6">
                     <label for="">Mensuração</label>
-                    <input type="text" value="{{$projeto->mensuracao_descricao}}" class="form-control">
+                    <input type="text" id="mensuracaotextoprojetoheader" value="{{$projeto->mensuracao_descricao}}" class="form-control">
                 </div>
                 <div class="col-md-6">
                     <label for="">Data</label>
-                    <input type="date" value="{{$projeto->mensuracao_data}}" class="form-control">
+                    <input type="date" id="mensuracaodataprojetoheader" value="{{$projeto->mensuracao_data}}" class="form-control">
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
                     <label for="">Tarifa Técnica</label>
-                    <input type="text" value="{{$projeto->tecn}}" class="form-control">
+                    <input type="text" id="tarifatecnprojetoheader" value="<?php echo 'R$ '.number_format($projeto->tecn,2);?>" class="form-control">
                 </div>
                 <div class="col-md-6">
                     <label for="">Tarifa Gestão</label>
-                    <input type="text" value="{{$projeto->gestao}}" class="form-control">
+                    <input type="text" id="tarifagestaoprojetoheader" value="<?php echo 'R$ '.number_format($projeto->gestao,2);?>" class="form-control">
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <label for="">Horas Totais</label>
-            <input type="text" value="{{$projeto->horas_totais}}" class="form-control">
-            <label for="">Valor</label>
-            <input type="text" value="{{$projeto->valor_total}}" class="form-control">
+            <input type="text" disabled value="{{$projeto->horas_totais}}" class="form-control">
             <label for="">Custo</label>
-            <input type="text" value="{{$projeto->custo_total}}" class="form-control">
+            <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->custo_total,2);?>" class="form-control">
+            <label for="">Valor</label>
+            <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_total,2);?>" class="form-control">
+
             <br>
-            <button class="btn btn-warning form-control">Atualizar Dados</button>
+            <div class="col-md-6">
+                <button onclick="atualizarHeader(<?php echo $projeto->id;?>)" class="btn btn-success form-control">Atualizar Dados</button>
+            </div>
+            <div class="col-md-6">
+                <button onclick="" class="btn btn-danger form-control">Criar Nova Versão do Projeto</button>
+            </div>
+
         </div>
 
     </div>
@@ -88,6 +95,55 @@
 
         });
 
+        function atualizarHeader(id) {
+            var nomeprojeto = $('#nomeprojetoheader').val();
+            var cliente = $('#clienteprojetoheader').val();
+            var mensuracaotexto = $('#mensuracaotextoprojetoheader').val();
+            var mensuracaodata = $('#mensuracaodataprojetoheader').val();
+            var tecn = $('#tarifatecnprojetoheader').val();
+            var gestao = $('#tarifagestaoprojetoheader').val();
+
+            if(nomeprojeto=="" || cliente=="" ||mensuracaotexto=="" || mensuracaodata=="" ){
+                swal({
+                    title: "Campos não preenchidos",
+                    text: "Por favor, verifique se todos os campos foram preenchidos",
+                    type: 'warning',
+                    timer: 2000
+                });
+            }else{
+                $.ajax({
+                    type:'POST',
+                    url:"/atualiza-projeto-header/"+id,
+                    headers: {
+                        'X-CSRF-Token': '{{ csrf_token() }}',
+                    },
+                    data:{
+                        nomeprojeto : nomeprojeto,
+                        cliente : cliente,
+                        mensuracaotexto : mensuracaotexto,
+                        mensuracaodata : mensuracaodata,
+                        tecn : tecn,
+                        gestao : gestao
+                    },
+                    success:function(data){
+                        console.log(data);
+                        swal({
+                            title: data.msg,
+                            // text: 'Do you want to continue',
+                            type: data.tipo,
+                            timer: 2000
+                        });
+
+                        location.reload();
+
+
+                    }
+                });
+            }
+        }
+
+
+
         function adicionaratividadeModal() {
             $("#modaladicionarAtividade").modal('toggle');
         }
@@ -106,7 +162,7 @@
                     text: "Por favor, verifique se todos os campos foram preenchidos",
                     type: 'warning',
                     timer: 2000
-                })
+                });
             }else{
 
                 $.ajax({
@@ -277,6 +333,8 @@
         </table>
 
         <a href="/"><button class="btn btn-default">Voltar</button></a>
+        <a href="/"><button class="btn btn-primary">Salvar baseline</button></a>
+
 
 
     </div>
