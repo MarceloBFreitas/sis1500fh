@@ -122,6 +122,7 @@
                 <th class="text-center">Projeto</th>
                 <th class="text-center">Atividade</th>
                 <th class="text-center">Horas Estimadas</th>
+                <th class="text-center">Horas Reais</th>
                 <th class="text-center">Horas Fim</th>
                 <th class="text-center">Ação</th>
 
@@ -139,8 +140,10 @@
                     </td>
 
                     <td>{{$itens->descricao}}</td>
-                    <td>{{$itens->horas_estimadas}}</td>
-                    <td>{{$itens->horas_fim}}</td>
+                    <td>{{$itens->horas_estimadasdet}}</td>
+                    <td>{{$itens->horas_reaisdet}}</td>
+
+                    <td>{{$itens->horas_fimdet}}</td>
 
                     <td>
                         <button class="edit-modal btn btn-success" title="Adicionar" onclick="addhoras('{{$itens->id}}','{{$itens->horas_fim}}')">

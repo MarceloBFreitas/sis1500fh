@@ -24,8 +24,8 @@ class RegistroHorasController extends Controller
     public function index(){
 
 
-        $itensTabela = DB::select('	
-  select sisprojeto_detalhe.id iddet, * from sisprojeto_detalhe 
+        $itensTabela = DB::select('  select sisprojeto_detalhe.id iddet,sisprojeto_detalhe.horas_estimadas horas_estimadasdet, sisprojeto_detalhe.horas_reais horas_reaisdet,sisprojeto_detalhe.horas_fim horas_fimdet, * from
+   sisprojeto_detalhe 
 inner join sisprojetos on sisprojeto_detalhe.id_projeto = sisprojetos.id
 inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividades.id');
 
