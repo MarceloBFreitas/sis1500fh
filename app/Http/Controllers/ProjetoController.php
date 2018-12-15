@@ -21,7 +21,7 @@ class ProjetoController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(){
+    public function atualizaHorasProjetos(){
         $projetosquery = DB::select(' select id, id_gestor,cliente ,projeto,tecn,gestao,mensuracao_descricao,mensuracao_data,
                      objetivo,custo_total,valor_total,horas_estimadas,horas_totais,
                      horas_fim,
@@ -49,8 +49,13 @@ class ProjetoController extends Controller
             $projeto->horas_fim = (empty($p->totalhorasregistradas)?0:$p->totalhorasestimadas);
             $projeto->save();
         }
+        return $projetosquery;
+    }
 
-        return view('projetos',['projetos' =>$projetosquery]);
+
+    public function index(){
+
+        return view('projetos',['projetos' =>ProjetoController::atualizaHorasProjetos()]);
     }
 
     public function criarProjeto($id){
@@ -119,7 +124,12 @@ class ProjetoController extends Controller
    }
 
     public function projetoDetalhes($id){
-        $projeto = Projeto::find($id);
+        ProjetoController::atualizaHorasProjetos();
+
+        $projetostodos = Projeto::find($id);
+
+
+        $projeto = Projeto
         $projetodetalhesquery = DB::select('
 SELECT sisprojeto_detalhe.*,
 		(
@@ -141,22 +151,7 @@ SELECT sisprojeto_detalhe.*,
                     inner join sisprojetos on sisprojetos.id = sisprojeto_detalhe.id_projeto
                     where sisprojeto_detalhe.id_projeto='.$projeto->id);
 
-        foreach ($projetodetalhesquery as $query){
-            $projetodetalhe = ProjetoDetalhe::find($query->id);
-            $totalhoras = 0;
-            $horasfim = 0;
-            if(empty($query->totalhorasregistradas)){
-                $projetodetalhe->horas_reais = $totalhoras;
-            }else{
-                $projetodetalhe->horas_reais = $query->totalhorasregistradas;
-            }
-            if(empty($query->horasfim)){
-                $projetodetalhe->horas_reais = $horasfim;
-            }else{
-                $projetodetalhe->horas_reais = $query->totalhorasregistradas;
-            }
-            $projetodetalhe->save();
-        }
+
 
         $tiposatividade = TipoAtividade::all();
         return view('projeto-detalhe',[
