@@ -43,30 +43,21 @@
 
         });
 
-        function addhoras(id) {
+        function addhoras(id,hf) {
+
+
+
+            alert(id);
+            alert(hf);
+
             $('#pegaid').val(id);
             $('#adddet').modal('toggle');
 
 
-            $.ajax({
-                type:'get',
-                url:"/pegar-horas-fim/"+id,
-                headers: {
-                    'X-CSRF-Token': '{{ csrf_token() }}',
-                },
-                success:function(data){
-                    swal({
-                        title: data.msg,
-                        // text: 'Do you want to continue',
-                        type: data.tipo,
-                        timer: 2000
-                    });
-
-                    location.reload();
 
 
-                }
-            });
+
+
 
 
         }
@@ -152,8 +143,8 @@
                     <td>{{$itens->horas_fim}}</td>
 
                     <td>
-                        <button class="edit-modal btn btn-success" title="Adicionar" onclick="addhoras({{$itens->id}})">
-                            <span class="glyphicon glyphicon-plus"></span>
+                        <button class="edit-modal btn btn-default" title="Adicionar" onclick="addhoras('{{$itens->id}}','{{$itens->horas_fim}}')">
+                            <span class="glyphicon glyphicon-edit"></span>
                         </button>
                         <a href="/horas/{{$itens->id}}">
                         <button  class="edit-modal btn btn-default" title="Vizualizar" >
@@ -191,6 +182,7 @@
 
                     <label for="comment">Dia</label><input class="form-control" type="date" id="iddia" > <br/>
                     <label for="comment">Quantidade de Horas</label><input class="form-control" type="Text" id="idqtd" > <br/>
+                    <label for="comment">Horas Para fim</label><input class="form-control" type="Text" id="idhorasfim" > <br/>
                     <label for="comment">Descrição:</label>
                     <textarea class="form-control" rows="5" id="iddesc"></textarea>
                 </div>

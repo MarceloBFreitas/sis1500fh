@@ -193,6 +193,7 @@
 
                      <label for="comment">Dia</label><input class="form-control" type="date" id="iddia" > <br/>
                      <label for="comment">Quantidade de Horas</label><input class="form-control" type="Text" id="idqtd" > <br/>
+                     <label for="comment">Horas Para fim</label><input class="form-control" type="Text" id="idhoras fim" > <br/>
                      <label for="comment">Descrição:</label>
                      <textarea class="form-control" rows="5" id="iddesc"></textarea>
                  </div>
