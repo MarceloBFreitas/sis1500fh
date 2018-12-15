@@ -351,12 +351,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Adicionar Atividade para <?php echo $projeto;?></h4>
+                    <h4 class="modal-title" id="myModalLabel">Adicionar Atividade para <?php echo $projeto->projeto;?></h4>
                 </div>
                 <div class="modal-body">
                     <label for="">Tipo de Atividade</label>
                     <select class="form-control" name="" id="tipoatividademodal">
-
+                        @foreach($tiposatividade as $tpatv)
+                            <option value="{{$tpatv->id}}">{{$tpatv->nome}}</option>
+                        @endforeach
                     </select>
                     <label for="">Descrição Adicional</label>
                     <input type="text" class="form-control" id="descatvmodal">

@@ -58,6 +58,7 @@
             <canvas id="horasSemanais2"></canvas>
         </div>
 
+
     </div>
 
 
@@ -65,6 +66,22 @@
 
 
     <script>
+
+        // $(document).ready(function(){
+        //
+        //     $('#horasid').on('input',function(e){
+        //         var valorcampodigitado = $('#horasid').val();
+        //         var horasestimadas = $('#horasestimadasid').val();
+        //
+        //         $('#horasestimadasid').val(horasestimadas-valorcampodigitado);
+        //         if(valorcampodigitado==""){
+        //             $('#horasestimadasid').val(horaanterior);
+        //         }
+        //     });
+        //
+        // });
+
+
         let horasSemanais = document.getElementById('horasSemanais').getContext('2d');
         let chart1 = new Chart(horasSemanais, {
             type: 'line',

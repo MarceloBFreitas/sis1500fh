@@ -4,7 +4,7 @@
 
 @section('content_header')
 
-    <h1><i class="glyphicon glyphicon-check"></i> Projetos</h1>
+    <h1><i class="glyphicon glyphicon-check"></i> Plano Projeto </h1>
 @stop
 
 @section('content')
