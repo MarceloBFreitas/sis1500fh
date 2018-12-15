@@ -36,14 +36,7 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
 
     public function  salvar(Request $request){
 
-
-
-
-
-
-
-           $lr = new Logregistros();
-
+        $lr = new Logregistros();
         $re = new Registros();
         $re->dia = $request->dia;
         $re->descricao = $request->desc;

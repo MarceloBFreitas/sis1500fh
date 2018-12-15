@@ -146,12 +146,6 @@ return [
             'label_color' => 'success',
         ],
 
-
-        [
-            'text' => 'Orçamentos',
-            'url'  => '/orcamento-pesquisa',
-            'icon' => 'balance-scale',
-        ],
         [
             'text'    => 'Gestão',
             'icon' => 'balance-scale',
@@ -237,13 +231,33 @@ return [
 
         ],
 
+//        [
+//            'text'        => 'Tipos de Atividade',
+//            'url'         => '/atividades',
+//            'icon'        => 'briefcase',
+//            // 'label'       => 4,
+//            'label_color' => 'success',
+//        ],
+
         [
             'text'        => 'Tipos de Atividade',
-            'url'         => '/atividades',
             'icon'        => 'briefcase',
-            // 'label'       => 4,
-            'label_color' => 'success',
+            'submenu' => [
+                    [
+                        'text' => 'Unitários',
+                        'url'  => '/atividades',
+                        'icon' => 'plus-square',
+                    ],
+                [
+                    'text' => 'Grupo de Tipos',
+                    'url'  => '/grupo-atividades',
+                    'icon' => 'plus-square',
+                ],
+                ]
         ],
+
+
+
 
 //        [
 //            'text'        => 'Clientes',

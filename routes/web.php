@@ -44,6 +44,7 @@ Route::post('/registrar-atividade','TipoAtividadesController@salvarAtividade')->
 Route::get('/detalhes-atividade/{id}','TipoAtividadesController@show')->name('detalhes.atividade');
 Route::post('/atualizar-atividade/{id}','TipoAtividadesController@update')->name('atualizar.atividade');
 Route::delete('/excluir-atividade/{id}','TipoAtividadesController@destroy')->name('excluir.atividade');
+Route::get('/grupo-atividades','TipoAtividadesController@grupoAtividade')->name('grupo.atividade');
 
 
 

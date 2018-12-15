@@ -8,6 +8,17 @@
     <div class="container" >
         <div class="container collapse in" id="menutopo" >
             <div class="col-md-6">
+                <label for="">Gestor do Projeto</label>
+                <select name="" id="" class="form-control">
+                    <?php
+                    if(empty($projeto->id_gestor)){
+                    ?>
+                        <option value="" selected>Nenhum Gestor Selecionado</option>
+                    <?php } ?>
+                    @foreach($gestores as $gestor)
+                        <option value="{{$gestor->gest_id}}">{{$gestor->name}}</option>
+                        @endforeach
+                </select>
                 <label for="">Nome do Projeto</label>
                 <input type="text" id="nomeprojetoheader" value="{{$projeto->projeto}}" class="form-control">
                 <label for="">Cliente</label>
@@ -34,18 +45,45 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <label for="">Horas Totais</label>
-                <input type="text" disabled value="{{$projeto->horas_totais}}" class="form-control">
-                <label for="">Custo</label>
-                <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->custo_total,2);?>" class="form-control">
-                <label for="">Valor</label>
-                <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_total,2);?>" class="form-control">
+                <label for="">Execuções Ordenadas: <?php
+                    if(empty($projeto->planejado) || 0){
+                        echo "Não";
+                    }else{
+                        echo "Sim";
+                    }
+                    ?></label> <br>
+                <span>* Caso não haja ordenação, a excução considerada será pela data de inclusão na programação</span><br>
 
-                <br>
+
                 <div class="col-md-6">
+                    <label for="">Horas Totais</label>
+                    <input type="text" disabled value="{{$projeto->horas_totais}}" class="form-control">
+                    <label for="">Horas Fim</label>
+                    <input type="text" disabled value="{{$projeto->horas_fim}}" class="form-control">
+                    <label for="">Custo</label>
+                    <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->custo_total,2);?>" class="form-control">
+                    <label for="">Valor Real</label>
+                    <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_total,2);?>" class="form-control">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="">Horas Planejadas</label>
+                    <input type="text" disabled value="{{$projeto->horas_estimadas}}" class="form-control">
+                    <label for="">Horas Registradas</label>
+                    <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->custo_total,2);?>" class="form-control">
+                    <label for="">Valor Planejado</label>
+                    <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_total,2);?>" class="form-control">
+                </div>
+
+
+
+
+
+
+                <div class="col-md-6" style="margin-top: 3%">
                     <button onclick="atualizarHeader(<?php echo $projeto->id;?>)" class="btn btn-success form-control">Atualizar Dados</button>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6" style="margin-top: 3%">
                     <button onclick="" class="btn btn-danger form-control">Criar Nova Versão do Projeto</button>
                 </div>
 
@@ -344,8 +382,9 @@
         </table>
 
         <a href="/"><button class="btn btn-default">Voltar</button></a>
-        <a href="/"><button class="btn btn-primary">Salvar baseline</button></a>
-        <a href="/"><button class="btn btn-success">Programar Atividades</button></a>
+        <a href="/"><button class="btn btn-primary"><span class="glyphicon glyphicon-book"></span> Salvar baseline</button></a>
+        <a href="/"><button class="btn btn-success"><span class="glyphicon glyphicon-calendar"></span> Programar Atividades</button></a>
+        <a href="/"><button class="btn btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Ordenar Execuções</button></a>
 
 
 

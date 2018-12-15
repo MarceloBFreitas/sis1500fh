@@ -123,4 +123,12 @@ class TipoAtividadesController extends Controller
         return response()->json($response); ;
     }
 
+    public function grupoAtividade(){
+        $grupoatividades = DB::select(' select sistipo_atividades.id as idtpv,
+             sistipo_atividades.*, sisblocotipoatividade.id as blid from
+             sistipo_atividades inner join sisblocotipoatividade on sisblocotipoatividade.id_tipoatividade = sistipo_atividades.id');
+
+        return view('grupo-atividades',['grupoatividades'=>$grupoatividades]);
+    }
+
 }

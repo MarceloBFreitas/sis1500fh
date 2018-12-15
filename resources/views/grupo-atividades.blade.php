@@ -4,7 +4,7 @@
 
 @section('content_header')
 
-    <h1><i class="glyphicon glyphicon-check"></i> Tipos de Atividades</h1>
+    <h1><i class="glyphicon glyphicon-check"></i> Grupos de Atividades</h1>
 @stop
 
 @section('content')
@@ -195,9 +195,9 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($atividades as $atividade)
-                <tr class="item{{$atividade->id}}">
-                    <td>{{$atividade->id}}</td>
+            @foreach($grupoatividades as $grupoatividade)
+                <tr class="item{{$grupoatividade->blid}}">
+                    <td>{{$grupoatividade->blid}}</td>
                     <td>{{$atividade->sigla}}</td>
                     <td>{{$atividade->nome}}</td>
                     <td>{{$atividade->tipo}}</td>
