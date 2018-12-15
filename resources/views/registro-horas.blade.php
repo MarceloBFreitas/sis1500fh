@@ -146,7 +146,7 @@
                         <button class="edit-modal btn btn-success" title="Adicionar" onclick="addhoras('{{$itens->id}}','{{$itens->horas_fim}}')">
                             <span class="glyphicon glyphicon-plus"></span>
                         </button>
-                        <a href="/horas/{{$itens->id}}">
+                        <a href="/horas/{{$itens->iddet}}">
                         <button  class="edit-modal btn btn-default" title="Vizualizar" >
                             <span class="glyphicon glyphicon-zoom-in"></span>
                         </button></a>
