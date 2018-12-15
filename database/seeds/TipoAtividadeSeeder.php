@@ -24,6 +24,13 @@ class TipoAtividadeSeeder extends Seeder
             'descricao' => 'Extração, carga e normalização de dados, migração de ambientes e transformações',
             'tipo' => 'Técnica',
         ]);
+
+        \App\TipoAtividade::create([
+            'sigla' => 'MDB',
+            'nome' => 'Modelagem de base Relacional ou Analítica',
+            'descricao' => 'Construção de estrutura de base de dados relacional ou Analítica',
+            'tipo' => 'Técnica',
+        ]);
     }
 }
 
