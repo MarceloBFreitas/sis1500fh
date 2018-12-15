@@ -21,7 +21,8 @@ class ProjetoController extends Controller
         $this->middleware('auth');
     }
 
-    public function atualizaHorasProjetos(){
+
+    public function index(){
         $projetosquery = DB::select(' select id, id_gestor,cliente ,projeto,tecn,gestao,mensuracao_descricao,mensuracao_data,
                      objetivo,custo_total,valor_total,horas_estimadas,horas_totais,
                      horas_fim,
@@ -45,17 +46,11 @@ class ProjetoController extends Controller
         foreach ($projetosquery as $p){
             $projeto = Projeto::find($p->id);
             $projeto->horas_totais = (empty($p->totalhorasregistradas)?0:$p->totalhorasregistradas);
-            $projeto->horas_estimadas =(empty($p->totalhorasregistradas)?0:$p->totalhorasestimadas);
-            $projeto->horas_fim = (empty($p->totalhorasregistradas)?0:$p->totalhorasestimadas);
+            $projeto->horas_estimadas =(empty($p->totalhorasestimadas)?0:$p->totalhorasestimadas);
+            $projeto->horas_fim = (empty($p->horasfim)?0:$p->horasfim);
             $projeto->save();
         }
-        return $projetosquery;
-    }
-
-
-    public function index(){
-
-        return view('projetos',['projetos' =>ProjetoController::atualizaHorasProjetos()]);
+        return view('projetos',['projetos' =>$projetosquery]);
     }
 
     public function criarProjeto($id){
@@ -129,27 +124,27 @@ class ProjetoController extends Controller
         $projetostodos = Projeto::find($id);
 
 
-        $projeto = Projeto
-        $projetodetalhesquery = DB::select('
-SELECT sisprojeto_detalhe.*,
-		(
-			select sum(sisregistros.qtd_horas) from sisregistros 
-				inner join sisprojeto_detalhe on sisprojeto_detalhe.id = sisregistros.id_projetodetalhe 
-                where sisprojeto_detalhe.id_projeto =  sisprojeto_detalhe.id
-		) as totalhorasregistradas,
-        sisprojeto_detalhe.horas_estimadas 
-				- 
-				(
-			         select sum(sisregistros.qtd_horas) from sisregistros 
-                     inner join sisprojeto_detalhe on sisprojeto_detalhe.id = sisregistros.id_projetodetalhe 
-                    where sisprojeto_detalhe.id_projeto =  sisprojeto_detalhe.id
-					) 
-					as horasfim,
-						  sistipo_atividades.*
-                    from sisprojeto_detalhe 
-                    inner join sistipo_atividades on sistipo_atividades.id = sisprojeto_detalhe.id_tpatv
-                    inner join sisprojetos on sisprojetos.id = sisprojeto_detalhe.id_projeto
-                    where sisprojeto_detalhe.id_projeto='.$projeto->id);
+        //$projeto = Projeto
+//        $projetodetalhesquery = DB::select('
+//SELECT sisprojeto_detalhe.*,
+//		(
+//			select sum(sisregistros.qtd_horas) from sisregistros
+//				inner join sisprojeto_detalhe on sisprojeto_detalhe.id = sisregistros.id_projetodetalhe
+//                where sisprojeto_detalhe.id_projeto =  sisprojeto_detalhe.id
+//		) as totalhorasregistradas,
+//        sisprojeto_detalhe.horas_estimadas
+//				-
+//				(
+//			         select sum(sisregistros.qtd_horas) from sisregistros
+//                     inner join sisprojeto_detalhe on sisprojeto_detalhe.id = sisregistros.id_projetodetalhe
+//                    where sisprojeto_detalhe.id_projeto =  sisprojeto_detalhe.id
+//					)
+//					as horasfim,
+//						  sistipo_atividades.*
+//                    from sisprojeto_detalhe
+//                    inner join sistipo_atividades on sistipo_atividades.id = sisprojeto_detalhe.id_tpatv
+//                    inner join sisprojetos on sisprojetos.id = sisprojeto_detalhe.id_projeto
+//                    where sisprojeto_detalhe.id_projeto='.$projeto->id);
 
 
 

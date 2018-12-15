@@ -143,8 +143,8 @@
                     <td>{{$itens->horas_fim}}</td>
 
                     <td>
-                        <button class="edit-modal btn btn-default" title="Adicionar" onclick="addhoras('{{$itens->id}}','{{$itens->horas_fim}}')">
-                            <span class="glyphicon glyphicon-edit"></span>
+                        <button class="edit-modal btn btn-success" title="Adicionar" onclick="addhoras('{{$itens->id}}','{{$itens->horas_fim}}')">
+                            <span class="glyphicon glyphicon-plus"></span>
                         </button>
                         <a href="/horas/{{$itens->id}}">
                         <button  class="edit-modal btn btn-default" title="Vizualizar" >
