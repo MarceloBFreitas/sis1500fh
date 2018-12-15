@@ -51,7 +51,7 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
         $projetodetalhe = ProjetoDetalhe::find($request->id);
 
 
-        $lr->hora_sugerida =  $projetodetalhe->horas_fim;
+        $lr->hora_fim_sugerida =  $projetodetalhe->horas_fim;
         $lr->id_progetodetalhe = $projetodetalhe->id;
         $projetodetalhe->horas_fim =  $request->horasf ;
         $projetodetalhe->horas_reais = $projetodetalhe->horas_reais + $re->qtd_horas;
