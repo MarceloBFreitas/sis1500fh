@@ -48,10 +48,25 @@
             $('#adddet').modal('toggle');
 
 
+            $.ajax({
+                type:'get',
+                url:"/pegar-horas-fim/"+id,
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                success:function(data){
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+
+                    location.reload();
 
 
-
-
+                }
+            });
 
 
         }
@@ -137,8 +152,8 @@
                     <td>{{$itens->horas_fim}}</td>
 
                     <td>
-                        <button class="edit-modal btn btn-default" title="Adicionar" onclick="addhoras({{$itens->id}})">
-                            <span class="glyphicon glyphicon-edit"></span>
+                        <button class="edit-modal btn btn-success" title="Adicionar" onclick="addhoras({{$itens->id}})">
+                            <span class="glyphicon glyphicon-plus"></span>
                         </button>
                         <a href="/horas/{{$itens->id}}">
                         <button  class="edit-modal btn btn-default" title="Vizualizar" >

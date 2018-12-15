@@ -15,6 +15,7 @@ class CreateProjetoTable extends Migration
     {
         Schema::create('sisprojetos', function (Blueprint $table) {
             $table->increments('id')->unsigned();
+            $table->integer('id_gestor')->nullable();
             $table->string('cliente');
             $table->string('projeto');
             $table->float('tecn');
@@ -26,7 +27,10 @@ class CreateProjetoTable extends Migration
             $table->float('valor_total');
             $table->float('horas_estimadas');
             $table->float('horas_totais');
+            $table->float('horas_fim')->nullable();
             $table->timestamps();
+
+            $table->foreign('id_gestor')->references('gest_id')->on('sisgestores');
         });
     }
 

@@ -5,44 +5,45 @@
 @section('content_header')
 
     <h1><i class="glyphicon glyphicon-check"></i> Orçamento: <?php echo $projeto;?></h1>
-    <div class="container">
-        <div class="col-md-6">
-            <label for="">Nome do Projeto</label>
-            <input type="text" id="nomeprojetoheader" value="{{$projeto}}" class="form-control">
-            <label for="">Cliente</label>
-            <input type="text" id="clienteprojetoheader" value="{{$cliente}}" class="form-control">
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="">Mensuração</label>
-                    <input type="text" id="mensuracaoprojetoheader" value="{{$mensuracaotexto}}" class="form-control">
+    <div class="container" >
+        <div class="container collapse in" id="menutopo" >
+            <div class="col-md-6">
+                <label for="">Nome do Projeto</label>
+                <input type="text" id="nomeprojetoheader" value="{{$projeto}}" class="form-control">
+                <label for="">Cliente</label>
+                <input type="text" id="clienteprojetoheader" value="{{$cliente}}" class="form-control">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="">Mensuração</label>
+                        <input type="text" id="mensuracaoprojetoheader" value="{{$mensuracaotexto}}" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="">Data</label>
+                        <input type="date" id="dataprojetoheader" value="{{$mensuracaodata}}" class="form-control">
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <label for="">Data</label>
-                    <input type="date" id="dataprojetoheader" value="{{$mensuracaodata}}" class="form-control">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="">Tarifa Técnica</label>
+                        <input type="text" id="tecnprojetoheader" value="<?php echo "R$ ".  number_format ($tarifatecn,2);?>" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="">Tarifa Gestão</label>
+                        <input type="text" id="gestaoprojetoheader" value="<?php echo "R$ ".  number_format ($tarifagestao,2);?>" class="form-control">
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="">Tarifa Técnica</label>
-                    <input type="text" id="tecnprojetoheader" value="<?php echo "R$ ".  number_format ($tarifatecn,2);?>" class="form-control">
-                </div>
-                <div class="col-md-6">
-                    <label for="">Tarifa Gestão</label>
-                    <input type="text" id="gestaoprojetoheader" value="<?php echo "R$ ".  number_format ($tarifagestao,2);?>" class="form-control">
-                </div>
+            <div class="col-md-6">
+                <label for="">Horas Totais</label>
+                <input type="text" disabled value="<?php echo number_format ($horastotais,2);?>" class="form-control">
+                <label for="">Valor</label>
+                <input type="text" disabled value="<?php echo "R$ ".  number_format ($valortotal,2);?>" class="form-control">
+                <br>
+                <button onclick="atualizarHeader(<?php echo $idorcamentoescopo;?>)" class="btn btn-warning form-control">Atualizar Dados</button>
             </div>
-        </div>
-        <div class="col-md-6">
-            <label for="">Horas Totais</label>
-            <input type="text" disabled value="<?php echo number_format ($horastotais,2);?>" class="form-control">
-            <label for="">Valor</label>
-            <input type="text" disabled value="<?php echo "R$ ".  number_format ($valortotal,2);?>" class="form-control">
-            <br>
-            <button onclick="atualizarHeader(<?php echo $idorcamentoescopo;?>)" class="btn btn-warning form-control">Atualizar Dados</button>
-        </div>
-
+            </div>
+        <button data-toggle="collapse" data-target="#menutopo"><span class="glyphicon glyphicon-resize-full"></span></button>
     </div>
-
 @stop
 
 @section('content')

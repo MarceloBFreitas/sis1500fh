@@ -77,19 +77,12 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
 
     }
 
-    public function horafim(Request $request){
-        $id = $request->idprojetodet;
-
+    public function horafim($id){
 
         $prodet=ProjetoDetalhe::find($id);
-            //Db::Select('select * from sisprojeto_detalhe   where sisprojeto_detalhe.id='.$id);
-        $valdehr = $prodet->horas_reais;
-        $valdeestima = $prodet->horas_estimadas;
-        $horasFim =   $valdeestima - $valdehr;
 
 
-
-        return response()->json($horasFim);
+       // return response()->json($horasFim);
 
 
 

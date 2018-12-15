@@ -5,51 +5,53 @@
 @section('content_header')
 
     <h1><i class="glyphicon glyphicon-check"></i> Projeto {{$projeto->projeto}}</h1>
-    <div class="container">
-        <div class="col-md-6">
-            <label for="">Nome do Projeto</label>
-            <input type="text" id="nomeprojetoheader" value="{{$projeto->projeto}}" class="form-control">
-            <label for="">Cliente</label>
-            <input type="text" id="clienteprojetoheader" value="{{$projeto->cliente}}" class="form-control">
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="">Mensuração</label>
-                    <input type="text" id="mensuracaotextoprojetoheader" value="{{$projeto->mensuracao_descricao}}" class="form-control">
-                </div>
-                <div class="col-md-6">
-                    <label for="">Data</label>
-                    <input type="date" id="mensuracaodataprojetoheader" value="{{$projeto->mensuracao_data}}" class="form-control">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="">Tarifa Técnica</label>
-                    <input type="text" id="tarifatecnprojetoheader" value="<?php echo 'R$ '.number_format($projeto->tecn,2);?>" class="form-control">
-                </div>
-                <div class="col-md-6">
-                    <label for="">Tarifa Gestão</label>
-                    <input type="text" id="tarifagestaoprojetoheader" value="<?php echo 'R$ '.number_format($projeto->gestao,2);?>" class="form-control">
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <label for="">Horas Totais</label>
-            <input type="text" disabled value="{{$projeto->horas_totais}}" class="form-control">
-            <label for="">Custo</label>
-            <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->custo_total,2);?>" class="form-control">
-            <label for="">Valor</label>
-            <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_total,2);?>" class="form-control">
-
-            <br>
+    <div class="container" >
+        <div class="container collapse in" id="menutopo" >
             <div class="col-md-6">
-                <button onclick="atualizarHeader(<?php echo $projeto->id;?>)" class="btn btn-success form-control">Atualizar Dados</button>
+                <label for="">Nome do Projeto</label>
+                <input type="text" id="nomeprojetoheader" value="{{$projeto->projeto}}" class="form-control">
+                <label for="">Cliente</label>
+                <input type="text" id="clienteprojetoheader" value="{{$projeto->cliente}}" class="form-control">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="">Mensuração</label>
+                        <input type="text" id="mensuracaotextoprojetoheader" value="{{$projeto->mensuracao_descricao}}" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="">Data</label>
+                        <input type="date" id="mensuracaodataprojetoheader" value="{{$projeto->mensuracao_data}}" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="">Tarifa Técnica</label>
+                        <input type="text" id="tarifatecnprojetoheader" value="<?php echo 'R$ '.number_format($projeto->tecn,2);?>" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="">Tarifa Gestão</label>
+                        <input type="text" id="tarifagestaoprojetoheader" value="<?php echo 'R$ '.number_format($projeto->gestao,2);?>" class="form-control">
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
-                <button onclick="" class="btn btn-danger form-control">Criar Nova Versão do Projeto</button>
+                <label for="">Horas Totais</label>
+                <input type="text" disabled value="{{$projeto->horas_totais}}" class="form-control">
+                <label for="">Custo</label>
+                <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->custo_total,2);?>" class="form-control">
+                <label for="">Valor</label>
+                <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_total,2);?>" class="form-control">
+
+                <br>
+                <div class="col-md-6">
+                    <button onclick="atualizarHeader(<?php echo $projeto->id;?>)" class="btn btn-success form-control">Atualizar Dados</button>
+                </div>
+                <div class="col-md-6">
+                    <button onclick="" class="btn btn-danger form-control">Criar Nova Versão do Projeto</button>
+                </div>
+
             </div>
-
         </div>
-
+        <button data-toggle="collapse" data-target="#menutopo"><span class="glyphicon glyphicon-resize-full"></span></button>
     </div>
 
 @stop
@@ -284,7 +286,7 @@
 
 
     <div class="container">
-        <br>
+
         <h4>Atividades Previstas</h4>
         <button onclick="adicionaratividadeModal()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Adicionar</button>
 
@@ -299,6 +301,7 @@
                 <th class="text-center">Tipo</th>
                 <th class="text-center">Horas Reais</th>
                 <th class="text-center">Estimadas</th>
+                <th class="text-center">Horas Fim</th>
                 <th class="text-center">Ações</th>
             </tr>
             </thead>
@@ -314,6 +317,10 @@
                     <td>
                         <input id="horasdettabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas}}">
                     </td>
+                    <td>
+                        <input id="horasdettabela" type="text" class="form-control" value="{{$projetodet->horas_fim}}">
+                    </td>
+
 
                     <td> <button class="edit-modal btn btn-primary" title="Atualizar"
                                  onclick="atualizarDetalhe({{$projetodet->id}})"

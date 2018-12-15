@@ -105,3 +105,4 @@ Route::post('/aux','RegistroHorasController@horafim')->name('registrar.horasf');
 Route::get('/horas/{id}','RegistroHorasController@resHorasDet')->name('detalhe.hora');
 Route::post('/horas-excluir/{id}','RegistroHorasController@delDet')->name('excluir.horas');
 Route::post('/horas-alterar','RegistroHorasController@alterRegistro')->name('alterar.horas');
+Route::post('/pegar-horas-fim/{id}','RegistroHorasController@horasfim')->name('pegar.fim.horas');

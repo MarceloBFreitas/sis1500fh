@@ -204,8 +204,8 @@
             <tr>
                 <th class="text-center">Cliente</th>
                 <th class="text-center">Projeto</th>
-                <th class="text-center">Horas Totais</th>
-                <th class="text-center">Horas Estimadas</th>
+                <th class="text-center">Gestor</th>
+                <th class="text-center">Horas</th>
                 <th class="text-center">Mensuração</th>
                 <th class="text-center">Ações</th>
             </tr>
@@ -213,11 +213,28 @@
             <tbody>
             @foreach($projetos as $projeto)
                 <tr class="item{{$projeto->id}}">
-                    <td>{{$projeto->cliente}}</td>
-                    <td>{{$projeto->projeto}}</td>
-                    <td><?php if(empty($projeto->totalhorasregistradas)){echo 0;}else{echo $projeto->totalhorasregistradas;}?></td>
-                    <td>{{$projeto->horas_estimadas}}</td>
-                    <td>{{formatarDataFront($projeto->mensuracao_data)}}</td>
+                    <td class="text-center">{{$projeto->cliente}}</td>
+                    <td class="text-center">{{$projeto->projeto}}</td>
+                    <td class="text-center"><?php if(empty($projeto->gestor)){echo " - - -";}else{echo $projeto->gestor;}?></td>
+                    <td>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Estimadas: </strong><br>
+                                <strong>Registradas:</strong> <br>
+                                <strong>Fim:</strong>
+                            </div>
+                            <div class="col-md-6">
+                                {{$projeto->horas_estimadas}} h<br>
+                                {{$projeto->horas_totais}} h<br>
+                                {{$projeto->horas_fim}} h
+                            </div>
+                        </div>
+
+                    </td>
+                    <td  class="text-center">
+                        {{formatarDataFront($projeto->mensuracao_data)}} <br>
+                        {{$projeto->mensuracao_descricao}}
+                    </td>
 
                     <td><a href="/detalhe-projeto/{{$projeto->id}}">
                             <button class="edit-modal btn btn-default" title="Detalhes"

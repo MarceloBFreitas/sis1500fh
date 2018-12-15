@@ -17,6 +17,7 @@ class CreateProjetoDetalhesTable extends Migration
             $table->increments('id')->unsigned();
             $table->integer('id_tpatv')->unsigned();
             $table->integer('id_projeto')->unsigned();
+            $table->integer('id_consultor')->nullable();
             $table->String('descricao');
             $table->float('horas_estimadas');
             $table->float('horas_reais');
@@ -25,6 +26,7 @@ class CreateProjetoDetalhesTable extends Migration
 
             $table->foreign('id_tpatv')->references('id')->on('sistipo_atividades');
             $table->foreign('id_projeto')->references('id')->on('sisprojetos');
+            $table->foreign('id_consultor')->references('cons_id')->on('sisconsultores');
 
 
             $table->timestamps();

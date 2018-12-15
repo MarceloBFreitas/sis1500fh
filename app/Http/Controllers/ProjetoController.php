@@ -8,6 +8,7 @@ use App\Gestor;
 use App\OrcamentoEscopo;
 use App\Projeto;
 use App\ProjetoDetalhe;
+use App\TipoAtividade;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,15 +22,31 @@ class ProjetoController extends Controller
     }
 
     public function index(){
-        $projetosquery = DB::select('  select 
-	 b.* ,
-	(select sum(sisprojeto_detalhe.horas_reais) from sisprojeto_detalhe 
-	inner join sisprojetos a on sisprojeto_detalhe.id_projeto = b.id ) as totalhorasregistradas
-	from  sisprojetos b');
+        $projetosquery = DB::select(' select id, id_gestor,cliente ,projeto,tecn,gestao,mensuracao_descricao,mensuracao_data,
+                     objetivo,custo_total,valor_total,horas_estimadas,horas_totais,
+                     horas_fim,
+                     created_at,updated_at ,
+                        (select sisusers.name from sisgestores inner join sisusers on 
+                            sisusers.id = sisgestores.user_id and sisgestores.gest_id = b.id_gestor) gestor,
+                        (select sum(sisregistros.qtd_horas) from sisregistros
+                        inner join sisprojeto_detalhe on sisprojeto_detalhe.id = sisregistros.id_projetodetalhe
+                        inner join sisprojetos on sisprojetos.id = sisprojeto_detalhe.id_projeto and sisprojetos.id = b.id) 
+                        as totalhorasregistradas,
+                        (
+                        select sum(sisprojeto_detalhe.horas_estimadas) from sisprojeto_detalhe inner join sisprojetos
+                        on sisprojetos.id = sisprojeto_detalhe.id_projeto and sisprojetos.id = b.id
+                        ) as totalhorasestimadas,
+                        (select sum(sisprojeto_detalhe.horas_fim) from sisprojeto_detalhe inner join sisprojetos
+                        on sisprojetos.id = sisprojeto_detalhe.id_projeto and sisprojetos.id = b.id
+                        ) as horasfim
+                        
+                        from  sisprojetos b');
 
         foreach ($projetosquery as $p){
             $projeto = Projeto::find($p->id);
-            $projeto->horas_totais = $p->totalhorasregistradas;
+            $projeto->horas_totais = (empty($p->totalhorasregistradas)?0:$p->totalhorasregistradas);
+            $projeto->horas_estimadas =(empty($p->totalhorasregistradas)?0:$p->totalhorasestimadas);
+            $projeto->horas_fim = (empty($p->totalhorasregistradas)?0:$p->totalhorasestimadas);
             $projeto->save();
         }
 
@@ -141,9 +158,11 @@ SELECT sisprojeto_detalhe.*,
             $projetodetalhe->save();
         }
 
+        $tiposatividade = TipoAtividade::all();
         return view('projeto-detalhe',[
             'projetodetalhesquery' => $projetodetalhesquery,
-            'projeto' =>$projeto
+            'projeto' =>$projeto,
+            'tiposatividade' =>$tiposatividade
         ]);
 
     }
