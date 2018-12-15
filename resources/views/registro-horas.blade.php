@@ -47,11 +47,13 @@
 
 
 
-            alert(id);
-            alert(hf);
 
             $('#pegaid').val(id);
+            $('#pegahf').val(hf);
+
+
             $('#adddet').modal('toggle');
+            $('#idhorasfim').val(hf);
 
 
 
@@ -67,6 +69,11 @@
             var desc= $('#iddesc').val();
 
             var id = $('#pegaid').val();
+            var hfdomodal = $('#idhorasfim').val();
+
+
+
+
 
 
             if(dia == ""){
@@ -90,7 +97,7 @@
                     dia:dia,
                     qtd:qtd,
                     desc:desc,
-
+                    horasf:hfdomodal,
                 },
                 success:function(data){
                     swal({
@@ -112,6 +119,7 @@
     </script>
 <div class="container">
     <input type="hidden" id="pegaid">
+    <input type="hidden" id="pegahf">
 
 <div>
         <table  class="table table-striped"  id="atividadetablehoras">
@@ -146,7 +154,7 @@
                     <td>{{$itens->horas_fimdet}}</td>
 
                     <td>
-                        <button class="edit-modal btn btn-success" title="Adicionar" onclick="addhoras('{{$itens->id}}','{{$itens->horas_fim}}')">
+                        <button class="edit-modal btn btn-success" title="Adicionar" onclick="addhoras('{{$itens->iddet}}','{{$itens->horas_fim}}')">
                             <span class="glyphicon glyphicon-plus"></span>
                         </button>
                         <a href="/horas/{{$itens->iddet}}">

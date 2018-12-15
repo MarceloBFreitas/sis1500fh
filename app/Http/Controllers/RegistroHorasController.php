@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Consultor;
 
 use App\Gestor;
+use App\Logregistros;
 use App\Projeto;
 use App\ProjetoDetalhe;
 use App\TipoAtividade;
@@ -36,22 +37,33 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
     public function  salvar(Request $request){
 
 
+
+
+
+
+
+           $lr = new Logregistros();
+
         $re = new Registros();
         $re->dia = $request->dia;
         $re->descricao = $request->desc;
         $re->qtd_horas = str_replace(',','.',$request->qtd);
         $re->id_projetodetalhe = $request->id;
         $re->id_user =  auth()->user()->id;
+        $lr->qtd_horas_registradas = $re->qtd_horas;
 
 
 
 
         $projetodetalhe = ProjetoDetalhe::find($request->id);
 
-        $projetodetalhe->horas_fim =  $projetodetalhe->horas_fim - $re->qtd_horas;
-        $projetodetalhe->horas_reais = $projetodetalhe->horas_reais + $re->qtd_horas;
 
+        $lr->hora_sugerida =  $projetodetalhe->horas_fim;
+        $lr->id_progetodetalhe = $projetodetalhe->id;
+        $projetodetalhe->horas_fim =  $request->horasf ;
+        $projetodetalhe->horas_reais = $projetodetalhe->horas_reais + $re->qtd_horas;
         $projetodetalhe->save();
+        $lr->hora_fim_cadastrada =  $projetodetalhe->horas_fim;
 
 
         $mensagem = "Você não tem autorização para realizar essa ação";
@@ -61,7 +73,8 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
         if(\Auth::user()->nivelacesso <3){
 
             $re->save();
-
+            $lr->id_registro = $re->id;
+            $lr->save();
             $tipo = "success";
             $mensagem = "Registro realizado com Sucesso";
         }else{
@@ -105,11 +118,16 @@ sisregistros.id_user = sisusers.id where sisregistros.id_projetodetalhe ='.$idPr
 
         $reg = Registros::find($id);
 
+        $lr = Logregistros::where('id_registro','=',$reg->id);
+
+
+
 
         $prodet = ProjetoDetalhe::find($reg->id_projetodetalhe);
 
         $prodet->horas_reais = $prodet->horas_reais - $reg->qtd_horas;
-        $prodet->horas_fim =  $prodet->horas_fim + $reg->qtd_horas;
+      //  $prodet->horas_fim =  $prodet->horas_fim + $reg->qtd_horas;
+        $prodet->horas_fim =  ($prodet->horas_fim + $lr->horas_sugeridas[0])-$lr->horas_adastradas[0];
 
         $prodet->save();
 
