@@ -131,4 +131,47 @@ sisregistros.id_user = sisusers.id where sisregistros.id_projetodetalhe ='.$idPr
         return response()->json($response);
 
 }
+public function alterRegistro(Request $request){
+
+    try{
+
+        $registro = Registros::find($request->id);
+
+
+
+        $projetodet = ProjetoDetalhe::find($registro->id_projetodetalhe);
+
+
+        $projetodet->horas_reais =  $projetodet->horas_reais - $registro->qtd_horas;
+        $projetodet->horas_fim =  $projetodet->horas_fim + $registro->qtd_horas;
+        $projetodet->save();
+        $projetodetalter = ProjetoDetalhe::find($registro->id_projetodetalhe);
+        $registro->dia = $request->dia;
+        $registro->qtd_horas = $request->qtd;
+        $registro->descricao = $request->desc;
+        $registro->save();
+
+        $projetodetalter->horas_reais =  $projetodetalter->horas_reais + $request->qtd;
+        $projetodetalter->horas_fim =  $projetodetalter->horas_fim - $request->qtd;
+        $projetodetalter->save();
+
+    $mensagem = "Registro Alterado";
+    $tipo = "success";
+}catch  (Exception $e) {
+    $mensagem = "Erro";
+    $tipo = "error";
+
+}
+
+    $response = array(
+        'tipo' => $tipo,
+        'msg' => $mensagem,
+    );
+    return response()->json($response);
+
+
+
+
+
+}
 }
