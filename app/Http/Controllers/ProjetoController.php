@@ -196,6 +196,7 @@ class ProjetoController extends Controller
 
         $projetodetalhesquery = DB::select('
                                                     SELECT sisprojeto_detalhe.*,sisusers.name as responsavel,sisusers.id as userid,
+                                                    sisprojeto_detalhe.id as id_projetodetalhe,
                                                     sistipo_atividades.*,
                                                         (
                                                             select sum(sisregistros.qtd_horas) from sisregistros
@@ -311,12 +312,13 @@ class ProjetoController extends Controller
         $mensagem="Erro no Controller, favor consultar API";
         $tipo="error";
 
+        //return "ERRO:".$request->iduser."-".$request->idprodet;
+
         $projetodetalhe = ProjetoDetalhe::find($request->idprodet);
 
         $projetodetalhe->id_responsavel = $request->iduser;
 
         if(\Auth::user()->nivelacesso <3){
-
             $projetodetalhe->save();
             $mensagem="Usuário Envolvido com Sucesso";
             $tipo="success";

@@ -192,9 +192,9 @@
             $("#modaladicionarAtividade").modal('toggle');
         }
 
-        function vincularResponsavel(idprojeto){
+        function vincularResponsavel($idprojeto){
             $("#modalAtribuirAtividade").modal('toggle');
-            $("#idoprojetodetalhe").val(idprojeto);
+            $("#idoprojetodetalhemodal").val($idprojeto);
         }
 
         function adicionarAtividadeCreate(idprojeto){
@@ -308,28 +308,48 @@
         }
 
 
-        function atribuirAtividadeUser() {
+        function __atribuirAtividadeUser(){
             var idprodet = $('#idoprojetodetalhe').val();
-            var iduser =  $('#useridmodal').val();
+            var iduser =  $('#idoprojetodetalhemodal').val();
+            alert(idprodet+"-"+iduser)
 
-            $.ajax({
-                type:'post',
-                url:'/atribuir-projeto-detalhe',
-                data:{
-                    _token : "<?php echo csrf_token() ?>",
-                    idprodet:idprodet,
-                    iduser:iduser
-                },
-                success:function(data){
-                    swal({
-                        title: data.msg,
-                        // text: 'Do you want to continue',
-                        type: data.tipo,
-                        timer: 2000
-                    });
-                    location.reload();
-                }
-            });
+        }
+        function atribuirAtividadeUser() {
+            var idprodet = $('#idoprojetodetalhemodal').val();
+            var iduser =  $('#useridmodalid').val();
+
+            if(iduser=="" || idprodet==""){
+                swal({
+                    title: "Erro JS",
+                    //text: 'Do you want to continue',
+                    type: 'error',
+                    timer: 2000
+                });
+            }else{
+                $.ajax({
+                    type:'post',
+                    url:'/definir-responsavel',
+                    headers: {
+                        'X-CSRF-Token': '{{ csrf_token() }}',
+                    },
+                    data:{
+                        idprodet:idprodet,
+                        iduser:iduser
+                    },
+                    success:function(data){
+                        swal({
+                            title: data.msg,
+                            // text: 'Do you want to continue',
+                            type: data.tipo,
+                            timer: 2000
+                        });
+                        console.log(data);
+                       location.reload();
+                    }
+                });
+            }
+
+
 
         }
 
@@ -383,7 +403,7 @@
             </thead>
             <tbody>
             @foreach($projetodetalhesquery as $projetodet)
-                <tr class="item{{$projetodet->id}}">
+                <tr class="item{{$projetodet->id_projetodetalhe}}">
                     <td  class="text-center">{{$projetodet->sigla}}</td>
                     <td  class="text-center">{{$projetodet->nome}}</td>
                     <td  class="text-center">{{$projetodet->tipo}}</td>
@@ -400,25 +420,25 @@
                         {{$projetodet->horas_reais}}
                     </td>
                     <td  class="text-center">
-                        <input id="horasdettabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas}}">
+                        <input size="6" id="horasdettabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas}}">
                     </td>
                     <td  class="text-center">
-                        <input id="horasdettabela" type="text" class="form-control" value="{{$projetodet->horas_fim}}">
+                        <input size="6" id="horasdettabela" type="text" class="form-control" value="{{$projetodet->horas_fim}}">
                     </td>
 
 
                     <td> <button class="edit-modal btn btn-primary" title="Atualizar"
-                                 onclick="atualizarDetalhe({{$projetodet->id}})"
+                                 onclick="atualizarDetalhe({{$projetodet->id_projetodetalhe}})"
                                  data-toggle="modal">
                             <span class="glyphicon glyphicon-refresh"></span>
                         </button>
-                        <button class="edit-modal btn btn-success" title="Atribuir"
-                                onclick="vincularResponsavel({{$projetodet->id}})"
+                        <button id="{{$projetodet->id}}botaoincluir" class="edit-modal btn btn-success" title="Atribuir"
+                                onclick="vincularResponsavel({{$projetodet->id_projetodetalhe}})"
                                 data-toggle="modal">
                             <span class="glyphicon glyphicon-user"></span>
                         </button>
                         <button class="delete-modal btn btn-danger" title="Remover"
-                                onclick="removerprojetoDetalhe({{$projetodet->id}})">
+                                onclick="removerprojetoDetalhe({{$projetodet->id_projetodetalhe}})">
                             <span  class="glyphicon glyphicon-trash"></span>
                         </button>
 
@@ -482,12 +502,12 @@
                 </div>
                 <div class="modal-body">
                     <label for="">Selecione o Responsável pela Atividade</label>
-                    <select class="form-control" name="" id="useridmodal">
+                    <select class="form-control" name="" id="useridmodalid">
                         @foreach($usuarios as $usuario)
                             <option value="{{$usuario->id}}">{{$usuario->name}}</option>
                         @endforeach
                     </select>
-                    <input type="hidden" id="idoprojetodetalhe">
+                    <input type="hidden" id="idoprojetodetalhemodal">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>

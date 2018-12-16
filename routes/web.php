@@ -80,7 +80,7 @@ Route::get('/detalhe-projeto/{id}','ProjetoController@projetoDetalhes')->name('h
 
 Route::post('/atualiza-projeto-header/{id}','ProjetoController@atualizarProjetoHeader')->name('atualizar.projeto.header');
 Route::post('/adicionar-atividade-projeto-detalhe','ProjetoController@adicionarAtividadeProjetoDetalhe')->name('atualizar.projeto.header');
-Route::post('/atribuir-projeto-detalhe','ProjetoController@atribuirUserAtividade')->name('atribuir.user.header');
+Route::post('/definir-responsavel','ProjetoController@atribuirUserAtividade')->name('definir.proprietario-projeto.detalhe');
 Route::delete('/excluir-detalhe-projeto/{id}','ProjetoController@removerProjetoDetalhe')->name('remover.projeto.detalhe');
 
 
