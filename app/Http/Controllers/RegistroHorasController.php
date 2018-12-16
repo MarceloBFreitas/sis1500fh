@@ -54,7 +54,7 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
         $lr->hora_fim_sugerida =  $projetodetalhe->horas_fim ;
         $lr->id_projetodetalhe = $projetodetalhe->id;
         $projetodetalhe->horas_fim =  $request->horasf - $request->qtd;
-        $lr->hora_fim_cadastrada =   $projetodetalhe->horas_fim ;
+        $lr->hora_fim_cadastrada =   $request->horasf - $request->qtd;
         $projetodetalhe->horas_reais = $projetodetalhe->horas_reais + $re->qtd_horas;
         $projetodetalhe->save();
       // =  $projetodetalhe->horas_fim;
@@ -112,34 +112,30 @@ sisregistros.id_user = sisusers.id where sisregistros.id_projetodetalhe ='.$idPr
 
     public function delDet($id){
 
-        $reg = Registros::find($id);
+        $regristro = Registros::find($id);
 
-        $idRegistroHora = (integer) DB::select('select id  from sislogregistros where sislogregistros.id_registro ='.$id);
-
-
-        $lr = Logregistros::find($idRegistroHora);
+      //  $idRegistroHora = (integer) DB::select('select id  from sislogregistros where sislogregistros.id_registro ='.$id);
 
 
+        $logRegistro = Logregistros::find($id);
 
-        $prodet = ProjetoDetalhe::find($lr->id_projetodetalhe);
 
-        $prodet->horas_reais = $prodet->horas_reais - $reg->qtd_horas;
-      //  $prodet->horas_fim =  $prodet->horas_fim + $reg->qtd_horas;
-        $horasqueestao = $prodet->horas_fim;
-        $horasanterioraoregistro = ($lr->hora_fim_sugerida + $lr->qtd_horas_registradas);
-        $horascadastradas =$lr->hora_fim_cadastrada;
 
-        $soma = $horasqueestao + $horasanterioraoregistro;
-        //$soma = $soma - $horascadastradas;
 
-        $prodet->horas_fim = $soma - $horascadastradas;;
-        //return$horasanterioraoregistro ;
 
-            //($prodet->horas_fim + $lr->hora_fim_sugerida) - $lr->hora_fim_cadastrada;
+        $prodet = ProjetoDetalhe::find($regristro->id_projetodetalhe);
+
+        $prodet->horas_reais = $prodet->horas_reais - $regristro->qtd_horas;
+
+        $horascadastradas =$logRegistro->hora_fim_cadastrada;
+
+          $prodet->horas_fim =  ($logRegistro->hora_fim_sugerida + $prodet->horas_fim) -$horascadastradas ;
+
+
 
         $prodet->save();
 
-        $reg->delete();
+        $regristro->delete();
 
         $mensagem = "Registro Removido";
         $tipo = "error";
