@@ -68,9 +68,8 @@
             var qtd  =$('#idqtd').val();
             var desc= $('#iddesc').val();
 
-            var id = $('#pegaid').val();
-            var hfdomodal = $('#idhorasfim').val();
-            $('#idhorasfim').val('');
+
+
 
 
 
@@ -85,6 +84,9 @@
                     timer: 2000
                 });
             }else{
+                var hfdomodal = $('#idhorasfim').val();
+                var id = $('#pegaid').val();
+                $('#idhorasfim').val('');
 
 
             $.ajax({

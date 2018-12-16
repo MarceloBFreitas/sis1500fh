@@ -44,6 +44,7 @@
         });
 
         function excluir(id) {
+            alert(id);
             $.ajax({
                 type:'POST',
                 url:"/horas-excluir/"+id,
@@ -104,14 +105,15 @@
 
                     },
                     success:function(data){
-                        swal({
-                            title: data.msg,
+                        //swal({
+                          //  title: data.msg,
                             // text: 'Do you want to continue',
-                            type: data.tipo,
-                            timer: 2000
-                        });
+                            //type: data.tipo,
+                            //timer: 2000
+                        //});
+                        console.log(data);
 
-                        location.reload();
+                      //  location.reload();
 
 
                     }
@@ -156,12 +158,10 @@
                                 <td class="text-center">{{$todos->dia}}</td>
                                 <td class="text-center">{{$todos->descricao}}</td>
                                 <td class="text-center">
-                                <button class="ion-android-deletebtn-danger  warning" title="Excluir" onclick="excluir({{$todos->idregistro}})">
+                                <button class="ion-android-deletebtn-danger  warning" title="Excluir" id="{{$todos->idregistro}}" onclick="excluir({{$todos->idregistro}})">
                                         <span class="glyphicon  glyphicon-trash warning danger"></span>
                                     </button>
-                                    <button class="btn-success " title="Alterar" onclick="abremodalalterar({{$todos->idregistro}})">
-                                        <span class="glyphicon  glyphicon-edit"></span>
-                                    </button>
+
                                 </td>
                             </tr>
                          @endforeach

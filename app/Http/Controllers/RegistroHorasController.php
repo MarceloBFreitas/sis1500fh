@@ -43,7 +43,7 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
         $re->qtd_horas = str_replace(',','.',$request->qtd);
         $re->id_projetodetalhe = $request->id;
         $re->id_user =  auth()->user()->id;
-        $lr->qtd_horas_registradas = $re->qtd_horas;
+        $lr->qtd_horas_registradas = $request->qtd;
 
 
 
@@ -51,12 +51,13 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
         $projetodetalhe = ProjetoDetalhe::find($request->id);
 
 
-        $lr->hora_fim_sugerida =  $projetodetalhe->horas_fim;
+        $lr->hora_fim_sugerida =  $projetodetalhe->horas_fim ;
         $lr->id_projetodetalhe = $projetodetalhe->id;
         $projetodetalhe->horas_fim =  $request->horasf - $request->qtd;
+        $lr->hora_fim_cadastrada =   $projetodetalhe->horas_fim ;
         $projetodetalhe->horas_reais = $projetodetalhe->horas_reais + $re->qtd_horas;
         $projetodetalhe->save();
-        $lr->hora_fim_cadastrada =  $projetodetalhe->horas_fim;
+      // =  $projetodetalhe->horas_fim;
 
 
         $mensagem = "Você não tem autorização para realizar essa ação";
@@ -67,6 +68,8 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
 
             $re->save();
             $lr->id_registro = $re->id;
+
+
             $lr->save();
             $tipo = "success";
             $mensagem = "Registro realizado com Sucesso";
@@ -111,19 +114,28 @@ sisregistros.id_user = sisusers.id where sisregistros.id_projetodetalhe ='.$idPr
 
         $reg = Registros::find($id);
 
-      //  $lrid = DB::select('  select id from sislogregistros where sislogregistros.id_registro  ='.$id);
+        $idRegistroHora = (integer) DB::select('select id  from sislogregistros where sislogregistros.id_registro ='.$id);
+
+
+        $lr = Logregistros::find($idRegistroHora);
 
 
 
-        $lr = Logregistros::find($id);
-
-
-
-        $prodet = ProjetoDetalhe::find($reg->id_projetodetalhe);
+        $prodet = ProjetoDetalhe::find($lr->id_projetodetalhe);
 
         $prodet->horas_reais = $prodet->horas_reais - $reg->qtd_horas;
       //  $prodet->horas_fim =  $prodet->horas_fim + $reg->qtd_horas;
-        $prodet->horas_fim =  ($prodet->horas_fim + $lr->hora_fim_sugerida)- $lr->hora_fim_cadastrada;
+        $horasqueestao = $prodet->horas_fim;
+        $horasanterioraoregistro = ($lr->hora_fim_sugerida + $lr->qtd_horas_registradas);
+        $horascadastradas =$lr->hora_fim_cadastrada;
+
+        $soma = $horasqueestao + $horasanterioraoregistro;
+        //$soma = $soma - $horascadastradas;
+
+        $prodet->horas_fim = $soma - $horascadastradas;;
+        //return$horasanterioraoregistro ;
+
+            //($prodet->horas_fim + $lr->hora_fim_sugerida) - $lr->hora_fim_cadastrada;
 
         $prodet->save();
 
