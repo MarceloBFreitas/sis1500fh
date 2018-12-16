@@ -72,9 +72,9 @@
                     <label for="">Horas Planejadas</label>
                     <input type="text" disabled value="{{$projeto->horas_estimadas}}" class="form-control">
                     <label for="">Horas Registradas</label>
-                    <input type="text" disabled value="<?php echo number_format($projeto->custo_total,2);?>" class="form-control">
+                    <input type="text" disabled value="<?php echo $projeto->horas_totais;?>" class="form-control">
                     <label for="">Valor Planejado</label>
-                    <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_total,2);?>" class="form-control">
+                    <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_planejado,2);?>" class="form-control">
                 </div>
 
 
@@ -192,15 +192,21 @@
             $("#modaladicionarAtividade").modal('toggle');
         }
 
-        function adicionarAtividadeCreate(){
+        function vincularResponsavel(idprojeto){
+            $("#modalAtribuirAtividade").modal('toggle');
+            $("#idoprojetodetalhe").val(idprojeto);
+        }
+
+        function adicionarAtividadeCreate(idprojeto){
 
             var atvid = $('#tipoatividademodal').val();
             var descricao =  $('#descatvmodal').val();
             var horasestimadas =  $('#horasestimadasmodal').val();
 
+            console.log(atvid+"-"+descricao+"-"+horasestimadas);
 
 
-            if(horasestimadas == "" ){
+            if(horasestimadas == "" ||descricao=="" || atvid==""){
                 swal({
                     title: "Campos não preenchidos",
                     text: "Por favor, verifique se todos os campos foram preenchidos",
@@ -211,12 +217,12 @@
 
                 $.ajax({
                     type:'POST',
-                    url:"{{URL::route('adicionar.atividade.escopo')}}",
+                    url:"/adicionar-atividade-projeto-detalhe",
                     headers: {
                         'X-CSRF-Token': '{{ csrf_token() }}',
                     },
                     data:{
-
+                        idprojeto:idprojeto,
                         atvid :atvid,
                         descricao:descricao,
                         horasestimadas :horasestimadas
@@ -267,7 +273,7 @@
             });
         }
 
-        function removerDetalhe($id) {
+        function removerprojetoDetalhe($id) {
             swal({
                 title: 'Confirmar Exclusão da Atividade?',
                 //text: 'Os projetos em que ele estiver envolvido também serão removidos, para desligamento de colaborador procure a guia Desligamento',
@@ -279,7 +285,7 @@
                 if (result.value) {
                     $.ajax({
                         type:'DELETE',
-                        url:'/excluir-detalhe-orcamento/'+$id,
+                        url:'/excluir-detalhe-projeto/'+$id,
                         data:{
                             _token : "<?php echo csrf_token() ?>"
                         },
@@ -300,6 +306,33 @@
                 }
             })
         }
+
+
+        function atribuirAtividadeUser() {
+            var idprodet = $('#idoprojetodetalhe').val();
+            var iduser =  $('#useridmodal').val();
+
+            $.ajax({
+                type:'post',
+                url:'/atribuir-projeto-detalhe',
+                data:{
+                    _token : "<?php echo csrf_token() ?>",
+                    idprodet:idprodet,
+                    iduser:iduser
+                },
+                success:function(data){
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+                    location.reload();
+                }
+            });
+
+        }
+
 
         function converteremProjeto(id){
             $.ajax({
@@ -351,17 +384,25 @@
             <tbody>
             @foreach($projetodetalhesquery as $projetodet)
                 <tr class="item{{$projetodet->id}}">
-                    <td>{{$projetodet->sigla}}</td>
-                    <td>{{$projetodet->nome}}</td>
-                    <td>{{$projetodet->tipo}}</td>
-                    <td>{{$projetodet->tipo}}</td>
-                    <td>
+                    <td  class="text-center">{{$projetodet->sigla}}</td>
+                    <td  class="text-center">{{$projetodet->nome}}</td>
+                    <td  class="text-center">{{$projetodet->tipo}}</td>
+                    <td  class="text-center">
+                        <?php
+                        if(empty($projetodet->responsavel)){
+                            echo '<span class="glyphicon btn-danger glyphicon-exclamation-sign"></span> N/C';
+                        }else{
+                            echo $projetodet->responsavel;
+                        }
+                        ?>
+                    </td>
+                    <td  class="text-center">
                         {{$projetodet->horas_reais}}
                     </td>
-                    <td>
+                    <td  class="text-center">
                         <input id="horasdettabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas}}">
                     </td>
-                    <td>
+                    <td  class="text-center">
                         <input id="horasdettabela" type="text" class="form-control" value="{{$projetodet->horas_fim}}">
                     </td>
 
@@ -372,12 +413,12 @@
                             <span class="glyphicon glyphicon-refresh"></span>
                         </button>
                         <button class="edit-modal btn btn-success" title="Atribuir"
-                                onclick="atualizarDetalhe({{$projetodet->id}})"
+                                onclick="vincularResponsavel({{$projetodet->id}})"
                                 data-toggle="modal">
                             <span class="glyphicon glyphicon-user"></span>
                         </button>
                         <button class="delete-modal btn btn-danger" title="Remover"
-                                onclick="removerDetalhe({{$projetodet->id}})">
+                                onclick="removerprojetoDetalhe({{$projetodet->id}})">
                             <span  class="glyphicon glyphicon-trash"></span>
                         </button>
 
@@ -420,7 +461,38 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                     @if(Auth::user()->nivelacesso <3)
-                        <button type="button" onclick="adicionarAtividadeCreate()" class="btn btn-primary">Adicionar</button>
+                        <button type="button" onclick="adicionarAtividadeCreate(<?php echo $projeto->id;?>)" class="btn btn-primary">Adicionar</button>
+                    @endif
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Modal Atribuir Atividades -->
+    <div class="modal fade" id="modalAtribuirAtividade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Adicionar Atividade para <?php echo $projeto->projeto;?></h4>
+                </div>
+                <div class="modal-body">
+                    <label for="">Selecione o Responsável pela Atividade</label>
+                    <select class="form-control" name="" id="useridmodal">
+                        @foreach($usuarios as $usuario)
+                            <option value="{{$usuario->id}}">{{$usuario->name}}</option>
+                        @endforeach
+                    </select>
+                    <input type="hidden" id="idoprojetodetalhe">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    @if(Auth::user()->nivelacesso <3)
+                        <button type="button" onclick="atribuirAtividadeUser()" class="btn btn-primary">Adicionar</button>
                     @endif
 
                 </div>

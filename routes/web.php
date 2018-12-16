@@ -79,6 +79,9 @@ Route::get('/projetos','ProjetoController@index')->name('home.projetos');
 Route::get('/detalhe-projeto/{id}','ProjetoController@projetoDetalhes')->name('home.projetos');
 
 Route::post('/atualiza-projeto-header/{id}','ProjetoController@atualizarProjetoHeader')->name('atualizar.projeto.header');
+Route::post('/adicionar-atividade-projeto-detalhe','ProjetoController@adicionarAtividadeProjetoDetalhe')->name('atualizar.projeto.header');
+Route::post('/atribuir-projeto-detalhe','ProjetoController@atribuirUserAtividade')->name('atribuir.user.header');
+Route::delete('/excluir-detalhe-projeto/{id}','ProjetoController@removerProjetoDetalhe')->name('remover.projeto.detalhe');
 
 
 
