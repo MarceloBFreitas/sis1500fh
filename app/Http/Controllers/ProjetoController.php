@@ -343,9 +343,12 @@ class ProjetoController extends Controller
         $projetodetalhe = ProjetoDetalhe::find($id);
         $idprojeto = $projetodetalhe->id_projeto;
 
+
         if(\Auth::user()->nivelacesso <3){
             try{
+                DB::statement('ALTER TABLE [dbo].[sisprojeto_detalhe]  NOCHECK CONSTRAINT [sisprojeto_detalhe_id_responsavel_foreign] ');
                 $projetodetalhe->delete();
+                DB::statement('ALTER TABLE [dbo].[sisprojeto_detalhe]  WITH CHECK CHECK CONSTRAINT [sisprojeto_detalhe_id_responsavel_foreign]');
                 $mensagem="Atividade Removida com Sucesso";
                 $tipo="success";
             }catch (\Exception $e){
