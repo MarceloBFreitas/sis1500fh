@@ -244,33 +244,56 @@
             }
         }
 
-        function atualizarDetalhe(id) {
-            var descricao =  $('#descridettabela').val();
-            var horas =  $('#horasdettabela').val();
+        function atualizarDetalheprojeto(id) {
+            var horasestimadas =  $('#'+id+'horasesttabela').val();
+            var horasfim =  $('#'+id+'horafimtabela').val();
 
-            $.ajax({
-                type:'post',
-                url:'/atualizar-atividade-orcamento/'+ id ,
-                headers: {
-                    'X-CSRF-Token': '{{ csrf_token() }}',
-                },
-                data:{
-                    horas:horas,
-                    descricao :descricao,
-                },
-                success:function(data){
-                    console.log(data);
-                    swal({
-                        title: data.msg,
-                        // text: 'Do you want to continue',
-                        type: data.tipo,
-                        timer: 2000
-                    });
 
-                    location.reload();
+            console.log(horasfim+"-"+horasestimadas)
+            if(horasestimadas =="" || horasestimadas == "" || horasestimadas =="0.0" || horasestimadas=="0,0" ){
+                swal({
+                    title: "Campos Vazios ou Inválidos",
+                    // text: 'Do you want to continue',
+                    type: 'warning',
+                    timer: 2000
+                });
+            }else{
+                swal({
+                    title: 'Confirmar Alteração da Atividade?',
+                    //text: 'Os projetos em que ele estiver envolvido também serão removidos, para desligamento de colaborador procure a guia Desligamento',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Confirmar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            type:'put',
+                            url:'/atualizar-detalhe-projeto',
+                            data:{
+                                _token : "<?php echo csrf_token() ?>",
+                                idprojetodetalhe:id,
+                                horasestimadas:horasestimadas,
+                                horasfim:horasfim
 
-                }
-            });
+                            },
+                            success:function(data){
+                                swal({
+                                    title: data.msg,
+                                    // text: 'Do you want to continue',
+                                    type: data.tipo,
+                                    timer: 2000
+                                });
+                                location.reload();
+                            }
+                        });
+
+
+                    } else if (result.dismiss === swal.DismissReason.cancel) {
+
+                    }
+                })
+            }
         }
 
         function removerprojetoDetalhe($id) {
@@ -420,15 +443,15 @@
                         {{$projetodet->horas_reais}}
                     </td>
                     <td  class="text-center">
-                        <input size="6" id="horasdettabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas}}">
+                        <input size="6" id="{{$projetodet->id_projetodetalhe}}horasesttabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas}}">
                     </td>
                     <td  class="text-center">
-                        <input size="6" id="horasdettabela" type="text" class="form-control" value="{{$projetodet->horas_fim}}">
+                        <input size="6" id="{{$projetodet->id_projetodetalhe}}horafimtabela" type="text" class="form-control" value="{{$projetodet->horas_fim}}">
                     </td>
 
 
                     <td> <button class="edit-modal btn btn-primary" title="Atualizar"
-                                 onclick="atualizarDetalhe({{$projetodet->id_projetodetalhe}})"
+                                 onclick="atualizarDetalheprojeto({{$projetodet->id_projetodetalhe}})"
                                  data-toggle="modal">
                             <span class="glyphicon glyphicon-refresh"></span>
                         </button>

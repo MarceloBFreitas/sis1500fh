@@ -630,6 +630,106 @@ class ProjetoController extends Controller
 
     }
 
+    public function atualizarProjetoDetalhe(Request $request){
+        $mensagem="Erro no Controller, favor consultar API";
+        $tipo="error";
+        $projetodetalhe = ProjetoDetalhe::find($request->idprojetodetalhe);
+        $projetodetalhe->horas_estimadas = str_replace(',','.',$request->horasestimadas);
+        $projetodetalhe->horas_fim = str_replace(',','.',$request->horasfim);
+
+
+        if(\Auth::user()->nivelacesso <3){
+            $idprojeto = $projetodetalhe->id_projeto;
+            $projetodetalhe->save();
+            $projeto = Projeto::find($idprojeto);
+            $projetodetalhes = DB::select(' select *,
+                                     (
+                                                select sum(sisregistros.qtd_horas) from sisprojeto_detalhe 
+                                        inner join sisregistros on sisregistros.id_projetodetalhe = sisprojeto_detalhe.id
+                                        where sisprojeto_detalhe.id = spd.id
+                                                and sisprojeto_detalhe.id_responsavel = spd.id_responsavel
+                                     ) horasreais,
+                                     (
+                                     select sisgestores.custohora from sisusers 
+                                       left join sisgestores on sisusers.id = sisgestores.user_id
+                                       left join sisconsultores on sisconsultores.user_id =sisusers.id
+                                       where sisusers.id = spd.id_responsavel
+                                     ) custohoragestor,
+                                     (
+                                     select sisconsultores.custohora from sisusers 
+                                       left join sisgestores on sisusers.id = sisgestores.user_id
+                                       left join sisconsultores on sisconsultores.user_id =sisusers.id
+                                       where sisusers.id = spd.id_responsavel
+                                     ) custohoraconsultor
+                                    
+                                      from sisprojeto_detalhe spd
+                                      inner join sistipo_atividades on sistipo_atividades.id = spd.id_tpatv
+                                       where spd.id_projeto = '.$projeto->id);
+
+            $custototal = 0.0;
+            $valortotal = 0.0;
+            $valoestimado = 0.0;
+            $horasestimadas = 0.0;
+            $horastotais = 0.0;
+            $horasfim = 0.0;
+
+            foreach ($projetodetalhes as $projetodetalhe){
+                //custo real
+                if(empty($projetodetalhe->custohoraconsultor)){
+                    $custotemp = $projetodetalhe->custohoragestor;
+                    if(!empty($projetodetalhe->horasreais)){
+                        $custototal = $custototal + ($projetodetalhe->horasreais *$custotemp );
+                    }
+                }else{
+                    $custotemp = $projetodetalhe->custohoraconsultor;
+                    if(!empty($projetodetalhe->horasreais)){
+                        $custototal = $custototal + ($projetodetalhe->horasreais *$custotemp );
+                    }
+                }
+                $horasestimadas = $horasestimadas + $projetodetalhe->horas_estimadas;
+
+                if(!empty($projetodetalhe->horasreais)){
+                    $horastotais = $horastotais+$projetodetalhe->horasreais;
+                }
+                if($projetodetalhe->tipo == "Técnica"){
+                    $valoestimado = $valoestimado + ($projeto->tecn *$projetodetalhe->horas_estimadas);
+                    $valortotal = $valortotal + ($projeto->tecn * $projetodetalhe->horasreais);
+                }else{
+                    $valoestimado = $valoestimado + ($projeto->gestao *$projetodetalhe->horas_estimadas);
+                    $valortotal = $valortotal + ($projeto->gestao * $projetodetalhe->horasreais);
+                }
+            }
+
+            $horasfim = $horasestimadas - $horastotais;
+
+            $projeto->custo_total = $custototal;
+            $projeto->valor_total = $valortotal;
+
+            $projeto->valor_planejado = $valoestimado;
+
+            $projeto->horas_estimadas = $horasestimadas;
+            $projeto->horas_totais = $horastotais;
+            $projeto->horas_fim = $horasfim;
+
+            $projeto->save();
+
+            $mensagem="Atividade Atualizada com Sucesso ao Projeto";
+            $tipo="success";
+        }else{
+            $mensagem="Você não tem autorização para este recurso";
+            $tipo="error";
+
+        }
+
+
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+        return response()->json($response);
+    }
+
     public function totalHorasReais($idatividade){
         $registrosdaatividade = DB::select('select * from sisregistros 
         where sisregistros.id_projetodetalhe = '.$idatividade);
