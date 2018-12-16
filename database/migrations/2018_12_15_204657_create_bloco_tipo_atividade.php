@@ -15,9 +15,8 @@ class CreateBlocoTipoAtividade extends Migration
     {
         Schema::create('sisblocotipoatividade', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_tipoatividade');
-
-            $table->foreign('id_tipoatividade')->references('id')->on('sistipo_atividades');
+            $table->string('nomegrupo');
+            $table->string('descricao');
             $table->timestamps();
         });
     }

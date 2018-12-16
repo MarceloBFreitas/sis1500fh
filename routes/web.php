@@ -45,6 +45,12 @@ Route::get('/detalhes-atividade/{id}','TipoAtividadesController@show')->name('de
 Route::post('/atualizar-atividade/{id}','TipoAtividadesController@update')->name('atualizar.atividade');
 Route::delete('/excluir-atividade/{id}','TipoAtividadesController@destroy')->name('excluir.atividade');
 Route::get('/grupo-atividades','TipoAtividadesController@grupoAtividade')->name('grupo.atividade');
+Route::get('/grupo-atividades','TipoAtividadesController@grupoAtividade')->name('grupo.atividade');
+Route::POST('/grupo-adicionar','TipoAtividadesController@grupoAdicionar')->name('registrar.atividade.grupo');
+Route::get('/detalhes-grupo/{id}','TipoAtividadesController@detalhesGrupo')->name('detalhes.grupo');
+Route::post('/atualizar-grupo-nome','TipoAtividadesController@atualizarBlocoTipo')->name('atualizar.grupo');
+Route::delete('/excluir-grupo/{id}','TipoAtividadesController@deletarGrupo')->name('deletar.grupo');
+Route::get('/gerenciar-grupo/{id}','TipoAtividadesController@adicionarTiposaoGrupo')->name('adicionar.tipos.grupo');
 
 
 

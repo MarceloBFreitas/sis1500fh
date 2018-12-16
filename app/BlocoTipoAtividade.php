@@ -9,7 +9,7 @@ class BlocoTipoAtividade extends Model
     protected $table = 'sisblocotipoatividade';
 
     protected $fillable = [
-        'id_tipoatividade',
+        'id_tipoatividade','nomegrupo'
     ];
 
 }
