@@ -25,6 +25,7 @@ class CreateProjetoTable extends Migration
             $table->string('objetivo');
             $table->float('custo_total');
             $table->float('valor_total');
+            $table->float('valor_planejado');
             $table->float('horas_estimadas');
             $table->float('horas_totais');
             $table->float('horas_fim')->nullable();
