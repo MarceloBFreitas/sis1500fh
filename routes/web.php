@@ -51,6 +51,11 @@ Route::get('/detalhes-grupo/{id}','TipoAtividadesController@detalhesGrupo')->nam
 Route::post('/atualizar-grupo-nome','TipoAtividadesController@atualizarBlocoTipo')->name('atualizar.grupo');
 Route::delete('/excluir-grupo/{id}','TipoAtividadesController@deletarGrupo')->name('deletar.grupo');
 Route::get('/gerenciar-grupo/{id}','TipoAtividadesController@adicionarTiposaoGrupo')->name('adicionar.tipos.grupo');
+Route::post('/adicionar-tipodetalhe-grupo','TipoAtividadesController@adicionarAtividadeaoGrupo');
+Route::delete('/excluir-grupo-detalhe/{id}','TipoAtividadesController@removerAtividadeaoGrupo');
+
+
+
 
 
 
@@ -60,6 +65,9 @@ Route::get('/escopo-orcamento','OrcamentoController@index')->name('home.orcament
 Route::post('/criar-escopo-orcamento','OrcamentoController@adicionarOrcamentoEscopo')->name('criar.orcamento.escopo');
 Route::get('/configurar-orcamento/{id}','OrcamentoController@homeEditarOrcamento')->name('detalhes.orcamento.escopo');
 Route::post('/adicionar-atividade-orcamento','OrcamentoController@adicionarAtividadeEscopoOrcamento')->name('adicionar.atividade.escopo');
+
+
+Route::post('/adicionar-grupo-atividades-bloco','OrcamentoController@adicionarBlocoEscopo');
 
 Route::post('/atualizar-atividade-orcamento/{id}','OrcamentoController@atualizarAtividadeEscopoOrcamento')->name('atualizar.atividade.escopo');
 Route::post('/atualizar-orcamento-escopo/{id}','OrcamentoController@atualizarOrcamentoEscopo')->name('atualizar.atividade.escopo');

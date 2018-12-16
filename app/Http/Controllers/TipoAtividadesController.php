@@ -239,4 +239,51 @@ class TipoAtividadesController extends Controller
         ]);
     }
 
+    public function adicionarAtividadeaoGrupo(Request $request){
+        $mensagem="Erro no Método de Persistência da API";
+        $tipo="error";
+
+        $blocotipodetalhe = new BlocoTipoAtividadeDetalhes();
+        $blocotipodetalhe->id_bloco = $request->idgrupo;
+        $blocotipodetalhe->id_tipoatividade = $request->atvid;
+
+        if(\Auth::user()->nivelacesso <3){
+            $blocotipodetalhe->save();
+
+            $tipo = "success";
+            $mensagem = "Tipo adicionado com Sucesso";
+        }else{
+            $mensagem = "Você não tem autorização para realizar essa ação";
+        }
+
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+        );
+        return response()->json($response);
+
+    }
+
+    public function removerAtividadeaoGrupo($id){
+        $mensagem="Erro no Método de Persistência da API";
+        $tipo="error";
+
+        $blocotipodetalhe =  BlocoTipoAtividadeDetalhes::find($id);
+
+        if(\Auth::user()->nivelacesso <3){
+            $blocotipodetalhe->delete();
+
+            $tipo = "success";
+            $mensagem = "Tipo removido com Sucesso";
+        }else{
+            $mensagem = "Você não tem autorização para realizar essa ação";
+        }
+
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+        );
+        return response()->json($response);
+
+    }
 }

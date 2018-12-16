@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BlocoTipoAtividade;
 use App\Orcamento;
 use App\OrcamentoDetalhe;
 use App\OrcamentoEscopo;
@@ -38,33 +39,7 @@ class OrcamentoController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
 
@@ -88,12 +63,6 @@ class OrcamentoController extends Controller
         return view('orcamento',['orcadet'=>$detorc,'desc'=>$atv]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
 
@@ -140,13 +109,27 @@ class OrcamentoController extends Controller
         $orcamentoescopo = OrcamentoEscopo::find($id);
 
         $atividades = DB::select('select *,sisescopo_orcamento_detalhe.id as eod_id,
-sisescopo_orcamento_detalhe.descricao as oed_decricao
-		from sisescopo_orcamento_detalhe
-		inner join sisescopo_orcamento on sisescopo_orcamento.id = sisescopo_orcamento_detalhe.id_eo
-		inner join sistipo_atividades on sistipo_atividades.id = sisescopo_orcamento_detalhe.id_atv
-		where sisescopo_orcamento_detalhe.id_eo = '.$id);
-
+            sisescopo_orcamento_detalhe.descricao as oed_decricao
+                    from sisescopo_orcamento_detalhe
+                    inner join sisescopo_orcamento on sisescopo_orcamento.id = sisescopo_orcamento_detalhe.id_eo
+                    inner join sistipo_atividades on sistipo_atividades.id = sisescopo_orcamento_detalhe.id_atv
+                    where sisescopo_orcamento_detalhe.id_eo = '.$id);
+        $horas = 0.0;
+        $valortotal = 0.0;
+        foreach ($atividades as $atividade){
+            $horas = $horas+$atividade->horas_estimadas;
+            if($atividade->tecn == "Gestão"){
+                $valortotal = $valortotal + ($atividade->horas_estimadas *$orcamentoescopo->gestao);
+            }else{
+                $valortotal = $valortotal + ($atividade->horas_estimadas *$orcamentoescopo->tecn);
+            }
+        }
+        $orcamentoescopo->horas_totais = $horas;
+        $orcamentoescopo->valor_total = $valortotal;
+        $orcamentoescopo->save();
         $tipoatividade = TipoAtividade::all();
+
+        $blocosatividades = BlocoTipoAtividade::all();
         return view('orcamento-detalhe',[
             'atividades'=>$atividades,
             'idorcamentoescopo'=>$id,
@@ -159,11 +142,11 @@ sisescopo_orcamento_detalhe.descricao as oed_decricao
             'status' => $orcamentoescopo->status,
             'valortotal' => $orcamentoescopo->valor_total,
             'horastotais' => $orcamentoescopo->horas_totais,
-            'tiposatividade' =>$tipoatividade
+            'tiposatividade' =>$tipoatividade,
+            'blocosatividades' =>$blocosatividades
 
         ]);
     }
-
 
     public function adicionarAtividadeEscopoOrcamento(Request $request)
     {
@@ -208,6 +191,47 @@ sisescopo_orcamento_detalhe.descricao as oed_decricao
 //        $table->integer('id_eo')->unsigned();
 //        $table->String('descricao');
 //        $table->float('horas_estimadas');
+
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+        return response()->json($response);
+    }
+
+    public function adicionarBlocoEscopo(Request $request)
+    {
+        $mensagem="Erro no Controller, favor consultar API";
+        $tipo="error";
+
+        $idbloco = $request->blocoid;
+        $iddoescopo = $request->escopoid;
+
+        $consultadasatividades = DB::select('	select sisblocotipoatividade.id as idbloco,sistipo_atividades.* ,sistipo_atividades.id as idatv
+                from sisblocotipoatividade inner join
+                sisblocotipoatividade_detalhes on sisblocotipoatividade_detalhes.id_bloco = sisblocotipoatividade.id
+                inner join sistipo_atividades on sisblocotipoatividade.id = sisblocotipoatividade_detalhes.id_tipoatividade 
+                where sisblocotipoatividade.id='.$idbloco);
+
+        if(\Auth::user()->nivelacesso <3){
+
+            foreach($consultadasatividades as $consultadasatividade){
+                $orcamentodetalhe = new OrcamentoDetalhe();
+                $orcamentodetalhe->id_atv = $consultadasatividade->idatv;
+                $orcamentodetalhe->id_eo = $idbloco;
+                $orcamentodetalhe->descricao = "";
+                $orcamentodetalhe->horas_estimadas =0.0;
+                $orcamentodetalhe->save();
+            }
+
+            $mensagem="Atividades adicionada com Sucesso";
+            $tipo="success";
+        }else{
+            $mensagem="Você não tem autorização para este recurso";
+            $tipo="error";
+
+        }
 
         $response = array(
             'tipo' => $tipo,

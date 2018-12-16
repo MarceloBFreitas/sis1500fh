@@ -139,6 +139,10 @@
             $("#modaladicionarAtividade").modal('toggle');
         }
 
+        function adicionargrupoModal() {
+            $("#modaladicionarGrupo").modal('toggle');
+        }
+
         function adicionarAtividadeCreate(){
 
             var atvid = $('#tipoatividademodal').val();
@@ -185,33 +189,78 @@
             }
         }
 
+        function adicionarGrupoCreate(){
+
+            var blocoid = $('#tipoGrupomodal').val();
+
+                $.ajax({
+                    type:'POST',
+                    url:"/adicionar-grupo-atividades-bloco",
+                    headers: {
+                        'X-CSRF-Token': '{{ csrf_token() }}',
+                    },
+                    data:{
+                        escopoid:{{$idorcamentoescopo}},
+                        blocoid :blocoid
+                    },
+                    success:function(data){
+                        console.log(data);
+                        swal({
+                            title: data.msg,
+                            // text: 'Do you want to continue',
+                            type: data.tipo,
+                            timer: 2000
+                        });
+
+                        location.reload();
+
+
+                    }
+                });
+
+        }
+
+
+
+
         function atualizarDetalhe(id) {
-            var descricao =  $('#descridettabela').val();
+            var descricao =  $('#'+id+'descridettabela').val();
             var horas =  $('#'+id+'horasdettabela').val();
 
-            $.ajax({
-                type:'post',
-                url:'/atualizar-atividade-orcamento/'+ id ,
-                headers: {
-                    'X-CSRF-Token': '{{ csrf_token() }}',
-                },
-                data:{
-                    horas:horas,
-                    descricao :descricao,
-                },
-                success:function(data){
-                    console.log(data);
-                    swal({
-                        title: data.msg,
-                        // text: 'Do you want to continue',
-                        type: data.tipo,
-                        timer: 2000
-                    });
 
-                    location.reload();
+            if(descricao=="" ||horas==0.0 ){
+                swal({
+                    title: "Campo Vazio ou Zerado",
+                    // text: 'Do you want to continue',
+                    type: "warning",
+                    timer: 2000
+                });
+            }else{
+                $.ajax({
+                    type:'post',
+                    url:'/atualizar-atividade-orcamento/'+ id ,
+                    headers: {
+                        'X-CSRF-Token': '{{ csrf_token() }}',
+                    },
+                    data:{
+                        horas:horas,
+                        descricao :descricao,
+                    },
+                    success:function(data){
+                        console.log(data);
+                        swal({
+                            title: data.msg,
+                            // text: 'Do you want to continue',
+                            type: data.tipo,
+                            timer: 2000
+                        });
 
-                }
-            });
+                        location.reload();
+
+                    }
+                });
+            }
+
         }
 
         function removerDetalhe($id) {
@@ -249,25 +298,46 @@
         }
 
         function converteremProjeto(id){
-            $.ajax({
-                type:'post',
-                url:'/criar-projeto/'+ id ,
-                headers: {
-                    'X-CSRF-Token': '{{ csrf_token() }}',
-                },
-                success:function(data){
-                    console.log(data);
-                    swal({
-                        title: data.msg,
-                        // text: 'Do you want to continue',
-                        type: data.tipo,
-                        timer: 2000
-                    });
 
-                    //location.reload();
+            var inputs = new Array();
 
+            var campos = 0;
+            $('.table input').each(function()
+            {
+                if($(this).val() == 0.0 || ""){
+                    campos = campos+1;
                 }
             });
+
+            if(campos >0){
+                swal({
+                    title: "Campos não Preenchidos",
+                    text: 'Por favor, verifique se todos os campos foram preenchidos e se as horas não estão com valores iguais a zero',
+                    type: 'error',
+                    timer: 4000
+                });
+            }else{
+                $.ajax({
+                    type:'post',
+                    url:'/criar-projeto/'+ id ,
+                    headers: {
+                        'X-CSRF-Token': '{{ csrf_token() }}',
+                    },
+                    success:function(data){
+                        console.log(data);
+                        swal({
+                            title: data.msg,
+                            // text: 'Do you want to continue',
+                            type: data.tipo,
+                            timer: 2000
+                        });
+
+                        //location.reload();
+
+                    }
+                });
+            }
+
         }
 
     </script>
@@ -276,8 +346,8 @@
 
     <div class="container">
         <br>
-        <h4>Atividades Previstas</h4>
-        <button onclick="adicionaratividadeModal()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Adicionar</button>
+        <button onclick="adicionaratividadeModal()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Tipo Atividade</button>
+        <button onclick="adicionargrupoModal()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Grupo de Atividade</button>
 
 
         <br><br>
@@ -300,7 +370,7 @@
                     <td>{{$atv->nome}}</td>
                     <td>{{$atv->tipo}}</td>
                     <td>
-                        <input id="descridettabela" type="text" class="form-control" value="{{$atv->oed_decricao}}">
+                        <input id="{{$atv->eod_id}}descridettabela" type="text" class="form-control" value="{{$atv->oed_decricao}}">
                     </td>
                     <td>
                         <input id="{{$atv->eod_id}}horasdettabela" type="text" class="form-control" value="<?php echo number_format ($atv->horas_estimadas,2);?>">
@@ -357,6 +427,36 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                     @if(Auth::user()->nivelacesso <3)
                         <button type="button" onclick="adicionarAtividadeCreate()" class="btn btn-primary">Adicionar</button>
+                    @endif
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Modal Criar Grupo -->
+    <div class="modal fade" id="modaladicionarGrupo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Adicionar Atividade para <?php echo $projeto;?></h4>
+                </div>
+                <div class="modal-body">
+                    <label for="">Grupo de Atividade</label>
+                    <select class="form-control" name="" id="tipoGrupomodal">
+                        @foreach($blocosatividades as $blocos)
+                            <option value="{{$blocos->id}}">{{$blocos->nomegrupo}}</option>
+                        @endforeach
+                    </select>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    @if(Auth::user()->nivelacesso <3)
+                        <button type="button" onclick="adicionarGrupoCreate()" class="btn btn-primary">Adicionar</button>
                     @endif
 
                 </div>
