@@ -25,10 +25,11 @@ class RegistroHorasController extends Controller
     public function index(){
 
 
-        $itensTabela = DB::select(' select sisprojeto_detalhe.id iddet,sisprojeto_detalhe.horas_estimadas horas_estimadasdet, sisprojeto_detalhe.horas_reais horas_reaisdet,sisprojeto_detalhe.horas_fim horas_fimdet, * from
+        $itensTabela = DB::select('select sisprojeto_detalhe.id iddet,sisprojeto_detalhe.horas_estimadas horas_estimadasdet, sisprojeto_detalhe.horas_reais horas_reaisdet,sisprojeto_detalhe.horas_fim horas_fimdet, *  from
    sisprojeto_detalhe 
 inner join sisprojetos on sisprojeto_detalhe.id_projeto = sisprojetos.id
-inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividades.id ='.auth(user.id) );
+inner join sistipo_atividades on sistipo_atividades.id = sisprojeto_detalhe.id_tpatv
+inner join sisusers on sisusers.id  = sisprojeto_detalhe.id_responsavel  where sisusers.id ='.auth()->user()->id);
 
 
         return view('registro-horas',['itensTabela'=>$itensTabela]);
@@ -64,7 +65,7 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
         $tipo = "error";
 
 
-        if(\Auth::user()->nivelacesso <3){
+
 
             $re->save();
             $lr->id_registro = $re->id;
@@ -73,10 +74,9 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
             $lr->save();
             $tipo = "success";
             $mensagem = "Registro realizado com Sucesso";
-        }else{
-            $mensagem = "Você não tem autorização para realizar essa ação";
-            $tipo = "error";
-        }
+
+
+
 
         $response = array(
             'tipo' => $tipo,
