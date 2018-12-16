@@ -111,7 +111,7 @@ return [
         'REGISTROS DE HORAS',
 
         [
-            'text'    => 'Balaço de Horas',
+            'text'    => 'Registro de Horas',
             'icon' => 'hourglass-half',
             'submenu' => [
                 [
@@ -123,7 +123,7 @@ return [
                 [
                     'text' => 'Registrar Horas',
                     'url'  => '/registro-horas',
-                    'icon'    => '',
+                    'icon'    => 'registered',
                 ],
             ],
         ],

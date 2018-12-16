@@ -39,7 +39,6 @@ class OrcamentoController extends Controller
 
     }
 
-
     public function show($id)
     {
 
@@ -105,23 +104,29 @@ class OrcamentoController extends Controller
 
     }
 
+
     public function homeEditarOrcamento($id){
+
         $orcamentoescopo = OrcamentoEscopo::find($id);
 
-        $atividades = DB::select('select *,sisescopo_orcamento_detalhe.id as eod_id,
-            sisescopo_orcamento_detalhe.descricao as oed_decricao
-                    from sisescopo_orcamento_detalhe
-                    inner join sisescopo_orcamento on sisescopo_orcamento.id = sisescopo_orcamento_detalhe.id_eo
-                    inner join sistipo_atividades on sistipo_atividades.id = sisescopo_orcamento_detalhe.id_atv
-                    where sisescopo_orcamento_detalhe.id_eo = '.$id);
+
         $horas = 0.0;
         $valortotal = 0.0;
-        foreach ($atividades as $atividade){
+        $targestao = (empty($orcamentoescopo->gestao)?0.0:$orcamentoescopo->gestao);
+        $tartecn = (empty($orcamentoescopo->tecn)?0.0:$orcamentoescopo->tecn);
+        $escopodetalhes = DB::select(' select sisescopo_orcamento_detalhe.*,sistipo_atividades.tipo  
+                     , sistipo_atividades.sigla 
+                  from sisescopo_orcamento_detalhe 
+                 inner join sistipo_atividades on sistipo_atividades.id = sisescopo_orcamento_detalhe.id_atv
+                 where sisescopo_orcamento_detalhe.id_eo ='.$id);
+
+        foreach ($escopodetalhes as $atividade){
             $horas = $horas+$atividade->horas_estimadas;
-            if($atividade->tecn == "Gestão"){
-                $valortotal = $valortotal + ($atividade->horas_estimadas *$orcamentoescopo->gestao);
+            if($atividade->tipo == "Gestão"){
+                $valortotal = $valortotal + ($atividade->horas_estimadas * $targestao);
+
             }else{
-                $valortotal = $valortotal + ($atividade->horas_estimadas *$orcamentoescopo->tecn);
+                $valortotal = $valortotal + ($atividade->horas_estimadas *$tartecn);
             }
         }
         $orcamentoescopo->horas_totais = $horas;
@@ -131,8 +136,8 @@ class OrcamentoController extends Controller
 
         $blocosatividades = BlocoTipoAtividade::all();
         return view('orcamento-detalhe',[
-            'atividades'=>$atividades,
-            'idorcamentoescopo'=>$id,
+            'atividades'=>$escopodetalhes,
+            'idorcamentoescopo'=>$orcamentoescopo->id,
             'cliente'=>$orcamentoescopo->cliente,
             'projeto'=>$orcamentoescopo->projeto,
             'tarifatecn' =>$orcamentoescopo->tecn,
@@ -200,6 +205,36 @@ class OrcamentoController extends Controller
         return response()->json($response);
     }
 
+    public function removerEscopo($id){
+
+        $mensagem="Erro no Controller, favor consultar API";
+        $tipo="error";
+
+        if(\Auth::user()->nivelacesso <3){
+            $escopoorcamento = OrcamentoEscopo::find($id);
+            $querydetalhesescopo = DB::select(' select * from sisescopo_orcamento_detalhe where sisescopo_orcamento_detalhe.id_eo ='.$id);
+            foreach($querydetalhesescopo as $q){
+                $escopodetalhe = OrcamentoDetalhe::find($q->id);
+                $escopodetalhe->delete();
+            }
+            $escopoorcamento->delete();
+
+            $mensagem="Escopo removido com sucesso";
+            $tipo="success";
+        }else{
+            $mensagem="Você não tem autorização para este recurso";
+            $tipo="error";
+        }
+
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+
+        return response()->json($response);
+    }
+
     public function adicionarBlocoEscopo(Request $request)
     {
         $mensagem="Erro no Controller, favor consultar API";
@@ -208,18 +243,18 @@ class OrcamentoController extends Controller
         $idbloco = $request->blocoid;
         $iddoescopo = $request->escopoid;
 
-        $consultadasatividades = DB::select('	select sisblocotipoatividade.id as idbloco,sistipo_atividades.* ,sistipo_atividades.id as idatv
-                from sisblocotipoatividade inner join
-                sisblocotipoatividade_detalhes on sisblocotipoatividade_detalhes.id_bloco = sisblocotipoatividade.id
-                inner join sistipo_atividades on sisblocotipoatividade.id = sisblocotipoatividade_detalhes.id_tipoatividade 
-                where sisblocotipoatividade.id='.$idbloco);
+        $consultadasatividades = DB::select('select sisblocotipoatividade_detalhes.*, sistipo_atividades.*, sistipo_atividades.id as idatv
+                        from sisblocotipoatividade_detalhes
+                        inner join sistipo_atividades on 
+                        sistipo_atividades.id = sisblocotipoatividade_detalhes.id_tipoatividade
+                         where sisblocotipoatividade_detalhes.id_bloco = '.$idbloco);
 
         if(\Auth::user()->nivelacesso <3){
 
             foreach($consultadasatividades as $consultadasatividade){
                 $orcamentodetalhe = new OrcamentoDetalhe();
                 $orcamentodetalhe->id_atv = $consultadasatividade->idatv;
-                $orcamentodetalhe->id_eo = $idbloco;
+                $orcamentodetalhe->id_eo = $iddoescopo;
                 $orcamentodetalhe->descricao = "";
                 $orcamentodetalhe->horas_estimadas =0.0;
                 $orcamentodetalhe->save();
@@ -246,34 +281,38 @@ class OrcamentoController extends Controller
 
         $mensagem="Erro no Controller, favor consultar API";
         $tipo="error";
-        $orcamentoDetalhe = OrcamentoDetalhe::find($id);
-        $orcamentoescopo = OrcamentoEscopo::find($orcamentoDetalhe->id_eo);
-        $atividade = TipoAtividade::find($orcamentoDetalhe->id_atv);
 
-        $horasremover = $orcamentoDetalhe->horas_estimadas;
-        $orcamentoDetalhe->horas_estimadas = str_replace(",",".",$request->horas);
+        $orcamentoDetalhe = OrcamentoDetalhe::find($id);
         $orcamentoDetalhe->descricao = $request->descricao;
+        $orcamentoDetalhe->horas_estimadas= str_replace(',','.',$request->horas);
 
 
         if(\Auth::user()->nivelacesso <3){
-
-
-
-            if($atividade->tipo == "Técnica"){
-                $orcamentoescopo->valor_total = $orcamentoescopo->valor_total - ($horasremover *$orcamentoescopo->tecn);
-                $orcamentoescopo->valor_total = $orcamentoescopo->valor_total + ($orcamentoDetalhe->horas_estimadas *$orcamentoescopo->tecn);
-                $orcamentoescopo->horas_totais = $orcamentoescopo->horas_totais - $horasremover;
-                $orcamentoescopo->horas_totais = $orcamentoescopo->horas_totais + $orcamentoDetalhe->horas_estimadas;
-            }
-            if($atividade->tipo == "Gestão"){
-                $orcamentoescopo->valor_total = $orcamentoescopo->valor_total - ($horasremover *$orcamentoescopo->gestao);
-                $orcamentoescopo->valor_total = $orcamentoescopo->valor_total + ($orcamentoDetalhe->horas_estimadas *$orcamentoescopo->gestao);
-                $orcamentoescopo->horas_totais = $orcamentoescopo->horas_totais - $horasremover;
-                $orcamentoescopo->horas_totais = $orcamentoescopo->horas_totais + $orcamentoDetalhe->horas_estimadas;
-            }
-
-            $orcamentoescopo->save();
             $orcamentoDetalhe->save();
+            $orcamentoescopo = OrcamentoEscopo::find($orcamentoDetalhe->id_eo);
+
+            $horas = 0.0;
+            $valortotal = 0.0;
+            $targestao = (empty($orcamentoescopo->gestao)?0.0:$orcamentoescopo->gestao);
+            $tartecn = (empty($orcamentoescopo->tecn)?0.0:$orcamentoescopo->tecn);
+            $escopodetalhes = DB::select(' select sisescopo_orcamento_detalhe.*,sistipo_atividades.tipo  
+                     , sistipo_atividades.sigla 
+                  from sisescopo_orcamento_detalhe 
+                 inner join sistipo_atividades on sistipo_atividades.id = sisescopo_orcamento_detalhe.id_atv
+                 where sisescopo_orcamento_detalhe.id_eo ='.$orcamentoescopo->id);
+
+            foreach ($escopodetalhes as $atividade){
+                $horas = $horas+$atividade->horas_estimadas;
+                if($atividade->tipo == "Gestão"){
+                    $valortotal = $valortotal + ($atividade->horas_estimadas * $targestao);
+
+                }else{
+                    $valortotal = $valortotal + ($atividade->horas_estimadas *$tartecn);
+                }
+            }
+            $orcamentoescopo->horas_totais = $horas;
+            $orcamentoescopo->valor_total = $valortotal;
+            $orcamentoescopo->save();
 
             $mensagem="Detalhe atualziado com Sucesso";
             $tipo="success";
@@ -283,10 +322,6 @@ class OrcamentoController extends Controller
 
         }
 
-//        $table->integer('id_atv')->unsigned();
-//        $table->integer('id_eo')->unsigned();
-//        $table->String('descricao');
-//        $table->float('horas_estimadas');
 
         $response = array(
             'tipo' => $tipo,
@@ -301,27 +336,36 @@ class OrcamentoController extends Controller
         $mensagem="Erro no Controller, favor consultar API";
         $tipo="error";
         $orcamentoDetalhe = OrcamentoDetalhe::find($id);
-        $orcamentoescopo = OrcamentoEscopo::find($orcamentoDetalhe->id_eo);
-        $atividade = TipoAtividade::find($orcamentoDetalhe->id_atv);
-
-        $horasremover = $orcamentoDetalhe->horas_estimadas;
 
 
         if(\Auth::user()->nivelacesso <3){
-
-
-
-            if($atividade->tipo == "Técnica"){
-                $orcamentoescopo->valor_total = $orcamentoescopo->valor_total - ($horasremover *$orcamentoescopo->tecn);
-                $orcamentoescopo->horas_totais = $orcamentoescopo->horas_totais - $horasremover;
-            }
-            if($atividade->tipo == "Gestão"){
-                $orcamentoescopo->valor_total = $orcamentoescopo->valor_total - ($horasremover *$orcamentoescopo->gestao);
-                $orcamentoescopo->horas_totais = $orcamentoescopo->horas_totais - $horasremover;
-            }
-
-            $orcamentoescopo->save();
+            $idescopo = $orcamentoDetalhe->id_eo;
             $orcamentoDetalhe->delete();
+
+            $orcamentoescopo = OrcamentoEscopo::find($idescopo);
+
+            $horas = 0.0;
+            $valortotal = 0.0;
+            $targestao = (empty($orcamentoescopo->gestao)?0.0:$orcamentoescopo->gestao);
+            $tartecn = (empty($orcamentoescopo->tecn)?0.0:$orcamentoescopo->tecn);
+            $escopodetalhes = DB::select(' select sisescopo_orcamento_detalhe.*,sistipo_atividades.tipo  
+                     , sistipo_atividades.sigla 
+                  from sisescopo_orcamento_detalhe 
+                 inner join sistipo_atividades on sistipo_atividades.id = sisescopo_orcamento_detalhe.id_atv
+                 where sisescopo_orcamento_detalhe.id_eo ='.$orcamentoescopo->id);
+
+            foreach ($escopodetalhes as $atividade){
+                $horas = $horas+$atividade->horas_estimadas;
+                if($atividade->tipo == "Gestão"){
+                    $valortotal = $valortotal + ($atividade->horas_estimadas * $targestao);
+
+                }else{
+                    $valortotal = $valortotal + ($atividade->horas_estimadas *$tartecn);
+                }
+            }
+            $orcamentoescopo->horas_totais = $horas;
+            $orcamentoescopo->valor_total = $valortotal;
+            $orcamentoescopo->save();
 
             $mensagem="Atividade removida com Sucesso";
             $tipo="success";
@@ -339,13 +383,6 @@ class OrcamentoController extends Controller
         return response()->json($response);
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function atualizarOrcamentoEscopo(Request $request,$id)
     {
         $mensagem="Erro no Controller, favor consultar API";

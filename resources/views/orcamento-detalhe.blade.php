@@ -189,7 +189,7 @@
             }
         }
 
-        function adicionarGrupoCreate(){
+        function adicionarGrupoCreate(idescopo){
 
             var blocoid = $('#tipoGrupomodal').val();
 
@@ -200,7 +200,7 @@
                         'X-CSRF-Token': '{{ csrf_token() }}',
                     },
                     data:{
-                        escopoid:{{$idorcamentoescopo}},
+                        escopoid:idescopo,
                         blocoid :blocoid
                     },
                     success:function(data){
@@ -227,7 +227,7 @@
             var descricao =  $('#'+id+'descridettabela').val();
             var horas =  $('#'+id+'horasdettabela').val();
 
-
+            //alert(descricao+"-"+horas);
             if(descricao=="" ||horas==0.0 ){
                 swal({
                     title: "Campo Vazio ou Zerado",
@@ -365,25 +365,25 @@
             </thead>
             <tbody>
             @foreach($atividades as $atv)
-                <tr class="item{{$atv->eod_id}}">
+                <tr class="item{{$atv->id}}">
                     <td>{{$atv->sigla}}</td>
-                    <td>{{$atv->nome}}</td>
+                    <td>{{$atv->descricao}}</td>
                     <td>{{$atv->tipo}}</td>
                     <td>
-                        <input id="{{$atv->eod_id}}descridettabela" type="text" class="form-control" value="{{$atv->oed_decricao}}">
+                        <input id="{{$atv->id}}descridettabela" type="text" class="form-control" value="{{$atv->descricao}}">
                     </td>
                     <td>
-                        <input id="{{$atv->eod_id}}horasdettabela" type="text" class="form-control" value="<?php echo number_format ($atv->horas_estimadas,2);?>">
+                        <input id="{{$atv->id}}horasdettabela" type="text" class="form-control" value="<?php echo number_format ($atv->horas_estimadas,2);?>">
                     </td>
 
                     <td> <button class="edit-modal btn btn-primary" title="Atualizar"
-                                 onclick="atualizarDetalhe({{$atv->eod_id}})"
+                                 onclick="atualizarDetalhe({{$atv->id}})"
                                     data-toggle="modal">
                                 <span class="glyphicon glyphicon-refresh"></span>
                             </button>
 
                         <button class="delete-modal btn btn-danger" title="Remover"
-                                onclick="removerDetalhe({{$atv->eod_id}})">
+                                onclick="removerDetalhe({{$atv->id}})">
                             <span  class="glyphicon glyphicon-trash"></span>
                         </button>
 
@@ -415,7 +415,7 @@
                     <label for="">Tipo de Atividade</label>
                     <select class="form-control" name="" id="tipoatividademodal">
                         @foreach($tiposatividade as $tpatv)
-                            <option value="{{$tpatv->id}}">{{$tpatv->nome}}</option>
+                            <option value="{{$tpatv->id}}">{{$tpatv->descricao}}</option>
                             @endforeach
                     </select>
                     <label for="">Descrição Adicional</label>
@@ -456,7 +456,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                     @if(Auth::user()->nivelacesso <3)
-                        <button type="button" onclick="adicionarGrupoCreate()" class="btn btn-primary">Adicionar</button>
+                        <button type="button" onclick="adicionarGrupoCreate({{$idorcamentoescopo}})" class="btn btn-primary">Adicionar</button>
                     @endif
 
                 </div>

@@ -9,7 +9,7 @@ class Logregistros extends Model
     protected $table = 'sislogregistros';
 
     protected $fillable = [
-        'id_registro'
+        'id_registro',
 
     ];
 

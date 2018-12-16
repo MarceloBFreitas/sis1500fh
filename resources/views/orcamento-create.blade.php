@@ -159,7 +159,7 @@
 
         function removerAtividade($id) {
             swal({
-                title: 'Confirmar Exclusão do Atividade?',
+                title: 'Confirmar Exclusão do Escopo do Orçamento?',
                 //text: 'Os projetos em que ele estiver envolvido também serão removidos, para desligamento de colaborador procure a guia Desligamento',
                 type: 'warning',
                 showCancelButton: true,
@@ -169,7 +169,7 @@
                 if (result.value) {
                     $.ajax({
                         type:'DELETE',
-                        url:'/excluir-atividade/'+$id,
+                        url:'/excluir-escopo/'+$id,
                         data:{
                             _token : "<?php echo csrf_token() ?>"
                         },
