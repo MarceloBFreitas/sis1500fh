@@ -52,8 +52,8 @@ inner join sistipo_atividades on sisprojeto_detalhe.id_tpatv  = sistipo_atividad
 
 
         $lr->hora_fim_sugerida =  $projetodetalhe->horas_fim;
-        $lr->id_progetodetalhe = $projetodetalhe->id;
-        $projetodetalhe->horas_fim =  $request->horasf ;
+        $lr->id_projetodetalhe = $projetodetalhe->id;
+        $projetodetalhe->horas_fim =  $request->horasf - $request->qtd;
         $projetodetalhe->horas_reais = $projetodetalhe->horas_reais + $re->qtd_horas;
         $projetodetalhe->save();
         $lr->hora_fim_cadastrada =  $projetodetalhe->horas_fim;
@@ -111,8 +111,11 @@ sisregistros.id_user = sisusers.id where sisregistros.id_projetodetalhe ='.$idPr
 
         $reg = Registros::find($id);
 
-        $lr = Logregistros::where('id_registro','=',$reg->id);
+      //  $lrid = DB::select('  select id from sislogregistros where sislogregistros.id_registro  ='.$id);
 
+
+
+        $lr = Logregistros::find($id);
 
 
 
@@ -120,7 +123,7 @@ sisregistros.id_user = sisusers.id where sisregistros.id_projetodetalhe ='.$idPr
 
         $prodet->horas_reais = $prodet->horas_reais - $reg->qtd_horas;
       //  $prodet->horas_fim =  $prodet->horas_fim + $reg->qtd_horas;
-        $prodet->horas_fim =  ($prodet->horas_fim + $lr->horas_sugeridas[0])-$lr->horas_adastradas[0];
+        $prodet->horas_fim =  ($prodet->horas_fim + $lr->hora_fim_sugerida)- $lr->hora_fim_cadastrada;
 
         $prodet->save();
 

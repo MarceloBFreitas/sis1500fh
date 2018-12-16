@@ -70,6 +70,7 @@
 
             var id = $('#pegaid').val();
             var hfdomodal = $('#idhorasfim').val();
+            $('#idhorasfim').val('');
 
 
 
@@ -154,7 +155,7 @@
                     <td>{{$itens->horas_fimdet}}</td>
 
                     <td>
-                        <button class="edit-modal btn btn-success" title="Adicionar" onclick="addhoras('{{$itens->iddet}}','{{$itens->horas_fim}}')">
+                        <button class="edit-modal btn btn-success" title="Adicionar" id="{{$itens->iddet}}" onclick="addhoras('{{$itens->iddet}}','{{$itens->horas_fimdet}}')">
                             <span class="glyphicon glyphicon-plus"></span>
                         </button>
                         <a href="/horas/{{$itens->iddet}}">
