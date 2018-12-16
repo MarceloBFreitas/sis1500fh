@@ -44,7 +44,7 @@
         });
 
         function excluir(id) {
-            alert(id);
+
             $.ajax({
                 type:'POST',
                 url:"/horas-excluir/"+id,
