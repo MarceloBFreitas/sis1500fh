@@ -119,6 +119,8 @@ class ProjetoController extends Controller
    }
 
     public function projetoDetalhes($id){
+
+
         $projetodetalhesquery = DB::select('
                 SELECT sisprojeto_detalhe.*,
                         (
@@ -166,6 +168,7 @@ class ProjetoController extends Controller
         $projeto->gestao = str_replace(',','.',str_replace('R$',"",str_replace(' ',"",$request->gestao)));
         $projeto->mensuracao_descricao = $request->mensuracaotexto;
         $projeto->mensuracao_data = $request->mensuracaodata;
+        $projeto->id_gestor = $request->gerente;
 
         $projetodetalhes = DB::select('select * from sisprojeto_detalhe 
             inner join sistipo_atividades on sistipo_atividades.id = sisprojeto_detalhe.id_tpatv

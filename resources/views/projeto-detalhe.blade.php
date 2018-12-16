@@ -9,14 +9,16 @@
         <div class="container collapse in" id="menutopo" >
             <div class="col-md-6">
                 <label for="">Gestor do Projeto</label>
-                <select name="" id="" class="form-control">
+                <select name="" id="gestorselectheader" class="form-control">
                     <?php
                     if(empty($projeto->id_gestor)){
                     ?>
                         <option value="" selected>Nenhum Gestor Selecionado</option>
                     <?php } ?>
                     @foreach($gestores as $gestor)
-                        <option value="{{$gestor->gest_id}}">{{$gestor->name}}</option>
+                        <option
+                                <?php if($projeto->id_gestor ==$gestor->gest_id){echo "selected";}?>
+                                value="{{$gestor->gest_id}}">{{$gestor->name}}</option>
                         @endforeach
                 </select>
                 <label for="">Nome do Projeto</label>
@@ -70,7 +72,7 @@
                     <label for="">Horas Planejadas</label>
                     <input type="text" disabled value="{{$projeto->horas_estimadas}}" class="form-control">
                     <label for="">Horas Registradas</label>
-                    <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->custo_total,2);?>" class="form-control">
+                    <input type="text" disabled value="<?php echo number_format($projeto->custo_total,2);?>" class="form-control">
                     <label for="">Valor Planejado</label>
                     <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_total,2);?>" class="form-control">
                 </div>
@@ -142,8 +144,9 @@
             var mensuracaodata = $('#mensuracaodataprojetoheader').val();
             var tecn = $('#tarifatecnprojetoheader').val();
             var gestao = $('#tarifagestaoprojetoheader').val();
+            var gerente = $('#gestorselectheader').val();
 
-            if(nomeprojeto=="" || cliente=="" ||mensuracaotexto=="" || mensuracaodata=="" ){
+            if(nomeprojeto=="" || cliente=="" ||mensuracaotexto=="" || mensuracaodata=="" || gerente==""){
                 swal({
                     title: "Campos não preenchidos",
                     text: "Por favor, verifique se todos os campos foram preenchidos",
@@ -163,7 +166,8 @@
                         mensuracaotexto : mensuracaotexto,
                         mensuracaodata : mensuracaodata,
                         tecn : tecn,
-                        gestao : gestao
+                        gestao : gestao,
+                        gerente:gerente
                     },
                     success:function(data){
                         console.log(data);
@@ -337,6 +341,7 @@
                 <th class="text-center">Sigla</th>
                 <th class="text-center">Atividade</th>
                 <th class="text-center">Tipo</th>
+                <th class="text-center">Responsável</th>
                 <th class="text-center">Horas Reais</th>
                 <th class="text-center">Estimadas</th>
                 <th class="text-center">Horas Fim</th>
@@ -348,6 +353,7 @@
                 <tr class="item{{$projetodet->id}}">
                     <td>{{$projetodet->sigla}}</td>
                     <td>{{$projetodet->nome}}</td>
+                    <td>{{$projetodet->tipo}}</td>
                     <td>{{$projetodet->tipo}}</td>
                     <td>
                         {{$projetodet->horas_reais}}
