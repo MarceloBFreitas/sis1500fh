@@ -147,7 +147,7 @@ sisregistros.id_user = sisusers.id where sisregistros.id_projetodetalhe ='.$idPr
         return response()->json($response);
 
 }
-public function alterRegistro(Request $request){
+    public function alterRegistro(Request $request){
 
     try{
 
@@ -190,4 +190,47 @@ public function alterRegistro(Request $request){
 
 
 }
+
+    public function todosRegistros(){
+
+        $todosRegistros = DB::select('  select sisregistros.descricao descricaodoregistro, * from sisregistros inner join sisprojeto_detalhe on sisregistros.id_projetodetalhe = sisprojeto_detalhe.id
+  inner join sisusers on sisregistros.id_user = sisusers.id
+  inner join sisprojetos on sisprojetos.id = sisprojeto_detalhe.id_projeto
+  inner join sistipo_atividades on sistipo_atividades.id = sisprojeto_detalhe.id_tpatv');
+
+        return view('todos-registros',['registro'=>$todosRegistros]);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -122,3 +122,7 @@ Route::get('/horas/{id}','RegistroHorasController@resHorasDet')->name('detalhe.h
 Route::post('/horas-excluir/{id}','RegistroHorasController@delDet')->name('excluir.horas');
 Route::post('/horas-alterar','RegistroHorasController@alterRegistro')->name('alterar.horas');
 Route::post('/pegar-horas-fim/{id}','RegistroHorasController@horasfim')->name('pegar.fim.horas');
+
+
+//chamar view que mostra todas os registros de hora
+Route::get('/todos-registros','RegistroHorasController@todosRegistros')->name('todos.registros');

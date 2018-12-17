@@ -116,7 +116,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'Listagem de Registros',
-                        // 'url'  => '/cadastrar-usuario',
+                    'url'  => '/todos-registros',
                     'icon' => 'list-ul',
                 ],
 
