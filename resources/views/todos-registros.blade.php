@@ -43,6 +43,14 @@
             );
 
         });
+        function chamamodaldet(desc) {
+
+            $('#showdet').modal('toggle');
+            $('#iddesc').val(desc);
+
+
+
+        }
 
     </script>
 
@@ -63,7 +71,7 @@
             </tr>
             </thead>
 
-            <tbody>$re->
+            <tbody>
                 @foreach($registro as $re)
               <tr class="item{{$re->id}}">
                  <td class="text-center">{{$re->name}}</td>
@@ -71,7 +79,11 @@
                  <td class="text-center">{{$re->sigla}}</td>
                  <td class="text-center">{{$re->dia}}</td>
                  <td class="text-center">{{$re->qtd_horas}}</td>
-                 <td class="text-center">{{$re->descricaodoregistro}}</td>
+                <td class="text-center" >
+                    <button  class="edit-modal btn btn-default"  onclick="chamamodaldet('{{$re->descricaodoregistro}}')" title="Vizualizar" >
+                      <span class="glyphicon glyphicon-zoom-in"></span>
+                  </button>
+                </td>
 
               </tr>
                 @endforeach
@@ -80,6 +92,29 @@
 
 
 
+    </div>
+
+
+    <div class="modal fade" id="showdet" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Detalhes do Registro</h4>
+                </div>
+                <div class="modal-body ">
+
+                    <div class="form-group">
+                        <h2>Registro Detalhado:</h2>
+
+                        <textarea class="form-control" rows="5" id="iddesc" disabled="true"></textarea>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
     </div>
 
 @stop
