@@ -194,27 +194,37 @@ class ProjetoController extends Controller
     public function projetoDetalhes($id){
 
 
-        $projetodetalhesquery = DB::select('
-                                                      SELECT sisprojeto_detalhe.descricao descri,*,sisusers.name as responsavel,sisusers.id as userid,
-                                                    sisprojeto_detalhe.id as id_projetodetalhe,
-                                                    sistipo_atividades.*,
-                                                        (
-                                                            select sum(sisregistros.qtd_horas) from sisregistros
-                                                                inner join sisprojeto_detalhe on sisprojeto_detalhe.id = sisregistros.id_projetodetalhe
-                                                                    where sisprojeto_detalhe.id_projeto =  sisprojeto_detalhe.id
-                                                        ) as totalhorasregistradas,
-                                                       sisprojeto_detalhe.horas_estimadas
-                                                                        -
-                                                       (
-                                                            select sum(sisregistros.qtd_horas) from sisregistros
-                                                            inner join sisprojeto_detalhe on sisprojeto_detalhe.id = sisregistros.id_projetodetalhe
-                                                            where sisprojeto_detalhe.id_projeto =  sisprojeto_detalhe.id
-                                                       )	as horasfim
-                                                       from sisprojeto_detalhe
-                                                        inner join sistipo_atividades on sistipo_atividades.id = sisprojeto_detalhe.id_tpatv
-                                                        inner join sisprojetos on sisprojetos.id = sisprojeto_detalhe.id_projeto
-                                                        left join sisusers on sisusers.id = sisprojeto_detalhe.id_responsavel
-                                                        where sisprojeto_detalhe.id_projeto='.$id);
+        $projetodetalhesquery = DB::select('SELECT
+  sisprojeto_detalhe.descricao descri,sisprojeto_detalhe.horas_estimadas horas_estimadas_det ,
+   sisprojeto_detalhe.horas_estimadas horas_fim_det ,
+  *,
+  sisusers.name AS responsavel,
+  sisusers.id AS userid,
+  sisprojeto_detalhe.id AS id_projetodetalhe,
+  sistipo_atividades.*,
+  (SELECT
+    SUM(sisregistros.qtd_horas)
+  FROM sisregistros
+  INNER JOIN sisprojeto_detalhe
+    ON sisprojeto_detalhe.id = sisregistros.id_projetodetalhe
+  WHERE sisprojeto_detalhe.id_projeto = sisprojeto_detalhe.id)
+  AS totalhorasregistradas,
+  sisprojeto_detalhe.horas_estimadas
+  - (SELECT
+    SUM(sisregistros.qtd_horas)
+  FROM sisregistros
+  INNER JOIN sisprojeto_detalhe
+    ON sisprojeto_detalhe.id = sisregistros.id_projetodetalhe
+  WHERE sisprojeto_detalhe.id_projeto = sisprojeto_detalhe.id)
+  AS horasfim
+FROM sisprojeto_detalhe
+INNER JOIN sistipo_atividades
+  ON sistipo_atividades.id = sisprojeto_detalhe.id_tpatv
+INNER JOIN sisprojetos
+  ON sisprojetos.id = sisprojeto_detalhe.id_projeto
+LEFT JOIN sisusers
+  ON sisusers.id = sisprojeto_detalhe.id_responsavel
+WHERE sisprojeto_detalhe.id_projeto = '.$id);
         $projeto = Projeto::find($id);
 
         $projetodetalhes = DB::select(' select *,
@@ -346,7 +356,7 @@ class ProjetoController extends Controller
 
         if(\Auth::user()->nivelacesso <3){
             try{
-                DB::statement('ALTER TABLE [dbo].[sisprojeto_detalhe]  NOCHECK CONSTRAINT [sisprojeto_detalhe_id_responsavel_foreign] ');
+                DB::statement('ALTER TABLE [dbo].[sisprojeto_detalhe]  NOCHECK CON STRAINT [sisprojeto_detalhe_id_responsavel_foreign] ');
                 $projetodetalhe->delete();
                 DB::statement('ALTER TABLE [dbo].[sisprojeto_detalhe]  WITH CHECK CHECK CONSTRAINT [sisprojeto_detalhe_id_responsavel_foreign]');
                 $mensagem="Atividade Removida com Sucesso";
@@ -639,6 +649,7 @@ class ProjetoController extends Controller
         $projetodetalhe = ProjetoDetalhe::find($request->idprojetodetalhe);
         $projetodetalhe->horas_estimadas = str_replace(',','.',$request->horasestimadas);
         $projetodetalhe->horas_fim = str_replace(',','.',$request->horasfim);
+        $projetodetalhe->predecessora = str_replace(" ",",",str_replace("-",",",str_replace(';',',',$request->tarefas)));
 
 
         if(\Auth::user()->nivelacesso <3){

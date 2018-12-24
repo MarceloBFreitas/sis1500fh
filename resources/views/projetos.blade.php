@@ -224,9 +224,9 @@
                                 <strong>Fim:</strong>
                             </div>
                             <div class="col-md-6">
-                                {{$projeto->horas_estimadas}} h<br>
-                                {{$projeto->horas_totais}} h<br>
-                                {{$projeto->horas_fim}} h
+                                {{number_format($projeto->horas_estimadas,2,",","")}} h<br>
+                                {{number_format($projeto->horas_totais,2,",","")}} h<br>
+                                {{number_format($projeto->horas_fim,2,",","")}} h
                             </div>
                         </div>
 

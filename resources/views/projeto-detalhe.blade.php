@@ -252,6 +252,7 @@
         function atualizarDetalheprojeto(id) {
             var horasestimadas =  $('#'+id+'horasesttabela').val();
             var horasfim =  $('#'+id+'horafimtabela').val();
+            var tarefas = $('#'+id+'tarefapred').val();
 
 
             console.log(horasfim+"-"+horasestimadas)
@@ -279,7 +280,8 @@
                                 _token : "<?php echo csrf_token() ?>",
                                 idprojetodetalhe:id,
                                 horasestimadas:horasestimadas,
-                                horasfim:horasfim
+                                horasfim:horasfim,
+                                tarefas:tarefas
 
                             },
                             success:function(data){
@@ -421,7 +423,7 @@
             <tr>
                 <th class="text-center">Sigla</th>
                 <th class="text-center">Atividade</th>
-                <th class="text-center">Tipo</th>
+                <th class="text-center">Predecessora(s)</th>
                 <th class="text-center">Responsável</th>
                 <th class="text-center">Horas Reais</th>
                 <th class="text-center">Estimadas</th>
@@ -432,9 +434,18 @@
             <tbody>
             @foreach($projetodetalhesquery as $projetodet)
                 <tr class="item{{$projetodet->id_projetodetalhe}}">
-                    <td  class="text-center">{{$projetodet->sigla}}</td>
-                    <td  class="text-center">{{$projetodet->descri}}</td>
-                    <td  class="text-center">{{$projetodet->tipo}}</td>
+                    <td  class="text-center">
+                        {{$projetodet->sigla}}<br>
+                        {{$projetodet->tipo}}
+                    </td>
+
+                    <td  class="text-center">
+                        <strong>ID:</strong>{{$projetodet->id_projetodetalhe}}<br>
+                        {{$projetodet->descri}}</td>
+                    <td  class="text-center">
+
+                        <input type="text"  value="{{$projetodet->predecessora}}" id="{{$projetodet->id_projetodetalhe}}tarefapred" size="10" placeholder="Tarefa(s)"><br>
+                    </td>
                     <td  class="text-center">
                         <?php
                         if(empty($projetodet->responsavel)){
@@ -448,10 +459,10 @@
                         {{$projetodet->horas_reais}}
                     </td>
                     <td  class="text-center">
-                        <input size="6" id="{{$projetodet->id_projetodetalhe}}horasesttabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas}}">
+                        <input size="6" id="{{$projetodet->id_projetodetalhe}}horasesttabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas_det}}">
                     </td>
                     <td  class="text-center">
-                        <input size="6" id="{{$projetodet->id_projetodetalhe}}horafimtabela" type="text" class="form-control" value="{{$projetodet->horas_fim}}">
+                        <input size="6" id="{{$projetodet->id_projetodetalhe}}horafimtabela" type="text" class="form-control" value="{{$projetodet->horas_fim_det}}">
                     </td>
 
 
@@ -477,9 +488,14 @@
         </table>
 
         <a href="/"><button class="btn btn-default">Voltar</button></a>
-        <a href="/"><button class="btn btn-primary"><span class="glyphicon glyphicon-book"></span> Salvar baseline</button></a>
+        <a href="/">
+            <button class="btn btn-primary"><span class="glyphicon glyphicon-saved"></span> Salvar baseline</button>
+            <button class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Editar baseline</button>
+        </a>
         <a href="/"><button class="btn btn-success"><span class="glyphicon glyphicon-calendar"></span> Programar Atividades</button></a>
-        <a href="/"><button class="btn btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Ordenar Execuções</button></a>
+        <a href="/"><button class="btn btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Visualizar Sequência</button></a>
+        <a href="/"><button class="btn btn-info"><span class="glyphicon glyphicon-camera"></span> Tirar Foto</button></a>
+        <a href="/"><button class="btn btn-default"><span class="glyphicon glyphicon-picture"></span> Fotos do Projeto</button></a>
 
 
 

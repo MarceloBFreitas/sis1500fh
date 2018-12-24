@@ -114,7 +114,7 @@
                         if($plano->custo ==""){
                             echo 'R$ 0,00';
                         }else{
-                            echo 'R$ '.$plano->custo;
+                            echo 'R$ '.number_format($plano->custo,2,",","");
                         }
                         ?></td>
 

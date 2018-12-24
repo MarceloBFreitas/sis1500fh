@@ -11,7 +11,7 @@
                 <label for="">Nome do Projeto</label>
                 <input type="text" id="nomeprojetoheader" value="{{$projeto}}" class="form-control">
                 <label for="">Cliente</label>
-                <input type="text" id="clienteprojetoheader" value="{{$cliente}}" class="form-control">
+                <input type="text" id="clienteprojetoheader" value="{{$cliente}}" disabled class="form-control">
                 <div class="row">
                     <div class="col-md-6">
                         <label for="">Mensuração</label>
