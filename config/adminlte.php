@@ -129,6 +129,7 @@ return [
         ],
 
 
+
         'BUSINESS',
 
         [
@@ -231,13 +232,12 @@ return [
 
         ],
 
-//        [
-//            'text'        => 'Tipos de Atividade',
-//            'url'         => '/atividades',
-//            'icon'        => 'briefcase',
-//            // 'label'       => 4,
-//            'label_color' => 'success',
-//        ],
+       [
+           'text'      => 'Cliente',
+            'url'      => '/cliente',
+           'icon'      => 'briefcase',
+           'label_color' => 'success',
+        ],
 
         [
             'text'        => 'Tipos de Atividade',

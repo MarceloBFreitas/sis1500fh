@@ -190,7 +190,34 @@
                 }
             })
         }
+        function showmodaladdcli() {
+            $("#modalCriarCliente").modal('toggle');
 
+        }
+
+
+        function salvaCli() {
+
+            var cli =  $('#addnovocli').val();
+            $.ajax({
+                type:'post',
+                url:"{{URL::route('home.cliente')}}",
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                data:{
+                    nome:cli
+                },  success:function(data){
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+                    location.reload();
+                }
+            });
+        }
     </script>
 
 
@@ -239,7 +266,9 @@
             </tbody>
         </table>
 
-        <a href="/"><button class="btn btn-default">Voltar</button></a>
+
+
+        <div > <a href="/"><button class="btn btn-default">Voltar</button></a></div>
 
     </div>
 
@@ -254,7 +283,11 @@
                 </div>
                 <div class="modal-body">
                     <label>Cliente</label>
-                    <input type="text" class="form-control" id="addclientemodal">
+                    <select class="form-control" name="" id="addclientemodal">
+                        @foreach($cliente as $cli)
+                            <option value="{{$cli->nome}}">{{$cli->nome}}</option>
+                        @endforeach
+                    </select>
                     <label>Nome do Projeto</label>
                     <input type="text" class="form-control" id="addprojetomodal">
                     <label>Objetivo</label>
@@ -291,6 +324,10 @@
             </div>
         </div>
     </div>
+
+
+
+
 
 
 

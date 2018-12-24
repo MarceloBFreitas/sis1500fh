@@ -58,14 +58,18 @@
 
 
                 <div class="col-md-6">
-                    <label for="">Horas Totais</label>
-                    <input type="text" disabled value="{{$projeto->horas_totais}}" class="form-control">
+                    <label for="">Horas Totais Planejadas</label>
+                    <input type="text" disabled value="<?php echo $projeto->horas_totais + $projeto->horas_estimadas;?>" class="form-control">
                     <label for="">Horas Fim</label>
                     <input type="text" disabled value="{{$projeto->horas_fim}}" class="form-control">
                     <label for="">Custo</label>
                     <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->custo_total,2);?>" class="form-control">
                     <label for="">Valor Real</label>
                     <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_total,2);?>" class="form-control">
+
+
+
+
                 </div>
 
                 <div class="col-md-6">
@@ -73,6 +77,7 @@
                     <input type="text" disabled value="{{$projeto->horas_estimadas}}" class="form-control">
                     <label for="">Horas Registradas</label>
                     <input type="text" disabled value="<?php echo $projeto->horas_totais;?>" class="form-control">
+
                     <label for="">Valor Planejado</label>
                     <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_planejado,2);?>" class="form-control">
                 </div>

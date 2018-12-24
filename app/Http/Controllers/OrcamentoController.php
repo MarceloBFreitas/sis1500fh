@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BlocoTipoAtividade;
+use App\Cliente;
 use App\Orcamento;
 use App\OrcamentoDetalhe;
 use App\OrcamentoEscopo;
@@ -35,7 +36,9 @@ class OrcamentoController extends Controller
                                                 sisescopo_orcamento.status as situacao
                                                 from sisescopo_orcamento');
 
-        return view('orcamento-create',['orcamentosescopo'=>$orcamentoescopo]);
+        $cli = Cliente::all();
+
+        return view('orcamento-create',['orcamentosescopo'=>$orcamentoescopo,'cliente'=>$cli]);
 
     }
 
@@ -275,6 +278,31 @@ class OrcamentoController extends Controller
         );
         return response()->json($response);
     }
+    public  function indexCli(){
+
+
+        $cli = Cliente::all();
+
+        return view('clientes',['cliente'=>$cli]);
+    }
+    public function editcli (Request $request){
+        $cli = Cliente::find($request->id);
+
+        $cli->nome = $request->nome;
+        $cli->save();
+
+
+        $mensagem="Cliente atualziado com Sucesso";
+        $tipo="success";
+
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+        return response()->json($response);
+
+    }
 
     public function atualizarAtividadeEscopoOrcamento(Request $request,$id)
     {
@@ -427,5 +455,31 @@ class OrcamentoController extends Controller
         );
         return response()->json($response);
 
+    }
+
+    public function criacli(Request $request){
+
+        $cli = new Cliente();
+        $cli->nome = $request->nome;
+
+
+
+
+        if(\Auth::user()->nivelacesso <3){
+            $cli->save();
+            $mensagem="Cliente Adicionado";
+            $tipo="success";
+        }else{
+            $mensagem="Você não tem autorização para este recurso";
+            $tipo="error";
+
+        }
+
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+        return response()->json($response);
     }
 }

@@ -98,6 +98,12 @@ Route::get('/orcamento/{id}','OrcamentoController@show')->name('home.orcamentos'
 Route::get('/orcamento-pesquisa','OrcamentoController@index')->name('home.orcamento');
 Route::post('/Registrar-orcamento','OrcamentoController@criaorc')->name('home.orcamentocria');
 
+//metodo que adiciona um novo cliente
+Route::post('/Registrar-cliente','OrcamentoController@criacli')->name('cadastrar.cliente');
+//indexcliente
+Route::get('/cliente','OrcamentoController@indexCli')->name('home.cliente');
+Route::post('/cliente-edit','OrcamentoController@editcli')->name('edit.cliente');
+
 
 
 
