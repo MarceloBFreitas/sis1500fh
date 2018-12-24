@@ -433,7 +433,7 @@
             @foreach($projetodetalhesquery as $projetodet)
                 <tr class="item{{$projetodet->id_projetodetalhe}}">
                     <td  class="text-center">{{$projetodet->sigla}}</td>
-                    <td  class="text-center">{{$projetodet->nome}}</td>
+                    <td  class="text-center">{{$projetodet->descri}}</td>
                     <td  class="text-center">{{$projetodet->tipo}}</td>
                     <td  class="text-center">
                         <?php
