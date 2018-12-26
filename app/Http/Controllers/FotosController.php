@@ -104,8 +104,6 @@ class FotosController extends Controller
             left join sisusers on sisusers.id = sisfoto_detalhe.id_responsavel 
             where sisfoto_detalhe.id_foto = '.$id);
 
-        $gestores = DB::select('select * from sisgestores inner join sisusers on sisusers.id = sisgestores.user_id
-          WHERE sisgestores.gest_id = '.$foto->id_gestor);
 
         if(empty($foto->id_gestor)){
             return view('foto-detalhe',[
@@ -114,6 +112,9 @@ class FotosController extends Controller
                 'gestores'=>'Sem Gestor Atrelado'
             ]);
         }else{
+
+            $gestores = DB::select('select * from sisgestores inner join sisusers on sisusers.id = sisgestores.user_id
+          WHERE sisgestores.gest_id = '.$foto->id_gestor);
             $nome ="";
             foreach ($gestores as $gestor){
                 $nome = $gestor->name;
