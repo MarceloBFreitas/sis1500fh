@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Foto;
 use App\FotoDetalhe;
+use App\Gestor;
 use App\Projeto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +21,7 @@ class FotosController extends Controller
 
 
         $projeto = Projeto::find($id);
-        $fotos = DB::select('select *,
+        $fotos = DB::select('select *,sisfotos.id as idfoto,
                     DATEPART(dw,sisfotos.created_at) dia_semana,
                     DATEPART(wk,sisfotos.created_at) semana,
                     DATEPART(mm,sisfotos.created_at) mes,
@@ -96,7 +97,68 @@ class FotosController extends Controller
     }
 
     public function DetalhesFoto($id){
+        $foto = Foto::find($id);
+        $detalhesfoto = DB::select('select * ,sisfoto_detalhe.id as id_fotodet
+            from sisfoto_detalhe 
+            inner join sistipo_atividades on sistipo_atividades.id = sisfoto_detalhe.id_tpatv
+            left join sisusers on sisusers.id = sisfoto_detalhe.id_responsavel 
+            where sisfoto_detalhe.id_foto = '.$id);
 
+        $gestores = DB::select('select * from sisgestores inner join sisusers on sisusers.id = sisgestores.user_id
+          WHERE sisgestores.gest_id = '.$foto->id_gestor);
+
+        if(empty($foto->id_gestor)){
+            return view('foto-detalhe',[
+                'detalhesfoto' => $detalhesfoto,
+                'foto' =>$foto,
+                'gestores'=>'Sem Gestor Atrelado'
+            ]);
+        }else{
+            $nome ="";
+            foreach ($gestores as $gestor){
+                $nome = $gestor->name;
+            }
+            return view('foto-detalhe',[
+                'detalhesfoto' => $detalhesfoto,
+                'foto' =>$foto,
+                'gestores'=>$nome
+            ]);
+
+        }
+
+    }
+
+    public function remover($id){
+
+        $mensagem="Erro no Controller, favor consultar API";
+        $tipo="error";
+
+        if(\Auth::user()->nivelacesso <3){
+
+            $foto = Foto::find($id);
+            $fotosdetalhes = DB::select(' select * from sisfoto_detalhe where id_foto ='.$id);
+
+            foreach ($fotosdetalhes as $fotosdetalhe){
+                $fotodetalhe = FotoDetalhe::find($fotosdetalhe->id);
+                $fotodetalhe->delete();
+            }
+            $foto->delete();
+
+            $mensagem="Foto do Projeto Removida com Sucesso";
+            $tipo="success";
+        }else{
+            $mensagem="Você não tem autorização para este recurso";
+            $tipo="error";
+
+        }
+
+
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+        return response()->json($response);
 
     }
 }

@@ -114,7 +114,39 @@
 
         });
 
+        function removerFoto($id) {
+            swal({
+                title: 'Confirmar Exclusão desta Foto?',
+                //text: 'Os projetos em que ele estiver envolvido também serão removidos, para desligamento de colaborador procure a guia Desligamento',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type:'put',
+                        url:'/excluir-foto/'+$id,
+                        headers: {
+                            'X-CSRF-Token': '{{ csrf_token() }}',
+                        },
+                        success:function(data){
+                            swal({
+                                title: data.msg,
+                                // text: 'Do you want to continue',
+                                type: data.tipo,
+                                timer: 2000
+                            });
+                            location.reload();
+                        }
+                    });
 
+
+                } else if (result.dismiss === swal.DismissReason.cancel) {
+
+                }
+            })
+        }
 
     </script>
 
@@ -137,7 +169,7 @@
             </thead>
             <tbody>
             @foreach($fotos as $foto)
-                <tr class="item{{$foto->id}}">
+                <tr class="item{{$foto->idfoto}}">
                     <td class="text-center">{{$foto->cliente}}</td>
                     <td class="text-center"><?php if(empty($foto->id_gestor)){echo " - - -";}else{echo $foto->name;}?></td>
                     <td>
@@ -165,13 +197,13 @@
                         <strong><?php echo retornaMes($foto->mes)?></strong>:{{$foto->ano}}
                     </td>
 
-                    <td><a href="/detalhes-foto/{{$foto->id}}">
+                    <td><a href="/detalhes-foto/{{$foto->idfoto}}">
                             <button class="edit-modal btn btn-default" title="Detalhes"
                                     data-toggle="modal">
                                 <span class="glyphicon glyphicon-edit"></span>
                             </button></a>
                         <button class="delete-modal btn btn-danger" title="Remover"
-                                onclick="removerAtividade({{$foto->id}})">
+                                onclick="removerFoto({{$foto->idfoto}})">
                             <span  class="glyphicon glyphicon-trash"></span>
                         </button></td>
                 </tr>

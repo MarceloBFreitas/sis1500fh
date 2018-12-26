@@ -92,7 +92,8 @@ Route::put('/atualizar-detalhe-projeto','ProjetoController@atualizarProjetoDetal
 
 Route::get('/fotos-projeto/{id}','FotosController@index')->name('home.fotos');
 Route::post('/criar-foto/{id}','FotosController@Create')->name('create.fotos');
-Route::post('/detalhes-foto/{id}','FotosController@DetalhesFoto')->name('detalhes.fotos');
+Route::get('/detalhes-foto/{id}','FotosController@DetalhesFoto')->name('detalhes.fotos');
+Route::put('/excluir-foto/{id}','FotosController@remover')->name('excluir.fotos');
 
 
 
