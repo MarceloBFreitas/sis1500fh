@@ -73,6 +73,86 @@ class BaselineController extends Controller
             }
 
 
+
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+        );
+
+        return response()->json($response);
+
+    }
+
+
+    public function edit(Request $request){
+
+
+
+         $base = db::select('select *from sisbaseline where sisbaseline.id_projeto = '.$request->id);
+
+         $iddabase = "";
+         foreach ($base as $b){
+             $iddabase =  $b->id;
+         }
+
+         $baseline = Baseline::find($iddabase);
+         $prod = Projeto::find($request->id);
+
+
+
+
+        $baseline->id_projeto = $prod->id;
+        $baseline->id_gestor = $prod->id_gestor;
+        $baseline->cliente = $prod->cliente;
+        $baseline->projeto = $prod->projeto;
+        $baseline->tecn = $prod->tecn;
+        $baseline->gestao = $prod->gestao;
+        $baseline->mensuracao_descricao = $prod->mensuracao_descricao;
+        $baseline->mensuracao_data = $prod->mensuracao_data;
+        $baseline->objetivo = $prod->objetivo;
+        $baseline->custo_total = $prod->custo_total;
+        $baseline->valor_total = $prod->valor_total;
+        $baseline->valor_planejado = $prod->valor_planejado;
+        $baseline->horas_estimadas = $prod->horas_estimadas;
+        $baseline->horas_totais = $prod->horas_totais;
+        $baseline->horas_fim = $prod->horas_fim;
+        $baseline->planejado = $prod->planejado;
+
+        $baseline->save();
+
+        $basedetlista = db::select('select * from sisbaseline_detalhe where sisbaseline_detalhe.id_baseline ='.$baseline->id);
+
+
+        foreach ($basedetlista as $bdet){
+            $det = BaselineDetalhe::find($bdet->id);
+
+            $det->delete();
+        }
+
+        $todosproddet = db::select('select * from sisprojeto_detalhe where sisprojeto_detalhe.id_projeto = ' . $request->id);
+
+        foreach ($todosproddet as $det) {
+            $basedet = new BaselineDetalhe();
+
+
+            $basedet->id_tpatv = $det->id_tpatv;
+            $basedet->id_baseline = $baseline->id;
+            $basedet->id_responsavel = $det->id_responsavel;
+            $basedet->descricao = $det->descricao;
+            $basedet->horas_reais = $det->horas_reais;
+            $basedet->predecessora = $det->predecessora;
+            $basedet->horas_estimadas = $det->horas_estimadas;
+            $basedet->horas_fim = $det->horas_fim;
+
+
+
+
+            $basedet->save();
+        }
+
+
+        $tipo="success";
+        $mensagem="baseline Alterada";
         $response = array(
             'tipo' => $tipo,
             'msg' => $mensagem,

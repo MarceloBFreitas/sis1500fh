@@ -116,6 +116,9 @@ Route::post('/cliente-edit','OrcamentoController@editcli')->name('edit.cliente')
 // criação baseline
 Route::post('/criar-baseline','BaselineController@addbase')->name('create.baseline');
 
+//alteração baseline
+Route::post('/alterar-baseline','BaselineController@edit')->name('edit.baseline');
+
 
 
 

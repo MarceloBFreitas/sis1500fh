@@ -457,6 +457,46 @@
 
         }
 
+        function alterarbase(id) {
+            swal({
+                title: 'Confirmar Alteração da Baseline?',
+                //text: 'Os projetos em que ele estiver envolvido também serão removidos, para desligamento de colaborador procure a guia Desligamento',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        type:'post',
+                        url:'/alterar-baseline',
+                        headers: {
+                            'X-CSRF-Token': '{{ csrf_token() }}',
+                        },
+                        data:{
+                            id:id
+                        },
+                        success:function(data){
+                            swal({
+                                title: data.msg,
+                                // text: 'Do you want to continue',
+                                type: data.tipo,
+                                timer: 2000
+                            });
+                            console.log(data);
+                            location.reload();
+                        }
+                    });
+
+
+                } else if (result.dismiss === swal.DismissReason.cancel) {
+
+                }
+            })
+
+        }
+
     </script>
 
 
@@ -540,7 +580,16 @@
 
         <a href="/"><button class="btn btn-default">Voltar</button></a>
 
-        <button onclick="adicionarbase({{$projeto->id}})" class="btn btn-primary"><span class="glyphicon glyphicon-saved"></span> Salvar baseline</>
+        <?php if($flag > 0){ ?>
+            <button onclick="alterarbase({{$projeto->id}})" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Alterar baseline</button>
+        <?php
+        } else{ ?>
+             <button onclick="adicionarbase({{$projeto->id}})" class="btn btn-primary"><span class="glyphicon glyphicon-saved"></span> Salvar baseline</button>
+        <?php }
+        ?>
+
+
+
 
 
         <a href="/"><button class="btn btn-success"><span class="glyphicon glyphicon-calendar"></span> Programar Atividades</button></a>

@@ -307,13 +307,26 @@ WHERE sisprojeto_detalhe.id_projeto = '.$id);
                    left join sisgestores on sisusers.id = sisgestores.user_id
                    left join sisconsultores on sisconsultores.user_id =sisusers.id');
 
+
+        $baseline = db::select(' select count(*) dados from sisbaseline where sisbaseline.id_projeto ='.$projeto->id);
+        $flag = 0;
+        foreach ($baseline as $b){
+            if($b->dados > 0){
+                $flag = 1;
+            }else{
+                $flag = 0;
+            }
+
+        }
+
         return view('projeto-detalhe',[
             'projetodetalhesquery' => $projetodetalhesquery,
             'projeto' =>$projeto,
             'consultores' => $consultores,
             'gestores' => $gestores,
             'tiposatividade' =>$tiposatividade,
-            'usuarios' => $usuarios
+            'usuarios' => $usuarios,
+            'flag'=>$flag
         ]);
 
     }
