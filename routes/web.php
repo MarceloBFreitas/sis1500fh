@@ -111,6 +111,13 @@ Route::post('/cliente-edit','OrcamentoController@editcli')->name('edit.cliente')
 
 
 
+
+// criação baseline
+Route::post('/criar-baseline','BaselineController@addbase')->name('create.baseline');
+
+
+
+
 Route::post('/Registrar-escopo','orcamentoescopoController@salvar')->name('registrar.escopo');
 Route::post('/tras-escopo','orcamentoescopoController@trasItem')->name('tras.escopo');
 
