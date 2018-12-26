@@ -429,6 +429,34 @@
             });
         }
 
+
+        function adicionarbase(id){
+            $.ajax({
+                type:'post',
+                url:'/criar-baseline',
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                data:{
+                    id:id
+                },
+                success:function(data){
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+                    console.log(data);
+                    location.reload();
+                }
+            });
+
+
+
+
+        }
+
     </script>
 
 
@@ -511,10 +539,10 @@
         </table>
 
         <a href="/"><button class="btn btn-default">Voltar</button></a>
-        <a href="/">
-            <button class="btn btn-primary"><span class="glyphicon glyphicon-saved"></span> Salvar baseline</button>
-            <button class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Editar baseline</button>
-        </a>
+
+        <button onclick="adicionarbase({{$projeto->id}})" class="btn btn-primary"><span class="glyphicon glyphicon-saved"></span> Salvar baseline</>
+
+
         <a href="/"><button class="btn btn-success"><span class="glyphicon glyphicon-calendar"></span> Programar Atividades</button></a>
         <a href="/"><button class="btn btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Visualizar Sequência</button></a>
         <a href="#"><button onclick="tirarFoto({{$projeto->id}})" class="btn btn-info"><span class="glyphicon glyphicon-camera"></span> Tirar Foto</button></a>

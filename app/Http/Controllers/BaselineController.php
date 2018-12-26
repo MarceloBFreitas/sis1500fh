@@ -63,6 +63,11 @@ class BaselineController extends Controller
                 $basedet->descricao = $det->descricao;
                 $basedet->horas_reais = $det->horas_reais;
                 $basedet->predecessora = $det->predecessora;
+                $basedet->horas_estimadas = $det->horas_estimadas;
+                $basedet->horas_fim = $det->horas_fim;
+
+
+
 
                 $basedet->save();
             }
