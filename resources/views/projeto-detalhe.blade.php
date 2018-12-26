@@ -406,6 +406,29 @@
             });
         }
 
+
+        function tirarFoto(id){
+            $.ajax({
+                type:'POST',
+                url:'/criar-foto/'+ id ,
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                success:function(data){
+                    console.log(data);
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+
+                    location.reload();
+
+                }
+            });
+        }
+
     </script>
 
 
@@ -494,8 +517,8 @@
         </a>
         <a href="/"><button class="btn btn-success"><span class="glyphicon glyphicon-calendar"></span> Programar Atividades</button></a>
         <a href="/"><button class="btn btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Visualizar Sequência</button></a>
-        <a href="/"><button class="btn btn-info"><span class="glyphicon glyphicon-camera"></span> Tirar Foto</button></a>
-        <a href="/"><button class="btn btn-default"><span class="glyphicon glyphicon-picture"></span> Fotos do Projeto</button></a>
+        <a href="#"><button onclick="tirarFoto({{$projeto->id}})" class="btn btn-info"><span class="glyphicon glyphicon-camera"></span> Tirar Foto</button></a>
+        <a href="/fotos-projeto/{{$projeto->id}}"><button  class="btn btn-default"><span class="glyphicon glyphicon-picture"></span> Fotos do Projeto</button></a>
 
 
 

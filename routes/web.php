@@ -88,7 +88,11 @@ Route::put('/atualizar-detalhe-projeto','ProjetoController@atualizarProjetoDetal
 
 
 
+//Fotos
 
+Route::get('/fotos-projeto/{id}','FotosController@index')->name('home.fotos');
+Route::post('/criar-foto/{id}','FotosController@Create')->name('create.fotos');
+Route::post('/detalhes-foto/{id}','FotosController@DetalhesFoto')->name('detalhes.fotos');
 
 
 
