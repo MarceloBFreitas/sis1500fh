@@ -344,6 +344,15 @@
             alert(idprodet+"-"+iduser)
 
         }
+
+        function ModaltirarFoto() {
+            var today = new Date();
+            var dy = today.getDate();
+            var mt = today.getMonth()+1;
+            var yr = today.getFullYear();
+            $('#datafotomodal').val(yr+"-"+mt+"-"+dy);
+            $("#modalfoto").modal('toggle');
+        }
         function atribuirAtividadeUser() {
             var idprodet = $('#idoprojetodetalhemodal').val();
             var iduser =  $('#useridmodalid').val();
@@ -382,8 +391,6 @@
 
 
         }
-
-
         function converteremProjeto(id){
             $.ajax({
                 type:'post',
@@ -405,31 +412,48 @@
                 }
             });
         }
-
-
         function tirarFoto(id){
-            $.ajax({
-                type:'POST',
-                url:'/criar-foto/'+ id ,
-                headers: {
-                    'X-CSRF-Token': '{{ csrf_token() }}',
-                },
-                success:function(data){
-                    console.log(data);
-                    swal({
-                        title: data.msg,
-                        // text: 'Do you want to continue',
-                        type: data.tipo,
-                        timer: 2000
+
+
+            swal({
+                title: 'Confirmar Registro da Foto?',
+                text: 'Caso exista uma foto registrada para esse dia, ela será substituida, senão uma foto será criada',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        type:'POST',
+                        url:'/criar-foto/'+ id ,
+                        headers: {
+                            'X-CSRF-Token': '{{ csrf_token() }}',
+                        },
+                        data:{
+                            datafoto: $('#datafotomodal').val()
+                        },
+                        success:function(data){
+                            console.log(data);
+                            swal({
+                                title: data.msg,
+                                // text: 'Do you want to continue',
+                                type: data.tipo,
+                                timer: 2000
+                            });
+
+                            location.reload();
+
+                        }
                     });
 
-                    location.reload();
+
+                } else if (result.dismiss === swal.DismissReason.cancel) {
 
                 }
-            });
+            })
         }
-
-
         function adicionarbase(id){
             $.ajax({
                 type:'post',
@@ -456,7 +480,6 @@
 
 
         }
-
         function alterarbase(id) {
             swal({
                 title: 'Confirmar Alteração da Baseline?',
@@ -594,7 +617,7 @@
 
         <a href="/"><button class="btn btn-success"><span class="glyphicon glyphicon-calendar"></span> Programar Atividades</button></a>
         <a href="/"><button class="btn btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Visualizar Sequência</button></a>
-        <a href="#"><button onclick="tirarFoto({{$projeto->id}})" class="btn btn-info"><span class="glyphicon glyphicon-camera"></span> Tirar Foto</button></a>
+        <a href="#"><button onclick="ModaltirarFoto()" class="btn btn-info"><span class="glyphicon glyphicon-camera"></span> Tirar Foto</button></a>
         <a href="/fotos-projeto/{{$projeto->id}}"><button  class="btn btn-default"><span class="glyphicon glyphicon-picture"></span> Fotos do Projeto</button></a>
 
 
@@ -634,6 +657,29 @@
     </div>
 
 
+
+    <!-- Modal Foto -->
+    <div class="modal fade" id="modalfoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Definir data da foto: <?php echo $projeto->projeto;?></h4>
+                </div>
+                <div class="modal-body">
+                   <span>Selecione a Data da Foto</span>
+                    <input type="date" id="datafotomodal" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    @if(Auth::user()->nivelacesso <3)
+                        <button type="button" onclick="tirarFoto(<?php echo $projeto->id;?>)" class="btn btn-primary">Adicionar</button>
+                    @endif
+
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Modal Atribuir Atividades -->
