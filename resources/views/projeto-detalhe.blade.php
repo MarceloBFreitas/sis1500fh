@@ -605,6 +605,7 @@
 
         <?php if($flag > 0){ ?>
             <button onclick="alterarbase({{$projeto->id}})" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Alterar baseline</button>
+            <a href="/view-baseline/{{$projeto->id}}"><button class="btn btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Visualizar Baseline</button></a>
         <?php
         } else{ ?>
              <button onclick="adicionarbase({{$projeto->id}})" class="btn btn-primary"><span class="glyphicon glyphicon-saved"></span> Salvar baseline</button>
@@ -616,7 +617,6 @@
 
 
         <a href="/"><button class="btn btn-success"><span class="glyphicon glyphicon-calendar"></span> Programar Atividades</button></a>
-        <a href="/"><button class="btn btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Visualizar Sequência</button></a>
         <a href="#"><button onclick="ModaltirarFoto()" class="btn btn-info"><span class="glyphicon glyphicon-camera"></span> Tirar Foto</button></a>
         <a href="/fotos-projeto/{{$projeto->id}}"><button  class="btn btn-default"><span class="glyphicon glyphicon-picture"></span> Fotos do Projeto</button></a>
 

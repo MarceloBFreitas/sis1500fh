@@ -162,5 +162,35 @@ class BaselineController extends Controller
 
     }
 
+    public  function  index($id){
+
+
+        $base = db::select(' select sisbaseline.id  idbase,* from sisbaseline
+  left join sisgestores on sisbaseline.id_gestor = sisgestores.gest_id
+  left join sisusers on sisusers.id = sisgestores.user_id
+  where sisbaseline.id_projeto ='.$id);
+        $idbaseline = 0;
+        foreach ($base as $b){
+            $idbaseline =  $b->idbase;
+        }
+
+        $baseline = Baseline::find($idbaseline);
+
+        $basedet = db::select('   select sisbaseline_detalhe.id idbase , sisbaseline_detalhe.descricao descri,* from sisbaseline_detalhe
+  left join sisusers on sisbaseline_detalhe.id_responsavel = sisusers.id
+  inner join sistipo_atividades on sistipo_atividades.id =  sisbaseline_detalhe.id_tpatv
+  where sisbaseline_detalhe.id_baseline ='.$baseline->id);
+
+
+
+
+        return view('baseline',['baseline'=>$baseline,'basedet'=>$basedet,'base'=>$base]);
+
+
+
+
+
+    }
+
 
 }

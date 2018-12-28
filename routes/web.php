@@ -119,6 +119,11 @@ Route::post('/criar-baseline','BaselineController@addbase')->name('create.baseli
 //alteração baseline
 Route::post('/alterar-baseline','BaselineController@edit')->name('edit.baseline');
 
+//view que chama visualização da baseline
+Route::get('/view-baseline/{id}','BaselineController@index')->name('view.baseline');
+
+
+
 
 
 
