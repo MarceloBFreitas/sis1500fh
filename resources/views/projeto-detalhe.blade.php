@@ -55,8 +55,6 @@
                     }
                     ?></label> <br>
                 <span>* Caso não haja ordenação, a excução considerada será pela data de inclusão na programação</span><br>
-
-
                 <div class="col-md-6">
                     <label for="">Horas Totais Planejadas</label>
                     <input type="text" disabled value="<?php echo $projeto->horas_totais + $projeto->horas_estimadas;?>" class="form-control">
@@ -66,12 +64,7 @@
                     <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->custo_total,2);?>" class="form-control">
                     <label for="">Valor Real</label>
                     <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_total,2);?>" class="form-control">
-
-
-
-
                 </div>
-
                 <div class="col-md-6">
                     <label for="">Horas Planejadas</label>
                     <input type="text" disabled value="{{$projeto->horas_estimadas}}" class="form-control">
@@ -81,12 +74,6 @@
                     <label for="">Valor Planejado</label>
                     <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_planejado,2);?>" class="form-control">
                 </div>
-
-
-
-
-
-
                 <div class="col-md-6" style="margin-top: 3%">
                     <button onclick="atualizarHeader(<?php echo $projeto->id;?>)" class="btn btn-success form-control">Atualizar Dados</button>
                 </div>
@@ -140,8 +127,44 @@
                 }
             );
 
-        });
+            $('#divgeraltabela').css('display','none');
 
+
+            $('#projetoodettablefiltrada').DataTable(
+                {
+                    "language": {
+                        "sEmptyTable": "Nenhum registro encontrado",
+                        "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                        "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                        "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                        "sInfoPostFix": "",
+                        "sInfoThousands": ".",
+                        "sLengthMenu": "_MENU_ resultados por página",
+                        "sLoadingRecords": "Carregando...",
+                        "sProcessing": "Processando...",
+                        "sZeroRecords": "Nenhum registro encontrado",
+                        "sSearch": "Pesquisar",
+                        "oPaginate": {
+                            "sNext": "Próximo",
+                            "sPrevious": "Anterior",
+                            "sFirst": "Primeiro",
+                            "sLast": "Último"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Ordenar colunas de forma ascendente",
+                            "sSortDescending": ": Ordenar colunas de forma descendente"
+                        }
+                    }
+                }
+            );
+
+
+
+        });
+        function visualizarTabeacheia(){
+            $('#divgeraltabela').css('display','inline');
+            $('#divfiltradatabela').css('display','none');
+        }
         function atualizarHeader(id) {
             var nomeprojeto = $('#nomeprojetoheader').val();
             var cliente = $('#clienteprojetoheader').val();
@@ -190,18 +213,13 @@
                 });
             }
         }
-
-
-
         function adicionaratividadeModal() {
             $("#modaladicionarAtividade").modal('toggle');
         }
-
         function vincularResponsavel($idprojeto){
             $("#modalAtribuirAtividade").modal('toggle');
             $("#idoprojetodetalhemodal").val($idprojeto);
         }
-
         function adicionarAtividadeCreate(idprojeto){
 
             var atvid = $('#tipoatividademodal').val();
@@ -248,7 +266,6 @@
                 });
             }
         }
-
         function atualizarDetalheprojeto(id) {
             var horasestimadas =  $('#'+id+'horasesttabela').val();
             var horasfim =  $('#'+id+'horafimtabela').val();
@@ -302,7 +319,6 @@
                 })
             }
         }
-
         function removerprojetoDetalhe($id) {
             swal({
                 title: 'Confirmar Exclusão da Atividade?',
@@ -336,21 +352,19 @@
                 }
             })
         }
-
-
         function __atribuirAtividadeUser(){
             var idprodet = $('#idoprojetodetalhe').val();
             var iduser =  $('#idoprojetodetalhemodal').val();
             alert(idprodet+"-"+iduser)
 
         }
-
         function ModaltirarFoto() {
             var today = new Date();
             var dy = today.getDate();
             var mt = today.getMonth()+1;
             var yr = today.getFullYear();
-            $('#datafotomodal').val(yr+"-"+mt+"-"+dy);
+            console.log(yr+"-"+mt+"-"+dy);
+            //$('#datafotomodal').val(yr+"-"+mt+"-"+dy);
             $("#modalfoto").modal('toggle');
         }
         function atribuirAtividadeUser() {
@@ -519,19 +533,88 @@
             })
 
         }
-
     </script>
-
-
-
     <div class="container">
 
         <h4>Atividades Previstas</h4>
         <button onclick="adicionaratividadeModal()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Adicionar</button>
+        <button onclick="visualizarTabeacheia()" class="btn btn-primary"><i class="glyphicon glyphicon-eye-open"></i> Visualizar Todas</button>
 
 
         <br><br>
 
+        <div id="divfiltradatabela">
+        <table class="table table-striped"  id="projetoodettablefiltrada">
+            <thead>
+            <tr>
+                <th class="text-center">Sigla</th>
+                <th class="text-center">Atividade</th>
+                <th class="text-center">Predecessora(s)</th>
+                <th class="text-center">Responsável</th>
+                <th class="text-center">Horas Reais</th>
+                <th class="text-center">Estimadas</th>
+                <th class="text-center">Horas Fim</th>
+                <th class="text-center">Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($projetodetalhesfiltradahorasfimquery as $projetodet)
+                <tr class="item{{$projetodet->id_projetodetalhe}}">
+                    <td  class="text-center">
+                        {{$projetodet->sigla}}<br>
+                        {{$projetodet->tipo}}
+                    </td>
+
+                    <td  class="text-center">
+                        <strong>ID:</strong>{{$projetodet->id_projetodetalhe}}<br>
+                        {{$projetodet->descri}}</td>
+                    <td  class="text-center">
+
+                        <input type="text"  value="{{$projetodet->predecessora}}" id="{{$projetodet->id_projetodetalhe}}tarefapred" size="10" placeholder="Tarefa(s)"><br>
+                    </td>
+                    <td  class="text-center">
+                        <?php
+                        if(empty($projetodet->responsavel)){
+                            echo '<span class="glyphicon btn-danger glyphicon-exclamation-sign"></span> N/C';
+                        }else{
+                            echo $projetodet->responsavel;
+                        }
+                        ?>
+                    </td>
+                    <td  class="text-center">
+                        {{$projetodet->horas_reais}}
+                    </td>
+                    <td  class="text-center">
+                        <input size="6" id="{{$projetodet->id_projetodetalhe}}horasesttabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas_det}}">
+                    </td>
+                    <td  class="text-center">
+                        <input size="6" id="{{$projetodet->id_projetodetalhe}}horafimtabela" type="text" class="form-control" value="{{$projetodet->horas_fim_det}}">
+                    </td>
+
+
+                    <td> <button class="edit-modal btn btn-primary" title="Atualizar"
+                                 onclick="atualizarDetalheprojeto({{$projetodet->id_projetodetalhe}})"
+                                 data-toggle="modal">
+                            <span class="glyphicon glyphicon-refresh"></span>
+                        </button>
+                        <button id="{{$projetodet->id}}botaoincluir" class="edit-modal btn btn-success" title="Atribuir"
+                                onclick="vincularResponsavel({{$projetodet->id_projetodetalhe}})"
+                                data-toggle="modal">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </button>
+                        <button class="delete-modal btn btn-danger" title="Remover"
+                                onclick="removerprojetoDetalhe({{$projetodet->id_projetodetalhe}})">
+                            <span  class="glyphicon glyphicon-trash"></span>
+                        </button>
+
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+        </div>
+
+    <div id="divgeraltabela">
         <table class="table table-striped"  id="projetoodettable">
             <thead>
             <tr>
@@ -600,6 +683,11 @@
             @endforeach
             </tbody>
         </table>
+    </div>
+
+
+
+
 
         <a href="/"><button class="btn btn-default">Voltar</button></a>
 
@@ -668,7 +756,7 @@
                 </div>
                 <div class="modal-body">
                    <span>Selecione a Data da Foto</span>
-                    <input type="date" id="datafotomodal" class="form-control">
+                    <input type="date" id="datafotomodal" value="<?php echo date('Y-m-d');?>" class="form-control">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>

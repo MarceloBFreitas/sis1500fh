@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
          $this->call(DetalheEscopoOrcamentoSeeder::class);
          $this->call(ConsultorSeeder::class);
          $this->call(GestorSeeder::class);
+         $this->call(FeriadosSeeder::class);
 
     }
 }

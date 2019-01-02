@@ -225,6 +225,47 @@ INNER JOIN sisprojetos
 LEFT JOIN sisusers
   ON sisusers.id = sisprojeto_detalhe.id_responsavel
 WHERE sisprojeto_detalhe.id_projeto = '.$id);
+
+
+        $projetodetalhesfiltradahorasfimquery = DB::select('SELECT
+  sisprojeto_detalhe.descricao descri,sisprojeto_detalhe.horas_estimadas horas_estimadas_det ,
+   sisprojeto_detalhe.horas_estimadas horas_fim_det ,
+  *,
+  sisusers.name AS responsavel,
+  sisusers.id AS userid,
+  sisprojeto_detalhe.id AS id_projetodetalhe,
+  sistipo_atividades.*,
+  (SELECT
+    SUM(sisregistros.qtd_horas)
+  FROM sisregistros
+  INNER JOIN sisprojeto_detalhe
+    ON sisprojeto_detalhe.id = sisregistros.id_projetodetalhe
+  WHERE sisprojeto_detalhe.id_projeto = sisprojeto_detalhe.id)
+  AS totalhorasregistradas,
+  sisprojeto_detalhe.horas_estimadas
+  - (SELECT
+    SUM(sisregistros.qtd_horas)
+  FROM sisregistros
+  INNER JOIN sisprojeto_detalhe
+    ON sisprojeto_detalhe.id = sisregistros.id_projetodetalhe
+  WHERE sisprojeto_detalhe.id_projeto = sisprojeto_detalhe.id)
+  AS horasfim
+FROM sisprojeto_detalhe
+INNER JOIN sistipo_atividades
+  ON sistipo_atividades.id = sisprojeto_detalhe.id_tpatv
+INNER JOIN sisprojetos
+  ON sisprojetos.id = sisprojeto_detalhe.id_projeto
+LEFT JOIN sisusers
+  ON sisusers.id = sisprojeto_detalhe.id_responsavel
+WHERE 
+sisprojeto_detalhe.horas_fim >0 and
+sisprojeto_detalhe.id_projeto = '.$id);
+
+
+
+
+
+
         $projeto = Projeto::find($id);
 
         $projetodetalhes = DB::select(' select *,
@@ -326,7 +367,8 @@ WHERE sisprojeto_detalhe.id_projeto = '.$id);
             'gestores' => $gestores,
             'tiposatividade' =>$tiposatividade,
             'usuarios' => $usuarios,
-            'flag'=>$flag
+            'flag'=>$flag,
+            'projetodetalhesfiltradahorasfimquery' => $projetodetalhesfiltradahorasfimquery
         ]);
 
     }

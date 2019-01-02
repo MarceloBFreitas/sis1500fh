@@ -17,6 +17,8 @@ class CreateTableFeriados extends Migration
             $table->increments('id')->unsigned();
             $table->date('data_feriado');
             $table->String('nome_feriado');
+
+            $table->timestamps();
         });
     }
 
