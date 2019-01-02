@@ -810,4 +810,12 @@ sisprojeto_detalhe.id_projeto = '.$id);
         }
         return $horas;
     }
+
+    public function visualizarAtividades($idprojeto){
+        return view('visualizar',[
+            'idprojeto' => $idprojeto
+        ]);
+    }
+
+
 }

@@ -110,8 +110,9 @@ Route::get('/cliente','OrcamentoController@indexCli')->name('home.cliente');
 Route::post('/cliente-edit','OrcamentoController@editcli')->name('edit.cliente');
 
 
+//visualização
 
-
+Route::get('/visualizar/{idprojeto}','ProjetoController@visualizarAtividades')->name('home.visualizar');
 
 // criação baseline
 Route::post('/criar-baseline','BaselineController@addbase')->name('create.baseline');
