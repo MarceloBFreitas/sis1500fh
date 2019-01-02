@@ -196,7 +196,7 @@ class ProjetoController extends Controller
 
         $projetodetalhesquery = DB::select('SELECT
   sisprojeto_detalhe.descricao descri,sisprojeto_detalhe.horas_estimadas horas_estimadas_det ,
-   sisprojeto_detalhe.horas_estimadas horas_fim_det ,
+   sisprojeto_detalhe.horas_fim horas_fim_det ,
   *,
   sisusers.name AS responsavel,
   sisusers.id AS userid,

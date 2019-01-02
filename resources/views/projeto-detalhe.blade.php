@@ -96,6 +96,7 @@
     }
     ?>
     <script>
+        var contador = 0;
         $(document).ready(function(){
             $('.datainput').mask('99/99/9999'); //Máscara para Data
             $('.valortable').mask("#.##0,00", {reverse: true});
@@ -162,8 +163,18 @@
 
         });
         function visualizarTabeacheia(){
-            $('#divgeraltabela').css('display','inline');
-            $('#divfiltradatabela').css('display','none');
+            if(contador==0){
+                $('#divgeraltabela').css('display','inline');
+                $('#divfiltradatabela').css('display','none');
+                $('#btvisualizarhorasfim').html('<i class="glyphicon glyphicon-eye-open"></i> Ocultar Finalizadas');
+                contador++;
+            }else{
+                $('#btvisualizarhorasfim').html(' <i class="glyphicon glyphicon-eye-close"></i> Visualizar Todas');
+                $('#divgeraltabela').css('display','none');
+                $('#divfiltradatabela').css('display','inline');
+                contador = 0;
+            }
+
         }
         function atualizarHeader(id) {
             var nomeprojeto = $('#nomeprojetoheader').val();
@@ -538,7 +549,7 @@
 
         <h4>Atividades Previstas</h4>
         <button onclick="adicionaratividadeModal()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Adicionar</button>
-        <button onclick="visualizarTabeacheia()" class="btn btn-primary"><i class="glyphicon glyphicon-eye-open"></i> Visualizar Todas</button>
+        <button onclick="visualizarTabeacheia()" id="btvisualizarhorasfim" class="btn btn-primary"><i class="glyphicon glyphicon-eye-close"></i> Visualizar Todas</button>
 
 
         <br><br>
