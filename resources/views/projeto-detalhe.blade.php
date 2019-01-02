@@ -581,7 +581,7 @@
                         {{$projetodet->descri}}</td>
                     <td  class="text-center">
 
-                        <input type="text"  value="{{$projetodet->predecessora}}" id="{{$projetodet->id_projetodetalhe}}tarefapred" size="10" placeholder="Tarefa(s)"><br>
+                        <input type="text"  class="text-center" value="{{$projetodet->predecessora}}" id="{{$projetodet->id_projetodetalhe}}tarefapred" size="5" placeholder="Tarefa(s)"><br>
                     </td>
                     <td  class="text-center">
                         <?php
@@ -596,10 +596,10 @@
                         {{$projetodet->horas_reais}}
                     </td>
                     <td  class="text-center">
-                        <input size="6" id="{{$projetodet->id_projetodetalhe}}horasesttabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas_det}}">
+                        <input size="5" class="text-center" id="{{$projetodet->id_projetodetalhe}}horasesttabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas_det}}">
                     </td>
                     <td  class="text-center">
-                        <input size="6" id="{{$projetodet->id_projetodetalhe}}horafimtabela" type="text" class="form-control" value="{{$projetodet->horas_fim_det}}">
+                        <input size="5" class="text-center" id="{{$projetodet->id_projetodetalhe}}horafimtabela" type="text" class="form-control" value="{{$projetodet->horas_fim_det}}">
                     </td>
 
 
@@ -652,7 +652,7 @@
                         {{$projetodet->descri}}</td>
                     <td  class="text-center">
 
-                        <input type="text"  value="{{$projetodet->predecessora}}" id="{{$projetodet->id_projetodetalhe}}tarefapred" size="10" placeholder="Tarefa(s)"><br>
+                        <input type="text" class="text-center" value="{{$projetodet->predecessora}}" id="{{$projetodet->id_projetodetalhe}}tarefapred" size="5" placeholder="Tarefa(s)"><br>
                     </td>
                     <td  class="text-center">
                         <?php
@@ -667,10 +667,10 @@
                         {{$projetodet->horas_reais}}
                     </td>
                     <td  class="text-center">
-                        <input size="6" id="{{$projetodet->id_projetodetalhe}}horasesttabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas_det}}">
+                        <input size="5" class="text-center" id="{{$projetodet->id_projetodetalhe}}horasesttabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas_det}}">
                     </td>
                     <td  class="text-center">
-                        <input size="6" id="{{$projetodet->id_projetodetalhe}}horafimtabela" type="text" class="form-control" value="{{$projetodet->horas_fim_det}}">
+                        <input size="5" class="text-center" id="{{$projetodet->id_projetodetalhe}}horafimtabela" type="text" class="form-control" value="{{$projetodet->horas_fim_det}}">
                     </td>
 
 

@@ -148,6 +148,43 @@ return [
         ],
 
         [
+            'text'        => 'Validações',
+            'icon'        => 'check',
+            'submenu' => [
+                [
+                    'text' => 'Objetivos',
+                    'url'  => '/atividades',
+                    'icon' => 'check',
+                ],
+                [
+                    'text' => 'Prazos',
+                    'url'  => '/grupo-atividades',
+                    'icon' => 'check',
+                ],
+                [
+                    'text' => 'Escopo',
+                    'url'  => '/grupo-atividades',
+                    'icon' => 'check',
+                ],
+                [
+                    'text' => 'Esforço',
+                    'url'  => '/grupo-atividades',
+                    'icon' => 'check',
+                ],
+                [
+                    'text' => 'Pendências',
+                    'url'  => '/grupo-atividades',
+                    'icon' => 'check',
+                ],
+                [
+                    'text' => 'Orçamento',
+                    'url'  => '/grupo-atividades',
+                    'icon' => 'check',
+                ],
+            ]
+        ],
+
+        [
             'text'    => 'Gestão',
             'icon' => 'balance-scale',
             'submenu' => [
@@ -185,6 +222,9 @@ return [
             ],
 
         ],
+
+
+
         'CADASTROS',
        // [
        //     'text' => 'Sistema de Gestão 1500FH',
