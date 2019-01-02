@@ -584,8 +584,10 @@ sisprojeto_detalhe.id_projeto = '.$id);
                 $consultor = Consultor::where('user_id','=',$reg->id_user);
                 $valorhora = $valorhora + $consultor->custohora;
             }else{
-                $gestor = Gestor::where('user_id','=',$reg->id_user);
-                $valorhora = $valorhora + $consultor->custohora;
+                $gestor = DB::select('select custohora from sisgestores where sisgestores.user_id ='.$reg->id_user);
+                foreach ($gestor as $g){
+                    $valorhora = $valorhora + $g->custohora;
+                }
             }
             $custo = $custo + ($reg->qtd_horas *$valorhora);
         }

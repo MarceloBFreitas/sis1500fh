@@ -17,7 +17,7 @@
                     <?php } ?>
                     @foreach($gestores as $gestor)
                         <option
-                                <?php if($projeto->id_gestor ==$gestor->gest_id){echo "selected";}?>
+                                <?php if($projeto->id_gestor == $gestor->gest_id){echo "selected";}?>
                                 value="{{$gestor->gest_id}}">{{$gestor->name}}</option>
                         @endforeach
                 </select>
@@ -169,7 +169,7 @@
                 $('#btvisualizarhorasfim').html('<i class="glyphicon glyphicon-eye-open"></i> Ocultar Finalizadas');
                 contador++;
             }else{
-                $('#btvisualizarhorasfim').html(' <i class="glyphicon glyphicon-eye-close"></i> Visualizar Todas');
+                $('#btvisualizarhorasfim').html(' <i class="glyphicon glyphicon-eye-close"></i> Visualizar Finalizadas');
                 $('#divgeraltabela').css('display','none');
                 $('#divfiltradatabela').css('display','inline');
                 contador = 0;
@@ -549,7 +549,7 @@
 
         <h4>Atividades Previstas</h4>
         <button onclick="adicionaratividadeModal()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Adicionar</button>
-        <button onclick="visualizarTabeacheia()" id="btvisualizarhorasfim" class="btn btn-primary"><i class="glyphicon glyphicon-eye-close"></i> Visualizar Todas</button>
+        <button onclick="visualizarTabeacheia()" id="btvisualizarhorasfim" class="btn btn-primary"><i class="glyphicon glyphicon-eye-close"></i> Visualizar Finalizadas</button>
 
 
         <br><br>
