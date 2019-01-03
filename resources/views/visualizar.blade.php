@@ -4,7 +4,7 @@
 
 @section('content_header')
 
-    <h1>Diagrama de Rede e Tempos de Eventos  </h1>
+
 @stop
 
 @section('content')
@@ -18,15 +18,19 @@
 </style>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-5">
+        <h3>Diagrama de Rede</h3>
         <div id="mynetwork"></div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-7">
+        <h3>Tempos de Eventos  </h3>
         <table class="table table-striped">
             <thead>
             <tr>
+                <th scope="col">Indíce</th>
                 <th scope="col">Atividade</th>
+                <th scope="col">Predecessora</th>
                 <th scope="col">Duração</th>
                 <th scope="col">Ini.Antec</th>
                 <th scope="col">Fim Antec</th>
@@ -36,7 +40,9 @@
             </thead>
             <tbody>
             <tr>
+                <td>2</td>
                 <td>ETL</td>
+                <td>3</td>
                 <td>5 horas</td>
                 <td>10/02/2019</td>
                 <td>20/02/2019</td>
@@ -44,7 +50,9 @@
                 <td>22/02/2019</td>
             </tr>
             <tr>
+                <td>2</td>
                 <td>ETL</td>
+                <td>3</td>
                 <td>5 horas</td>
                 <td>10/02/2019</td>
                 <td>20/02/2019</td>
@@ -52,7 +60,9 @@
                 <td>22/02/2019</td>
             </tr>
             <tr>
+                <td>2</td>
                 <td>ETL</td>
+                <td>3</td>
                 <td>5 horas</td>
                 <td>10/02/2019</td>
                 <td>20/02/2019</td>
@@ -60,13 +70,16 @@
                 <td>22/02/2019</td>
             </tr>
             <tr>
+                <td>2</td>
                 <td>ETL</td>
+                <td>3</td>
                 <td>5 horas</td>
                 <td>10/02/2019</td>
                 <td>20/02/2019</td>
                 <td>12/02/2019</td>
                 <td>22/02/2019</td>
             </tr>
+
 
             </tbody>
         </table>
