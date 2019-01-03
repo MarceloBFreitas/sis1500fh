@@ -812,6 +812,28 @@ sisprojeto_detalhe.id_projeto = '.$id);
     }
 
     public function visualizarAtividades($idprojeto){
+
+        $projetodetalhes = DB::select('select * from sisprojeto_detalhe where sisprojeto_detalhe.id_projeto ='.$idprojeto);
+
+        $nodes = array();
+        $edges = array();
+
+        foreach($projetodetalhes as $projetodetalhe){
+            if(empty($projetodetalhe->predecessora) || $projetodetalhe->predecessora ==0){
+                array_push($edges,'{from: 1, to: '.$projetodetalhe->id.'},');
+            }else{
+
+            }
+            $pred = explode(",",$projetodetalhe->predecessora);
+
+            for ($i = 1; $i <= 10; $i++) {
+                //echo $i;
+            }
+
+            array_push($edges,'{from: 1, to: '.$projetodetalhe->id.'},');
+
+        }
+
         return view('visualizar',[
             'idprojeto' => $idprojeto
         ]);
