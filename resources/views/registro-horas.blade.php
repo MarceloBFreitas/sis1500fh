@@ -76,7 +76,7 @@
 
 
 
-            if(dia == ""){
+            if(dia == "" || desc == ""){
                 swal({
                     title: 'Campo vazio',
                     text: 'Por favor, verificar se todos os campos estão preenchidos',
