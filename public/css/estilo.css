@@ -27,3 +27,15 @@ div.dataTables_wrapper div.dataTables_paginate{
 .cabecalhodet ul{
     list-style: none;
 }
+
+.swal2-popup #swal2-content {
+    font-size: 14pt !important;
+}
+
+.swal2-popup .swal2-title {
+    font-size: 2.5em !important;
+}
+.swal2-icon.swal2-warning {
+    border-color: #930 !important;
+    color: #930 !important;
+}
