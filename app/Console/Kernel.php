@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->command('foto:all')->weeklyOn(1,'7:00');
+             //->weeklyOn(1,'7:00');
         //          ->hourly();
     }
 

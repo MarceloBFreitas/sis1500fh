@@ -30,6 +30,7 @@ class CreateProjetoTable extends Migration
             $table->float('horas_totais');
             $table->float('horas_fim')->nullable();
             $table->integer('planejado')->nullable();
+            $table->string('status');
             $table->timestamps();
 
             $table->foreign('id_gestor')->references('gest_id')->on('sisgestores');

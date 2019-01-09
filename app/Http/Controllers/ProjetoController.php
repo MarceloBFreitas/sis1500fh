@@ -23,7 +23,7 @@ class ProjetoController extends Controller
 
 
     public function index(){
-        $projetosquery = DB::select(' select id, id_gestor,cliente ,projeto,tecn,gestao,mensuracao_descricao,mensuracao_data,
+        $projetosquery = DB::select(' select id,status, id_gestor,cliente ,projeto,tecn,gestao,mensuracao_descricao,mensuracao_data,
                      objetivo,custo_total,valor_total,horas_estimadas,horas_totais,
                      horas_fim,
                      created_at,updated_at ,
@@ -76,6 +76,7 @@ class ProjetoController extends Controller
             $projeto->custo_total = 0.0;
             $projeto->valor_total = 0.0;
             $projeto->valor_planejado = $orcamentoescopo->valor_total;
+            $projeto->status ='execucao';
 
 
             $projeto->horas_totais = 0.0;
@@ -800,7 +801,22 @@ sisprojeto_detalhe.id_projeto = '.$id);
         );
         return response()->json($response);
     }
+    public function finalProjeto(Request $request){
+        $pro = Projeto::find($request->id);
+        $pro->status = 'finalizado';
+        $pro->save();
+        $mensagem="projeto finalizado";
+        $tipo="success";
 
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+
+        return response()->json($response);
+
+    }
     public function totalHorasReais($idatividade){
         $registrosdaatividade = DB::select('select * from sisregistros 
         where sisregistros.id_projetodetalhe = '.$idatividade);

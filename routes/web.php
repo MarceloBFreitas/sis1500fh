@@ -85,6 +85,9 @@ Route::delete('/excluir-detalhe-projeto/{id}','ProjetoController@removerProjetoD
 Route::put('/atualizar-detalhe-projeto','ProjetoController@atualizarProjetoDetalhe')->name('remover.projeto.detalhe');
 
 
+Route::post('/finaliza','ProjetoController@finalProjeto')->name('final.projeto');
+
+
 
 
 

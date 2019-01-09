@@ -15,10 +15,49 @@
     }
     ?>
     <script>
+
+        var contador = 0;
+
         $(document).ready(function(){
+            $('#divfiltradatabela').css('display','none');
+
             $('.datainput').mask('99/99/9999'); //Máscara para Data
             $('.valortable').mask("#.##0,00", {reverse: true});
             $('#projetosdettable').DataTable(
+                {
+                    "language": {
+                        "sEmptyTable": "Nenhum registro encontrado",
+                        "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                        "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                        "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                        "sInfoPostFix": "",
+                        "sInfoThousands": ".",
+                        "sLengthMenu": "_MENU_ resultados por página",
+                        "sLoadingRecords": "Carregando...",
+                        "sProcessing": "Processando...",
+                        "sZeroRecords": "Nenhum registro encontrado",
+                        "sSearch": "Pesquisar",
+                        "oPaginate": {
+                            "sNext": "Próximo",
+                            "sPrevious": "Anterior",
+                            "sFirst": "Primeiro",
+                            "sLast": "Último"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Ordenar colunas de forma ascendente",
+                            "sSortDescending": ": Ordenar colunas de forma descendente"
+                        }
+                    }
+                }
+            );
+
+        });
+
+
+        $(document).ready(function(){
+            $('.datainput').mask('99/99/9999'); //Máscara para Data
+            $('.valortable').mask("#.##0,00", {reverse: true});
+            $('#projetosdettablefim').DataTable(
                 {
                     "language": {
                         "sEmptyTable": "Nenhum registro encontrado",
@@ -190,7 +229,20 @@
                 }
             })
         }
+        function visualizarTabeacheia(){
+            if(contador==0){
+                $('#divgeraltabela').css('display','inline');
+                $('#divfiltradatabela').css('display','none');
+                $('#btvisualizarhorasfim').html(' <i class="glyphicon glyphicon-eye-close"></i> Visualizar Finalizadas');
+                contador++;
+            }else{
+                $('#btvisualizarhorasfim').html(' <i class="glyphicon glyphicon-eye-open"></i> Ocultar Finalizadas');
+                $('#divgeraltabela').css('display','none');
+                $('#divfiltradatabela').css('display','inline');
+                contador = 0;
+            }
 
+        }
     </script>
 
 
@@ -198,7 +250,68 @@
     <div class="container">
 
         <br><br>
+        <button onclick="visualizarTabeacheia()" id="btvisualizarhorasfim" class="btn btn-primary"><i class="glyphicon glyphicon-eye-close"></i> Visualizar Finalizadas</button>
+        <div id="divfiltradatabela">
 
+            <table class="table table-striped"  id="projetosdettablefim">
+                <thead>
+                <tr>
+                    <th class="text-center">Cliente</th>
+                    <th class="text-center">Projeto</th>
+                    <th class="text-center">Gestor</th>
+                    <th class="text-center">Horas</th>
+                    <th class="text-center">Mensuração</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($projetos as $projeto)
+                    <tr class="item{{$projeto->id}}">
+                        <td class="text-center">{{$projeto->cliente}}</td>
+                        <td class="text-center">{{$projeto->projeto}}</td>
+                        <td class="text-center"><?php if(empty($projeto->gestor)){echo " - - -";}else{echo $projeto->gestor;}?></td>
+                        <td>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Estimadas: </strong><br>
+                                    <strong>Registradas:</strong> <br>
+                                    <strong>Fim:</strong>
+                                </div>
+                                <div class="col-md-6">
+                                    {{number_format($projeto->horas_estimadas,2,",","")}} h<br>
+                                    {{number_format($projeto->horas_totais,2,",","")}} h<br>
+                                    {{number_format($projeto->horas_fim,2,",","")}} h
+                                </div>
+                            </div>
+
+                        </td>
+                        <td  class="text-center">
+                            {{formatarDataFront($projeto->mensuracao_data)}} <br>
+                            {{$projeto->mensuracao_descricao}}
+                        </td>
+                        <td class="text-center"><?php if($projeto->status == 'finalizado'){echo'Finalizado'; }else echo 'Execução';?>
+                        </td>
+
+                        <td><a href="/detalhe-projeto/{{$projeto->id}}">
+                                <button class="edit-modal btn btn-default" title="Detalhes"
+                                        data-toggle="modal">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </button></a>
+                            <button class="delete-modal btn btn-danger" title="Remover"
+                                    onclick="removerAtividade({{$projeto->id}})">
+                                <span  class="glyphicon glyphicon-trash"></span>
+                            </button></td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+
+
+
+        </div>
+
+        <div id="divgeraltabela">
         <table class="table table-striped"  id="projetosdettable">
             <thead>
             <tr>
@@ -206,12 +319,14 @@
                 <th class="text-center">Projeto</th>
                 <th class="text-center">Gestor</th>
                 <th class="text-center">Horas</th>
-                <th class="text-center">Mensuração</th>
+                <th class="text-center">Mensuração tudo</th>
+                <th class="text-center">Status</th>
                 <th class="text-center">Ações</th>
             </tr>
             </thead>
             <tbody>
             @foreach($projetos as $projeto)
+                <?php if($projeto->status != 'finalizado'){?>
                 <tr class="item{{$projeto->id}}">
                     <td class="text-center">{{$projeto->cliente}}</td>
                     <td class="text-center">{{$projeto->projeto}}</td>
@@ -235,6 +350,8 @@
                         {{formatarDataFront($projeto->mensuracao_data)}} <br>
                         {{$projeto->mensuracao_descricao}}
                     </td>
+                    <td class="text-center"><?php if($projeto->status == 'finalizado'){echo'Finalizado'; }else echo 'Execução';?>
+                    </td>
 
                     <td><a href="/detalhe-projeto/{{$projeto->id}}">
                             <button class="edit-modal btn btn-default" title="Detalhes"
@@ -246,9 +363,15 @@
                             <span  class="glyphicon glyphicon-trash"></span>
                         </button></td>
                 </tr>
+                <?php } ?>
             @endforeach
             </tbody>
         </table>
+
+
+
+
+        </div>
 
         <a href="/"><button class="btn btn-default">Voltar</button></a>
 

@@ -544,6 +544,43 @@
             })
 
         }
+        function fimprojeto(id) {
+
+            swal({
+                title: 'Confirmar finalização do Projeto?',
+                text: ' Caso confirme a finalização, causara impactos nos envolvidos uma vez finalizado não aparecera atividades nos registros de hora desse projeto, Deseja continuar?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.value) {
+            $.ajax({
+
+                type:'post',
+                url:'/finaliza',
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                data:{
+                    id:id
+                },
+                success:function(data){
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+                    console.log(data);
+                    location.reload();
+                }
+            });
+                } else if (result.dismiss === swal.DismissReason.cancel) {
+
+                }
+            })
+        }
     </script>
     <div class="container">
 
@@ -625,7 +662,7 @@
         </table>
         </div>
 
-    <div id="divgeraltabela">
+         <div id="divgeraltabela">
         <table class="table table-striped"  id="projetoodettable">
             <thead>
             <tr>
@@ -719,6 +756,9 @@
         <a href="/visualizar/{{$projeto->id}}"><button class="btn btn-warning"><span class="glyphicon glyphicon-tree-deciduous"></span> Visualizar Atividades</button></a>
         <a href="#"><button onclick="ModaltirarFoto()" class="btn btn-info"><span class="glyphicon glyphicon-camera"></span> Tirar Foto</button></a>
         <a href="/fotos-projeto/{{$projeto->id}}"><button  class="btn btn-default"><span class="glyphicon glyphicon-picture"></span> Fotos do Projeto</button></a>
+       <?php if($projeto->status == 'execucao'){ ?>
+           <button  class="btn btn-danger" onclick="fimprojeto({{$projeto->id}})" >Finalizar Projeto <span class="glyphicon glyphicon-check"></span></button>
+        <?php } ?>
 
 
 
