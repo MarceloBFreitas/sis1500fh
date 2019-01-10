@@ -11,9 +11,42 @@
     <script>
 
         $(document).ready(function(){
+            $('#divfiltradatabela').css('display','none');
             $('.datainput').mask('99/99/9999'); //Máscara para Data
             $('.valortable').mask("#.##0,00", {reverse: true});
             $('#atividadetablehoras').DataTable(
+                {
+                    "language": {
+                        "sEmptyTable": "Nenhum registro encontrado",
+                        "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                        "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                        "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                        "sInfoPostFix": "",
+                        "sInfoThousands": ".",
+                        "sLengthMenu": "_MENU_ resultados por página",
+                        "sLoadingRecords": "Carregando...",
+                        "sProcessing": "Processando...",
+                        "sZeroRecords": "Nenhum registro encontrado",
+                        "sSearch": "Pesquisar",
+                        "oPaginate": {
+                            "sNext": "Próximo",
+                            "sPrevious": "Anterior",
+                            "sFirst": "Primeiro",
+                            "sLast": "Último"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Ordenar colunas de forma ascendente",
+                            "sSortDescending": ": Ordenar colunas de forma descendente"
+                        }
+                    }
+                }
+            );
+
+        });
+        $(document).ready(function(){
+            $('.datainput').mask('99/99/9999'); //Máscara para Data
+            $('.valortable').mask("#.##0,00", {reverse: true});
+            $('#atividadetablehorasfiltro').DataTable(
                 {
                     "language": {
                         "sEmptyTable": "Nenhum registro encontrado",
@@ -118,13 +151,29 @@
 
             }
 
+
+        }
+        function visualizarTabeacheia(){
+            if(contador==0){
+                $('#divgeraltabela').css('display','inline');
+                $('#divfiltradatabela').css('display','none');
+                $('#btvisualizarhorasfim').html(' <i class="glyphicon glyphicon-eye-close"></i> Visualizar Tudo');
+                contador++;
+            }else{
+                $('#btvisualizarhorasfim').html(' <i class="glyphicon glyphicon-eye-open"></i> Ocultar Com horas para fim menor que zero');
+                $('#divgeraltabela').css('display','none');
+                $('#divfiltradatabela').css('display','inline');
+                contador = 0;
+            }
+
         }
     </script>
 <div class="container">
     <input type="hidden" id="pegaid">
     <input type="hidden" id="pegahf">
+    <button onclick="visualizarTabeacheia()" id="btvisualizarhorasfim" class="btn btn-primary"><i class="glyphicon glyphicon-eye-close"></i> Visualizar Tudo</button>
 
-<div>
+<div id="divgeraltabela">
         <table  class="table table-striped"  id="atividadetablehoras">
             <thead>
             <tr>
@@ -171,6 +220,55 @@
         </table>
 
 </div>
+<div id="divfiltradatabela" >
+        <table  class="table table-striped"  id="atividadetablehorasfiltro">
+            <thead>
+            <tr>
+
+                <th class="text-center">Clientes</th>
+                <th class="text-center">Projeto</th>
+                <th class="text-center">Atividade</th>
+                <th class="text-center">Horas Estimadas</th>
+                <th class="text-center">Horas Reais</th>
+                <th class="text-center">Horas Fim</th>
+                <th class="text-center">Ação</th>
+
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach($itensTabela as $itens)
+                <?php if($itens->horas_fimdet > 0){ ?>
+                <tr class="item{{$itens->id}}">
+                    <td>{{$itens->cliente}}</td>
+                    <td>
+                        {{$itens->sigla}}<br>
+                        {{$itens->projeto}}
+
+                    </td>
+
+                    <td>{{$itens->descricao}}</td>
+                    <td>{{$itens->horas_estimadasdet}}</td>
+                    <td>{{$itens->horas_reaisdet}}</td>
+
+                    <td>{{$itens->horas_fimdet}}</td>
+
+                    <td>
+                        <button class="edit-modal btn btn-success" title="Adicionar" id="{{$itens->iddet}}" onclick="addhoras('{{$itens->iddet}}','{{$itens->horas_fimdet}}')">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                        <a href="/horas/{{$itens->iddet}}">
+                            <button  class="edit-modal btn btn-default" title="Vizualizar" >
+                                <span class="glyphicon glyphicon-zoom-in"></span>
+                            </button></a>
+                    </td>
+                </tr>
+                <?php } ?>
+            @endforeach
+            </tbody>
+        </table>
+
+    </div>
 
 
 </div>
