@@ -127,8 +127,8 @@ Route::post('/alterar-baseline','BaselineController@edit')->name('edit.baseline'
 Route::get('/view-baseline/{id}','BaselineController@index')->name('view.baseline');
 
 
-
-
+//Rota Explosão explosao
+Route::post('/explosao/{id}','ProjetoController@explosao');
 
 
 Route::post('/Registrar-escopo','orcamentoescopoController@salvar')->name('registrar.escopo');

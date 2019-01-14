@@ -856,4 +856,32 @@ sisprojeto_detalhe.id_projeto = '.$id);
     }
 
 
+    public function explosao($id){
+        $projetosdetalhes = DB::select('SELECT * from sisprojeto_detalhe where sisprojeto_detalhe.id_projeto ='.$id);
+        $mensagem = "Por favor, todas as atividades do projeto devem possuir um responsável";
+        $tipo = "error";
+
+        foreach ($projetosdetalhes as $pdetalhe){
+            if(empty($pdetalhe->id_responsavel)){
+                $response = array(
+                    'tipo' => $tipo,
+                    'msg' => $mensagem,
+
+                );
+                return response()->json($response);
+            }
+        }
+
+
+
+
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+
+        return response()->json($response);
+
+    }
 }
