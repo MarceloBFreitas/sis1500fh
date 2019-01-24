@@ -16,6 +16,11 @@ class DetalheEscopoOrcamentoSeeder extends Seeder
             'id_eo'=>1,
             'descricao' => 'Desenho da Infraestrutura do Bot',
             'horas_estimadas' =>10
+
+
+
+
+
         ]);
 
         \App\OrcamentoDetalhe::create([

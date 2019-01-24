@@ -82,6 +82,10 @@ class ProjetoController extends Controller
             $projeto->horas_totais = 0.0;
             $projeto->horas_estimadas = $orcamentoescopo->horas_totais;
             $projeto->horas_fim = $orcamentoescopo->horas_totais;
+
+
+
+
             $orcamentoescopo->status = 1;
 
 
@@ -97,6 +101,8 @@ class ProjetoController extends Controller
                     $pdetalhe->horas_estimadas = $orc_det->horas_estimadas;
                     $pdetalhe->horas_reais = 0;
                     $pdetalhe->horas_fim = $orc_det->horas_estimadas;
+
+
                     $pdetalhe->save();
                 }
 
@@ -608,6 +614,8 @@ sisprojeto_detalhe.id_projeto = '.$id);
         $projetodetalhe->horas_fim = str_replace(',','.',$request->horasestimadas);
 
 
+
+
         if(\Auth::user()->nivelacesso <3){
             $projetodetalhe->save();
 
@@ -857,9 +865,10 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
 
     public function explosao($id){
-        $projetosdetalhes = DB::select('SELECT * from sisprojeto_detalhe where sisprojeto_detalhe.id_projeto ='.$id);
+        $projetosdetalhes = DB::select('  SELECT * from sisprojeto_detalhe where sisprojeto_detalhe.id_projeto ='.$id.'  order by predecessora,id');
         $mensagem = "Por favor, todas as atividades do projeto devem possuir um responsável";
         $tipo = "error";
+
 
         foreach ($projetosdetalhes as $pdetalhe){
             if(empty($pdetalhe->id_responsavel)){
@@ -870,7 +879,58 @@ sisprojeto_detalhe.id_projeto = '.$id);
                 );
                 return response()->json($response);
             }
+
         }
+
+
+            $horasconsultorint=0;
+            //lembrar de fazer ess foreach com a lista ordenada ordenar antes desse comentario, nao esquecer de apagar esse comentario pq é feio
+        foreach ($projetosdetalhes as $pdetalhe){
+            $horasconsultor =  DB::select('
+ select horas_por_dia from sisconsultores inner join sisusers on sisconsultores.cons_id = sisusers.id
+ inner join sisprojeto_detalhe on sisprojeto_detalhe.id_responsavel = sisconsultores.cons_id
+ where sisprojeto_detalhe.id_responsavel ='.$pdetalhe.id_responsavel);
+            foreach ($horasconsultor as $horas){
+                $horasconsultorint = $horas->horas_por_dia;
+            }
+
+            $Todaldias = $pdetalhe->horas_estimadas / $horasconsultorint;
+            $Todaldias =  round($Todaldias,0);
+            $tabpredec = array('id','datafim'); // array da logica das datas
+
+
+                while($Todaldias != 0){
+                    $diatemp = 0;
+                    $pdetexplo = new ProjetoDetalhe();
+                    $pdetexplo = $pdetalhe;
+                    $pdetexplo->horas_estimadas = $horasconsultorint;
+                    $pdetexplo->horas_fim = $horasconsultorint;
+                    if($tabpredec[0][0]=='id'){
+                        $pdetexplo->data_inicio =  date('Y-m-d H:i:s');
+                    }else{
+                        //percorrer array para achar data inicio que atualizara
+                        //atualizar logica para
+                    }
+                    // inserir logica das horas inicio;
+                    //logica-----
+                    // adicionar um array com id da atv e hora que ela termina
+                    //sempre quando adicionar uma atividade atualiza o array..
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+        }
+
 
 
 
@@ -884,4 +944,6 @@ sisprojeto_detalhe.id_projeto = '.$id);
         return response()->json($response);
 
     }
+
+
 }

@@ -319,7 +319,7 @@
                 <th class="text-center">Projeto</th>
                 <th class="text-center">Gestor</th>
                 <th class="text-center">Horas</th>
-                <th class="text-center">Mensuração tudo</th>
+                <th class="text-center">Mensuração</th>
                 <th class="text-center">Status</th>
                 <th class="text-center">Ações</th>
             </tr>
