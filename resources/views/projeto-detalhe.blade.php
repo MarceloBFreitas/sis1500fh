@@ -808,6 +808,10 @@
                     <input type="text" class="form-control" id="descatvmodal">
                     <label for="">Horas Estimadas</label>
                     <input type="text" class="form-control" id="horasestimadasmodal">
+                    <label for="">Data de inicio</label>
+                    <input class="form-control"  type="date" id="inidata">
+
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>

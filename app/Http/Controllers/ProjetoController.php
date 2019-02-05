@@ -889,32 +889,80 @@ sisprojeto_detalhe.id_projeto = '.$id);
             $horasconsultor =  DB::select('
  select horas_por_dia from sisconsultores inner join sisusers on sisconsultores.cons_id = sisusers.id
  inner join sisprojeto_detalhe on sisprojeto_detalhe.id_responsavel = sisconsultores.cons_id
- where sisprojeto_detalhe.id_responsavel ='.$pdetalhe.id_responsavel);
+ where sisprojeto_detalhe.id_responsavel ='.$pdetalhe.id_responsavel);//pode ser gestor mudar o select left join
             foreach ($horasconsultor as $horas){
                 $horasconsultorint = $horas->horas_por_dia;
             }
 
             $Todaldias = $pdetalhe->horas_estimadas / $horasconsultorint;
             $Todaldias =  round($Todaldias,0);
+
             $tabpredec = array('id','datafim'); // array da logica das datas
 
-
+            $pred = $pdetalhe->predecessora;
+            $diatemp = 0;
                 while($Todaldias != 0){
-                    $diatemp = 0;
+
                     $pdetexplo = new ProjetoDetalhe();
                     $pdetexplo = $pdetalhe;
                     $pdetexplo->horas_estimadas = $horasconsultorint;
                     $pdetexplo->horas_fim = $horasconsultorint;
-                    if($tabpredec[0][0]=='id'){
-                        $pdetexplo->data_inicio =  date('Y-m-d H:i:s');
+
+
+
+
+                    if($pred == null){
+                        $pdetexplo->data_inicio =  date('y/m/d');
+                        $pdetexplo->data_fim = date('y/m/d');
+                        $pred =1;
+                        $pdetexplo->save();
+                        $diatemp = date('y/m/d');
+
                     }else{
-                        //percorrer array para achar data inicio que atualizara
-                        //atualizar logica para
+
+                        $aux=0;
+                        $dia = $diatemp;
+                        $dia = date('y/m/d', strtotime("+1 days",strtotime($dia)));
+                        while($aux !=1){
+
+
+                            $resultsemana = DB::select('select DATEPART(weekday,'.$dia.')');
+                            if($resultsemana == 1 or $resultsemana==7){
+                                $dia = date('y/m/d', strtotime("+1 days",strtotime($dia)));
+                            }else{
+
+                                $feriado = DB::select('  select COUNT(*) as diaferiado from sisferiados where sisferiados.data_feriado = '.$dia);
+                                foreach ($feriado as $f){
+                                    $feriado = $f;
+                                }
+
+                                if($feriado){
+                                    $dia = date('y/m/d', strtotime("+1 days",strtotime($dia)));
+                                }else{
+                                    $pdetexplo->data_inicio = $dia;
+                                    $pdetexplo->data_fim = $dia;
+                                    $aux = 1;
+
+                                }
+
+
+
+                            }
+
+
+
+
+
+                        }
+                        $diatemp = $dia;
+                        $pdetexplo->save();
+
+
+                        //while para encontrar dia valido
+                        //atualizar dia valido no diatemp
+                        // saindo do else decrementar total dias
                     }
-                    // inserir logica das horas inicio;
-                    //logica-----
-                    // adicionar um array com id da atv e hora que ela termina
-                    //sempre quando adicionar uma atividade atualiza o array..
+
 
 
 
