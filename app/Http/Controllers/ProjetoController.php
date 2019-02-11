@@ -884,8 +884,9 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
 
             $horasconsultorint=0;
-            //lembrar de fazer ess foreach com a lista ordenada ordenar antes desse comentario, nao esquecer de apagar esse comentario pq é feio
+
         foreach ($projetosdetalhes as $pdetalhe){
+
             $horasconsultor =  DB::select('
  select horas_por_dia from sisconsultores inner join sisusers on sisconsultores.cons_id = sisusers.id
  inner join sisprojeto_detalhe on sisprojeto_detalhe.id_responsavel = sisconsultores.cons_id
@@ -912,9 +913,9 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
 
                     if($pred == null){
-                        $pdetexplo->data_inicio =  date('y/m/d');
+                        $pdetexplo->data_inicio =  date('y/m/d');// data sugerida
                         $pdetexplo->data_fim = date('y/m/d');
-                        $pred =1;
+
                         $pdetexplo->save();
                         $diatemp = date('y/m/d');
 

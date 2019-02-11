@@ -622,6 +622,7 @@
                 <th class="text-center">Sigla</th>
                 <th class="text-center">Atividade</th>
                 <th class="text-center">Predecessora(s)</th>
+                <th class="text-center">Data inicial</th>
                 <th class="text-center">Responsável</th>
                 <th class="text-center">Horas Reais</th>
                 <th class="text-center">Estimadas</th>
@@ -643,6 +644,9 @@
                     <td  class="text-center">
 
                         <input type="text"  class="text-center" value="{{$projetodet->predecessora}}" id="{{$projetodet->id_projetodetalhe}}tarefapred" size="5" placeholder="Tarefa(s)"><br>
+                    </td>
+                    <td>
+                        <input type="date" class="text-center" id="datainicial">  <button class="edit-modal btn btn-primary"><span class="glyphicon glyphicon-refresh"></span></button>
                     </td>
                     <td  class="text-center">
                         <?php
