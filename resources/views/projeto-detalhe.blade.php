@@ -605,6 +605,67 @@
                 }
             })
         }
+
+        function adddataini(id){
+            var data =  $('#'+id+'datainicialfil').val();
+
+
+            $.ajax({
+                type:'post',
+                url:'/adddatainicial',
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                data:{
+                    data:data,
+                    id:id
+                },
+                success:function(data){
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+
+                    location.reload();
+                }
+            });
+
+
+
+
+        }
+        function adddatainisemfiltro(id){
+            var data =  $('#'+id+'datainicial').val();
+
+
+            $.ajax({
+                type:'post',
+                url:'/adddatainicialsemfiltro',
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                data:{
+                    data:data,
+                    id:id
+                },
+                success:function(data){
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+
+                    location.reload();
+                }
+            });
+
+
+
+
+        }
     </script>
     <div class="container">
 
@@ -646,7 +707,7 @@
                         <input type="text"  class="text-center" value="{{$projetodet->predecessora}}" id="{{$projetodet->id_projetodetalhe}}tarefapred" size="5" placeholder="Tarefa(s)"><br>
                     </td>
                     <td>
-                        <input type="date" class="text-center" id="datainicial">  <button class="edit-modal btn btn-primary"><span class="glyphicon glyphicon-refresh"></span></button>
+                        <input type="date" class="text-center" id="{{$projetodet->id_projetodetalhe}}datainicialfil" value="{{$projetodet->data_inicio}}">  <button onclick="adddataini({{$projetodet->id_projetodetalhe}})" class="edit-modal btn btn-primary"><span class="glyphicon glyphicon-refresh"></span></button>
                     </td>
                     <td  class="text-center">
                         <?php
@@ -697,6 +758,7 @@
                 <th class="text-center">Sigla</th>
                 <th class="text-center">Atividade</th>
                 <th class="text-center">Predecessora(s)</th>
+                <th class="text-center">Data inicial</th>
                 <th class="text-center">Responsável</th>
                 <th class="text-center">Horas Reais</th>
                 <th class="text-center">Estimadas</th>
@@ -718,6 +780,9 @@
                     <td  class="text-center">
 
                         <input type="text" class="text-center" value="{{$projetodet->predecessora}}" id="{{$projetodet->id_projetodetalhe}}tarefapred" size="5" placeholder="Tarefa(s)"><br>
+                    </td>
+                    <td>
+                        <input type="date" class="text-center" id="{{$projetodet->id_projetodetalhe}}datainicial" value="{{$projetodet->data_inicio}}" onclick="adddatainisemfiltro({{$projetodet->id_projetodetalhe}})">  <button class="edit-modal btn btn-primary"><span class="glyphicon glyphicon-refresh"></span></button>
                     </td>
                     <td  class="text-center">
                         <?php

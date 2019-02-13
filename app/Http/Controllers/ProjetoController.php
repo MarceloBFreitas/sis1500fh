@@ -12,6 +12,7 @@ use App\TipoAtividade;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\Return_;
 
 
 class ProjetoController extends Controller
@@ -863,6 +864,45 @@ sisprojeto_detalhe.id_projeto = '.$id);
         ]);
     }
 
+    public function adddatainiciofiltro(Request $request){
+        $prodetf = ProjetoDetalhe::find($request->id);
+
+        $prodetf->data_inicio = $request->data;
+        $prodetf->save();
+
+        $tipo='success';
+        $mensagem='Data de inicio adicionada';
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+
+         return response()->json($response);
+
+
+    }
+
+    public function adddatainicio(Request $request){
+        $prodetf = ProjetoDetalhe::find($request->id);
+
+        $prodetf->data_inicio = $request->data;
+        $prodetf->save();
+
+        $tipo='success';
+        $mensagem='Data de inicio adicionada';
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+
+         return response()->json($response);
+
+
+    }
+
+
 
     public function explosao($id){
         $projetosdetalhes = DB::select('  SELECT * from sisprojeto_detalhe where sisprojeto_detalhe.id_projeto ='.$id.'  order by predecessora,id');
@@ -883,88 +923,180 @@ sisprojeto_detalhe.id_projeto = '.$id);
         }
 
 
-            $horasconsultorint=0;
 
-        foreach ($projetosdetalhes as $pdetalhe){
+        $horasconsultorint=0;
+        $tabpredec = array(); // array da logica das datas
 
-            $horasconsultor =  DB::select('
- select horas_por_dia from sisconsultores inner join sisusers on sisconsultores.cons_id = sisusers.id
- inner join sisprojeto_detalhe on sisprojeto_detalhe.id_responsavel = sisconsultores.cons_id
- where sisprojeto_detalhe.id_responsavel ='.$pdetalhe.id_responsavel);//pode ser gestor mudar o select left join
-            foreach ($horasconsultor as $horas){
+
+
+        foreach ($projetosdetalhes as $pdetalhe) {
+
+
+
+            $horasconsultor = DB::select('
+              select horas_por_dia from sisconsultores inner join sisusers on sisconsultores.cons_id = sisusers.id
+              inner join sisprojeto_detalhe on sisprojeto_detalhe.id_responsavel = sisconsultores.cons_id
+              where sisprojeto_detalhe.id_responsavel ='.$pdetalhe->id_responsavel);//podeser gestor mudar o select left join
+
+
+
+            foreach ($horasconsultor as $horas) {
                 $horasconsultorint = $horas->horas_por_dia;
             }
 
             $Todaldias = $pdetalhe->horas_estimadas / $horasconsultorint;
-            $Todaldias =  round($Todaldias,0);
+            if( $pdetalhe->horas_estimadas % $horasconsultorint == 0){
 
-            $tabpredec = array('id','datafim'); // array da logica das datas
+            }else{
+
+                $Todaldias = (int) $Todaldias;
+                $Todaldias ++;
+
+            }
+
 
             $pred = $pdetalhe->predecessora;
             $diatemp = 0;
-                while($Todaldias != 0){
 
-                    $pdetexplo = new ProjetoDetalhe();
-                    $pdetexplo = $pdetalhe;
+
+
+
+            if ($pdetalhe->predecessora ==  NULL) {
+
+                // atrubuir data inicio no array
+                date('d/m/Y', strtotime($pdetalhe->data_inicio));
+                $interno = array($pdetalhe->id, date('y/m/d', strtotime($pdetalhe->data_inicio)));
+
+
+                while ($Todaldias != 0) {
+
+
+
+                     $pdetexplo = new ProjetoDetalhe();
+
+
+                    $pdetexplo->id_tpatv = $pdetalhe->id_tpatv;
+                    $pdetexplo->id_projeto = $pdetalhe->id_projeto;
+
+                    $pdetexplo->id_responsavel = $pdetalhe->id_responsavel;
+                    $pdetexplo->descricao = $pdetalhe->descricao;
+                    $pdetexplo->horas_estimadas = $pdetalhe->horas_estimadas;
+                    $pdetexplo->horas_reais = $pdetalhe->horas_reais;
+                    $pdetexplo->horas_fim = $pdetalhe->horas_fim;
+                    $pdetexplo->predecessora = $pdetalhe->predecessora;
+                    $pdetexplo->explosao = $pdetalhe->explosao;
+
+
+
                     $pdetexplo->horas_estimadas = $horasconsultorint;
                     $pdetexplo->horas_fim = $horasconsultorint;
 
+                    $dia = $interno[1];
+                    $auxnovadata = explode("/",$dia);
+                    $novadata = "20".$auxnovadata[0]."-".$auxnovadata[1]."-".$auxnovadata[2];
+
+                    $pdetexplo->data_inicio = $novadata;
+                    $pdetexplo->data_fim = $novadata;
 
 
-
-                    if($pred == null){
-                        $pdetexplo->data_inicio =  date('y/m/d');// data sugerida
-                        $pdetexplo->data_fim = date('y/m/d');
-
-                        $pdetexplo->save();
-                        $diatemp = date('y/m/d');
-
-                    }else{
-
-                        $aux=0;
-                        $dia = $diatemp;
-                        $dia = date('y/m/d', strtotime("+1 days",strtotime($dia)));
-                        while($aux !=1){
-
-
-                            $resultsemana = DB::select('select DATEPART(weekday,'.$dia.')');
-                            if($resultsemana == 1 or $resultsemana==7){
-                                $dia = date('y/m/d', strtotime("+1 days",strtotime($dia)));
-                            }else{
-
-                                $feriado = DB::select('  select COUNT(*) as diaferiado from sisferiados where sisferiados.data_feriado = '.$dia);
-                                foreach ($feriado as $f){
-                                    $feriado = $f;
-                                }
-
-                                if($feriado){
-                                    $dia = date('y/m/d', strtotime("+1 days",strtotime($dia)));
-                                }else{
-                                    $pdetexplo->data_inicio = $dia;
-                                    $pdetexplo->data_fim = $dia;
-                                    $aux = 1;
-
-                                }
-
-
-
-                            }
+                    $pdetexplo->save();
 
 
 
 
 
-                        }
-                        $diatemp = $dia;
-                        $pdetexplo->save();
 
 
-                        //while para encontrar dia valido
-                        //atualizar dia valido no diatemp
-                        // saindo do else decrementar total dias
+                    $dia = $interno[1];
+                    $auxnovadata = explode("/",$dia);
+                    $novadata = "20".$auxnovadata[0]."-".$auxnovadata[1]."-".$auxnovadata[2];
+
+
+
+                    $dia = DB::select("select DATEADD (day , 1 ,CAST('$novadata'AS DATE)) as ndata");
+
+                    $diaf="";
+                    foreach ($dia as $nd){
+                        $diaf = $nd->ndata;
                     }
 
 
+                     $interno[1] = $diaf;
+
+
+
+
+
+                     $aux = 0;
+
+
+
+
+
+
+
+
+
+                    while ($aux == 0) {
+
+                        $semana = DB::select("select DATEPART(weekday,'$diaf')as semana");
+                        $resultsemana = "";
+
+                               foreach ($semana as $res){
+                                   $resultsemana= $res->semana;
+                               }
+
+
+
+
+                        if ($resultsemana == 1 or $resultsemana == 7) {
+
+                            $dia = $interno[1];
+                            $auxnovadata = explode("/",$dia);
+                            $novadata = "20".$auxnovadata[0]."-".$auxnovadata[1]."-".$auxnovadata[2];
+
+
+
+                            $dia = DB::select("select DATEADD (day , 1 ,CAST('$novadata'AS DATE)) as ndata");
+
+                            $diaf="";
+                            foreach ($dia as $nd){
+                                $diaf = $nd->ndata;
+                            }
+
+
+                            $interno[1] = $diaf;
+
+
+
+
+
+                        }elseif(ProjetoController::testeferiado($interno[1])) {
+                            $dia = $interno[1];
+                            $auxnovadata = explode("/",$dia);
+                            $novadata = "20".$auxnovadata[0]."-".$auxnovadata[1]."-".$auxnovadata[2];
+
+
+
+                            $dia = DB::select("select DATEADD (day , 1 ,CAST('$novadata'AS DATE)) as ndata");
+
+                            $diaf="";
+                            foreach ($dia as $nd){
+                                $diaf = $nd->ndata;
+                            }
+
+
+                            $interno[1] = $diaf;
+                        } else {
+
+                            $aux = 1;
+
+                        }
+
+
+                    }
+
+                    $Todaldias = $Todaldias-1;
 
 
 
@@ -977,11 +1109,13 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
 
 
+            } else {
+                $a=0;
+            }
 
         }
 
-
-
+        $mensagem="explodida teste";
 
 
         $response = array(
@@ -991,6 +1125,23 @@ sisprojeto_detalhe.id_projeto = '.$id);
         );
 
         return response()->json($response);
+
+    }
+
+    public  function  testeferiado($dia){
+
+
+        $testedia =  DB::select("select COUNT(*) as diaferiado from sisferiados where sisferiados.data_feriado = "."'".$dia."'");
+        $teste = "";
+        foreach ($testedia as $t){
+            $teste = $t->diaferiado;
+        }
+       if($teste == 1){
+           return true;
+
+       }else{
+           return false;
+       }
 
     }
 

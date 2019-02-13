@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Support\Facades\DB;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -86,6 +86,14 @@ Route::put('/atualizar-detalhe-projeto','ProjetoController@atualizarProjetoDetal
 
 
 Route::post('/finaliza','ProjetoController@finalProjeto')->name('final.projeto');
+//add data inicio com filtro
+Route::post('/adddatainicial','ProjetoController@adddatainiciofiltro')->name('datainiciofiltro');
+
+
+Route::post('/adddatainicialsemfiltro','ProjetoController@adddatainicio')->name('datainicio');
+
+
+
 
 
 
@@ -157,3 +165,60 @@ Route::post('/pegar-horas-fim/{id}','RegistroHorasController@horasfim')->name('p
 
 //chamar view que mostra todas os registros de hora
 Route::get('/todos-registros','RegistroHorasController@todosRegistros')->name('todos.registros');
+
+Route::get('/teste', function(){
+
+
+
+
+
+
+
+    $lista = array(); //instanciei uma lista
+
+    $pessoa = [  //criando outra lista
+        'nome' => 'Marcelo',
+        'idade' => 29,
+    ];
+
+    $pessoa2 = [  //criando outra lista
+        'nome' => 'Vitor',
+        'idade' => 45,
+    ];
+    $arraydevalor = array('1',3,'Macaco',4.6);
+
+    array_push($lista,'maça');
+    array_push($lista,'banana');
+    array_push($lista,$pessoa); //adicionei uma listadentro da outra
+    array_push($lista,$pessoa2); //adicionei uma listadentro da outra
+
+    foreach ($arraydevalor as $exemplosovalor){
+        echo $exemplosovalor."<br>";
+    }
+
+
+    $dia = DB::select("select DATEADD (day , 1 ,'2019-02-23') as ndata");
+    // $dia = date('y/m/d', strtotime('+1 days', strtotime( $interno[1])));
+    $res="";
+    foreach ($dia as $nd){
+        $res =  $nd->ndata;
+    }
+
+    echo $res;
+    echo "<br><hr>";
+
+
+    foreach ($lista as $l){
+        if(is_array($l)){
+            $laco = 0;
+            foreach ($l as  $chave => $valor){
+                echo "laço:".$laco."<br>";
+                $laco++;
+                echo "Chave:".$chave."<br>";
+                echo "Valor:".$valor."<br>";
+            }
+        }
+    }
+    dd($lista);
+
+});
