@@ -954,7 +954,7 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
             }
 
-
+            $auxtotoaldia = $Todaldias;
             $pred = $pdetalhe->predecessora;
             $diatemp = 0;
 
@@ -991,25 +991,25 @@ sisprojeto_detalhe.id_projeto = '.$id);
                     $pdetexplo->horas_estimadas = $horasconsultorint;
                     $pdetexplo->horas_fim = $horasconsultorint;
 
-                    $dia = $interno[1];
-                    $auxnovadata = explode("/",$dia);
-                    $novadata = "20".$auxnovadata[0]."-".$auxnovadata[1]."-".$auxnovadata[2];
 
-                    $pdetexplo->data_inicio = $novadata;
-                    $pdetexplo->data_fim = $novadata;
+
+                    $dia = $interno[1];
+                    if( $Todaldias != $auxtotoaldia) {
+                        $pdetexplo->data_inicio = $dia;
+                        $pdetexplo->data_fim = $dia;
+                        $novadata = $dia;
+
+                    }else {
+
+                        $auxnovadata = explode("/", $dia);
+                        $novadata = "20" . $auxnovadata[0] . "-" . $auxnovadata[1] . "-" . $auxnovadata[2];
+
+                        $pdetexplo->data_inicio = $novadata;
+                        $pdetexplo->data_fim = $novadata;
+                    }
 
 
                     $pdetexplo->save();
-
-
-
-
-
-
-
-                    $dia = $interno[1];
-                    $auxnovadata = explode("/",$dia);
-                    $novadata = "20".$auxnovadata[0]."-".$auxnovadata[1]."-".$auxnovadata[2];
 
 
 
@@ -1030,20 +1030,16 @@ sisprojeto_detalhe.id_projeto = '.$id);
                      $aux = 0;
 
 
+                    $obj = new ProjetoController();
+                    while ($aux == 0 ) {
 
 
-
-
-
-
-
-                    while ($aux == 0) {
 
                         $semana = DB::select("select DATEPART(weekday,'$diaf')as semana");
                         $resultsemana = "";
 
                                foreach ($semana as $res){
-                                   $resultsemana= $res->semana;
+                                   $resultsemana = $res->semana;
                                }
 
 
@@ -1051,14 +1047,16 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
                         if ($resultsemana == 1 or $resultsemana == 7) {
 
-                            $dia = $interno[1];
-                            $auxnovadata = explode("/",$dia);
-                            $novadata = "20".$auxnovadata[0]."-".$auxnovadata[1]."-".$auxnovadata[2];
 
+                            //$dia = $interno[1];
+                            //$auxnovadata = explode("/",$dia);
+                            $novadata = $interno[1];//"20".$auxnovadata[0]."-".$auxnovadata[1]."-".$auxnovadata[2];
 
-
-                            $dia = DB::select("select DATEADD (day , 1 ,CAST('$novadata'AS DATE)) as ndata");
-
+                            if($resultsemana == 7) {
+                                $dia = DB::select("select DATEADD (day , 2 ,CAST('$novadata'AS DATE)) as ndata");
+                            }else {
+                                $dia = DB::select("select DATEADD (day , 1 ,CAST('$novadata'AS DATE)) as ndata");
+                            }
                             $diaf="";
                             foreach ($dia as $nd){
                                 $diaf = $nd->ndata;
@@ -1071,27 +1069,38 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
 
 
-                        }elseif(ProjetoController::testeferiado($interno[1])) {
-                            $dia = $interno[1];
-                            $auxnovadata = explode("/",$dia);
-                            $novadata = "20".$auxnovadata[0]."-".$auxnovadata[1]."-".$auxnovadata[2];
+
+                        }elseif($obj->testeferiado($interno[1])) {
+
+
+                          //   $testedia =  DB::select("select COUNT(*) as diaferiado from sisferiados where sisferiados.data_feriado = "."'".$interno[1]."'");
+                           // foreach ($testedia as $t){
+                             //   $testedia = $t->diaferiado;
+                            //}
+                              //  if($testedia){
+                                    $novadata = $interno[1];//"20".$auxnovadata[0]."-".$auxnovadata[1]."-".$auxnovadata[2];
 
 
 
-                            $dia = DB::select("select DATEADD (day , 1 ,CAST('$novadata'AS DATE)) as ndata");
+                                    $dia = DB::select("select DATEADD (day , 1 ,CAST('$novadata'AS DATE)) as ndata");
 
-                            $diaf="";
-                            foreach ($dia as $nd){
-                                $diaf = $nd->ndata;
-                            }
+                                    $diaf="";
+                                    foreach ($dia as $nd){
+                                        $diaf = $nd->ndata;
+                                    }
 
 
-                            $interno[1] = $diaf;
-                        } else {
+                                    $interno[1] = $diaf;
 
-                            $aux = 1;
+                                }else{
+                                     $aux =2;
+                                }
 
-                        }
+
+
+
+
+
 
 
                     }
@@ -1104,13 +1113,13 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
 
                 }
+                return "a";
 
+                array_push($tabpredec,$interno);
 
-
-
-
+                return$tabpredec;
             } else {
-                $a=0;
+                return "a";
             }
 
         }
