@@ -171,7 +171,7 @@
                     'X-CSRF-Token': '{{ csrf_token() }}',
                 },
                 success:function(data){
-                    console.log(data);
+                    //console.log(data);
                     swal({
                         title: data.msg,
                         // text: 'Do you want to continue',
@@ -179,7 +179,7 @@
                         timer: 4000
                     });
 
-                    //location.reload();
+                    location.reload();
 
 
                 }
