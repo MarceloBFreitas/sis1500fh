@@ -1242,7 +1242,7 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
         }
 
-        $mensagem="explodida teste";
+        $mensagem="Projeto Programado";
 
         $tipo = "succes";
         $response = array(
