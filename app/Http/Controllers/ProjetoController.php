@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cliente;
 use App\Consultor;
+use App\ExplosaoAtv;
 use App\Gestor;
 use App\OrcamentoEscopo;
 use App\Projeto;
@@ -920,16 +921,28 @@ sisprojeto_detalhe.id_projeto = '.$id);
                 return response()->json($response);
             }
 
-        }
+            elseif($pdetalhe->predecessora == null && $pdetalhe->data_inicio == null){
 
+
+                $response = "Atividades com predecessoras null deverão conter data inicial obrigatorio";
+
+                $response = array(
+                    'tipo' => $tipo,
+                    'msg' => $response,
+
+                );
+                return response()->json($response);
+            }
+
+        }
 
 
         $horasconsultorint=0;
         $tabpredec = array(); // array da logica das datas
 
 
-
         foreach ($projetosdetalhes as $pdetalhe) {
+
 
 
 
@@ -944,7 +957,9 @@ sisprojeto_detalhe.id_projeto = '.$id);
                 $horasconsultorint = $horas->horas_por_dia;
             }
 
+
             $Todaldias = $pdetalhe->horas_estimadas / $horasconsultorint;
+
             if( $pdetalhe->horas_estimadas % $horasconsultorint == 0){
 
             }else{
@@ -953,6 +968,10 @@ sisprojeto_detalhe.id_projeto = '.$id);
                 $Todaldias ++;
 
             }
+
+
+
+
 
             $auxtotoaldia = $Todaldias;
             $pred = $pdetalhe->predecessora;
@@ -972,13 +991,16 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
 
 
-                     $pdetexplo = new ProjetoDetalhe();
+                    $pdetexplo = new ExplosaoAtv();
 
 
+                    $pdetexplo->id_microatv = $pdetalhe->id;
                     $pdetexplo->id_tpatv = $pdetalhe->id_tpatv;
+
                     $pdetexplo->id_projeto = $pdetalhe->id_projeto;
 
                     $pdetexplo->id_responsavel = $pdetalhe->id_responsavel;
+
                     $pdetexplo->descricao = $pdetalhe->descricao;
                     $pdetexplo->horas_estimadas = $pdetalhe->horas_estimadas;
                     $pdetexplo->horas_reais = $pdetalhe->horas_reais;
@@ -1010,6 +1032,9 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
 
                     $pdetexplo->save();
+
+
+
 
 
 
@@ -1113,7 +1138,8 @@ sisprojeto_detalhe.id_projeto = '.$id);
                 array_push($tabpredec,$interno);
 
 
-            } else {
+            }
+            else {
 
 
                 $dataini ="";
@@ -1126,17 +1152,21 @@ sisprojeto_detalhe.id_projeto = '.$id);
                 }
                     $interno = array($pdetalhe->id, $dataini);
                // return $dataini;
+
+
                 while ($Todaldias != 0) {
 
 
 
-                    $pdetexplo = new ProjetoDetalhe();
+                    $pdetexplo = new ExplosaoAtv();
 
-
+                    $pdetexplo->id_microatv = $pdetalhe->id;
                     $pdetexplo->id_tpatv = $pdetalhe->id_tpatv;
                     $pdetexplo->id_projeto = $pdetalhe->id_projeto;
 
                     $pdetexplo->id_responsavel = $pdetalhe->id_responsavel;
+
+
                     $pdetexplo->descricao = $pdetalhe->descricao;
                     $pdetexplo->horas_estimadas = $pdetalhe->horas_estimadas;
                     $pdetexplo->horas_reais = $pdetalhe->horas_reais;
@@ -1241,6 +1271,35 @@ sisprojeto_detalhe.id_projeto = '.$id);
             }
 
         }
+
+
+
+
+        foreach ($projetosdetalhes as $trocadata){
+
+            $prodet = ProjetoDetalhe::find($trocadata->id);
+
+
+            $datas = DB::select('    select MAX(data_fim)as maxima ,min(data_inicio) as minima from sis_explosao_atv  where sis_explosao_atv.id_microatv = '.$trocadata->id);
+
+            $datafim="";
+            $dataini="";
+
+            foreach ($datas as $d){
+                $datafim=$d->maxima;
+                $dataini=$d->minima;
+
+            }
+
+
+
+                $prodet->data_inicio = $dataini;
+                $prodet->data_fim = $datafim;
+            $prodet->explosao = 'programada';
+            $prodet->save();
+
+        }
+
 
         $mensagem="Projeto Programado";
 
