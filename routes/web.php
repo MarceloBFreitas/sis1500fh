@@ -86,6 +86,8 @@ Route::put('/atualizar-detalhe-projeto','ProjetoController@atualizarProjetoDetal
 
 
 Route::post('/finaliza','ProjetoController@finalProjeto')->name('final.projeto');
+
+Route::post('/atualiza-atv','ProjetoController@salvarmudancas')->name('att.projeto');
 //add data inicio com filtro
 Route::post('/adddatainicial','ProjetoController@adddatainiciofiltro')->name('datainiciofiltro');
 
@@ -161,6 +163,10 @@ Route::get('/horas/{id}','RegistroHorasController@resHorasDet')->name('detalhe.h
 Route::post('/horas-excluir/{id}','RegistroHorasController@delDet')->name('excluir.horas');
 Route::post('/horas-alterar','RegistroHorasController@alterRegistro')->name('alterar.horas');
 Route::post('/pegar-horas-fim/{id}','RegistroHorasController@horasfim')->name('pegar.fim.horas');
+
+
+
+
 
 
 //chamar view que mostra todas os registros de hora

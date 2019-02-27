@@ -1141,7 +1141,6 @@ sisprojeto_detalhe.id_projeto = '.$id);
             }
             else {
 
-
                 $dataini ="";
                 foreach ($tabpredec as $arr) {
 
@@ -1330,6 +1329,36 @@ sisprojeto_detalhe.id_projeto = '.$id);
        }
 
     }
+    public function salvarmudancas(Request $request)
+    {
+            $dadosArray = $request->itens;
 
+         return $dadosArray[0]['id'];
+
+        foreach ($dadosArray as $res->alue){
+
+          $prodet = ProjetoDetalhe::find($res->id);
+
+        $prodet->predecessora = $res->pred;
+        $prodet->data_inicio = $res->dataini;
+        $prodet->id_responsavel = $res->idenvolvido;
+        $prodet->horas_estimadas = $res->hestima;
+        $prodet->horas_fim = $res->hfim;
+        $prodet->save();
+
+    }
+
+        $mensagem="Projeto salvado";
+
+        $tipo = "succes";
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+
+        return response()->json($response);
+
+    }
 
 }

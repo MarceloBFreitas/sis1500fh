@@ -666,6 +666,108 @@
 
 
         }
+
+        function salvasemfiltro(){
+             var itens =  [];
+
+            $('#projetoodettable tbody tr').each(function(index,tr){
+
+
+                  var obj = {
+                        id:$(this).find(".idprodder").val(),
+                        pred:$(this).find(".predecessora").val(),
+                        dataini:$(this).find(".dataini").val(),
+                        idenvolvido:$(this).find(".func").val(),
+                        hestima:$(this).find(".hestima").val(),
+                        hfim:$(this).find(".hfim").val()
+                };
+
+
+                itens.push(obj);
+
+            });
+
+            console.log(itens);
+            $.ajax({
+                type:'post',
+                url:'/atualiza-atv',
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                data:{
+                    itens:itens
+                },
+                success:function(data){
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+
+                    //location.reload();
+
+                    console.log(data);
+                }
+            });
+
+
+
+        }
+
+        function salvacomfiltro(){
+            var itens = {};
+
+            $('table tbody tr').each(function(index,tr){
+
+
+                var obj = {};
+                    obj.id=$(this).find(".idfiltro").val(),
+                    obj.pred =$(this).find(".predfiltro").val(),
+                    obj.dataini=$(this).find(".datainifiltro").val(),
+                    obj.idenvolvido=$(this).find(".funcfiltro").val(),
+                    obj.hestima=$(this).find(".hestimafiltro").val(),
+                    obj.hfim=$(this).find(".hfimfiltro").val()
+
+
+                console.log(obj);
+
+                itens.push(obj);
+
+            });
+
+
+            console.log(itens);
+
+
+            $.ajax({
+                type:'post',
+                url:'/atualiza-atv',
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                data:{
+                    data:itens
+                },
+                success:function(data){
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+
+                    location.reload();
+                }
+            });
+
+
+
+
+
+
+        }
+
     </script>
     <div class="container">
 
@@ -700,45 +802,43 @@
                     </td>
 
                     <td  class="text-center">
-                        <strong>ID:</strong>{{$projetodet->id_projetodetalhe}}<br>
+                        <input disabled class="text-center idfiltro "  value="{{$projetodet->id_projetodetalhe}}"  id="{{$projetodet->id_projetodetalhe}}filtro" size="5"> <br>
                         {{$projetodet->descri}}</td>
                     <td  class="text-center">
 
-                        <input type="text"  class="text-center" value="{{$projetodet->predecessora}}" id="{{$projetodet->id_projetodetalhe}}tarefapred" size="5" placeholder="Tarefa(s)"><br>
+                        <input type="text"  class="text-center predfiltro" value="{{$projetodet->predecessora}}" id="{{$projetodet->id_projetodetalhe}}tarefapred" size="5" placeholder="Tarefa(s)"><br>
                     </td>
                     <td>
-                        <input type="date" class="text-center" id="{{$projetodet->id_projetodetalhe}}datainicialfil" value="{{$projetodet->data_inicio}}">  <button onclick="adddataini({{$projetodet->id_projetodetalhe}})" class="edit-modal btn btn-primary"><span class="glyphicon glyphicon-refresh"></span></button>
+                        <input type="date" class="text-center datainifiltro" id="{{$projetodet->id_projetodetalhe}}datainicialfil" value="{{$projetodet->data_inicio}}">
                     </td>
                     <td  class="text-center">
-                        <?php
-                        if(empty($projetodet->responsavel)){
-                            echo '<span class="glyphicon btn-danger glyphicon-exclamation-sign"></span> N/C';
-                        }else{
-                            echo $projetodet->responsavel;
-                        }
-                        ?>
+                        <div class="form-group">
+                            <select class="form-control funcfiltro" id="sel1">
+                                <?php
+                                if(empty($projetodet->id_responsavel)){
+                                ?>
+
+                                <option selected >Adicionar envolvido</option>
+                                <?php } ?>
+                                @foreach($usuarios as $usuario)
+                                    <option <?php if($projetodet->id_responsavel == $usuario->id){echo "selected";}?>
+                                            value="{{$usuario->id}}">{{$usuario->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </td>
                     <td  class="text-center">
                         {{$projetodet->horas_reais}}
                     </td>
                     <td  class="text-center">
-                        <input size="5" class="text-center" id="{{$projetodet->id_projetodetalhe}}horasesttabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas_det}}">
+                        <input size="5" class="text-center hestimafiltro" id="{{$projetodet->id_projetodetalhe}}horasesttabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas_det}}">
                     </td>
                     <td  class="text-center">
-                        <input size="5" class="text-center" id="{{$projetodet->id_projetodetalhe}}horafimtabela" type="text" class="form-control" value="{{$projetodet->horas_fim_det}}">
+                        <input size="5" class="text-center hfimfiltro" id="{{$projetodet->id_projetodetalhe}}horafimtabela" type="text" class="form-control" value="{{$projetodet->horas_fim_det}}">
                     </td>
 
 
-                    <td> <button class="edit-modal btn btn-primary" title="Atualizar"
-                                 onclick="atualizarDetalheprojeto({{$projetodet->id_projetodetalhe}})"
-                                 data-toggle="modal">
-                            <span class="glyphicon glyphicon-refresh"></span>
-                        </button>
-                        <button id="{{$projetodet->id}}botaoincluir" class="edit-modal btn btn-success" title="Atribuir"
-                                onclick="vincularResponsavel({{$projetodet->id_projetodetalhe}})"
-                                data-toggle="modal">
-                            <span class="glyphicon glyphicon-user"></span>
-                        </button>
+                    <td>
                         <button class="delete-modal btn btn-danger" title="Remover"
                                 onclick="removerprojetoDetalhe({{$projetodet->id_projetodetalhe}})">
                             <span  class="glyphicon glyphicon-trash"></span>
@@ -749,6 +849,9 @@
             @endforeach
             </tbody>
         </table>
+            </br></br>
+            <a href="#"><button onclick="salvacomfiltro()" class="btn btn-success"><span class="glyphicon glyphicon-save"></span> Salvar Dados Alterados</button></a>
+            </br></br>
         </div>
 
          <div id="divgeraltabela">
@@ -775,45 +878,49 @@
                     </td>
 
                     <td  class="text-center">
-                        <strong>ID:</strong>{{$projetodet->id_projetodetalhe}}<br>
+                        <input disabled class="text-center idprodder"  value="{{$projetodet->id_projetodetalhe}}"  id="{{$projetodet->id_projetodetalhe}}filtro" size="5" > </input><br>
                         {{$projetodet->descri}}</td>
                     <td  class="text-center">
 
-                        <input type="text" class="text-center" value="{{$projetodet->predecessora}}" id="{{$projetodet->id_projetodetalhe}}tarefapred" size="5" placeholder="Tarefa(s)"><br>
+                        <input type="text" class="text-center predecessora" value="{{$projetodet->predecessora}}" id="{{$projetodet->id_projetodetalhe}}tarefapred" size="5" placeholder="Tarefa(s)"><br>
                     </td>
                     <td>
-                        <input type="date" class="text-center" id="{{$projetodet->id_projetodetalhe}}datainicial" value="{{$projetodet->data_inicio}}" onclick="adddatainisemfiltro({{$projetodet->id_projetodetalhe}})">  <button class="edit-modal btn btn-primary"><span class="glyphicon glyphicon-refresh"></span></button>
+                        <input type="date" class="text-center dataini" id="{{$projetodet->id_projetodetalhe}}datainicial" value="{{$projetodet->data_inicio}}" >
                     </td>
                     <td  class="text-center">
-                        <?php
-                        if(empty($projetodet->responsavel)){
-                            echo '<span class="glyphicon btn-danger glyphicon-exclamation-sign"></span> N/C';
-                        }else{
-                            echo $projetodet->responsavel;
-                        }
-                        ?>
+                        <div class="form-group">
+                            <select class="form-control func" id="sel1">
+                                <?php
+                                if(empty($projetodet->id_responsavel)){
+
+                                ?>
+
+                                <option selected >Adicionar envolvido</option>
+                                    <?php } ?>
+                                @foreach($usuarios as $usuario)
+                                    <option <?php if($projetodet->id_responsavel == $usuario->id){echo "selected";}?>
+                                            value="{{$usuario->id}}">{{$usuario->name}}</option>
+
+
+
+
+
+                                @endforeach
+                            </select>
+                        </div>
                     </td>
                     <td  class="text-center">
                         {{$projetodet->horas_reais}}
                     </td>
                     <td  class="text-center">
-                        <input size="5" class="text-center" id="{{$projetodet->id_projetodetalhe}}horasesttabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas_det}}">
+                        <input size="5" class="text-center hestima" id="{{$projetodet->id_projetodetalhe}}horasesttabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas_det}}">
                     </td>
                     <td  class="text-center">
-                        <input size="5" class="text-center" id="{{$projetodet->id_projetodetalhe}}horafimtabela" type="text" class="form-control" value="{{$projetodet->horas_fim_det}}">
+                        <input size="5" class="text-center hfim " id="{{$projetodet->id_projetodetalhe}}horafimtabela" type="text" class="form-control" value="{{$projetodet->horas_fim_det}}">
                     </td>
 
 
-                    <td> <button class="edit-modal btn btn-primary" title="Atualizar"
-                                 onclick="atualizarDetalheprojeto({{$projetodet->id_projetodetalhe}})"
-                                 data-toggle="modal">
-                            <span class="glyphicon glyphicon-refresh"></span>
-                        </button>
-                        <button id="{{$projetodet->id}}botaoincluir" class="edit-modal btn btn-success" title="Atribuir"
-                                onclick="vincularResponsavel({{$projetodet->id_projetodetalhe}})"
-                                data-toggle="modal">
-                            <span class="glyphicon glyphicon-user"></span>
-                        </button>
+                    <td> 
                         <button class="delete-modal btn btn-danger" title="Remover"
                                 onclick="removerprojetoDetalhe({{$projetodet->id_projetodetalhe}})">
                             <span  class="glyphicon glyphicon-trash"></span>
@@ -824,6 +931,9 @@
             @endforeach
             </tbody>
         </table>
+             </br></br>
+             <a href="#"><button onclick="salvasemfiltro()" class="btn btn-success"><span class="glyphicon glyphicon-save"></span> # Salvar Dados Alterados</button></a>
+             </br></br>
     </div>
 
 
