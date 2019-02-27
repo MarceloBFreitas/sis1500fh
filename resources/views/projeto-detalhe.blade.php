@@ -705,9 +705,9 @@
                         timer: 2000
                     });
 
-                    //location.reload();
+                    location.reload();
 
-                    console.log(data);
+
                 }
             });
 
@@ -716,21 +716,21 @@
         }
 
         function salvacomfiltro(){
-            var itens = {};
+            var itens = [];
 
-            $('table tbody tr').each(function(index,tr){
-
-
-                var obj = {};
-                    obj.id=$(this).find(".idfiltro").val(),
-                    obj.pred =$(this).find(".predfiltro").val(),
-                    obj.dataini=$(this).find(".datainifiltro").val(),
-                    obj.idenvolvido=$(this).find(".funcfiltro").val(),
-                    obj.hestima=$(this).find(".hestimafiltro").val(),
-                    obj.hfim=$(this).find(".hfimfiltro").val()
+            $('#projetoodettablefiltrada tbody tr').each(function(index,tr){
 
 
-                console.log(obj);
+                var obj = {
+                    id:$(this).find(".idfiltro").val(),
+                    pred :$(this).find(".predfiltro").val(),
+                    dataini:$(this).find(".datainifiltro").val(),
+                    idenvolvido:$(this).find(".funcfiltro").val(),
+                    hestima:$(this).find(".hestimafiltro").val(),
+                    hfim:$(this).find(".hfimfiltro").val()
+
+                };
+
 
                 itens.push(obj);
 
@@ -747,7 +747,7 @@
                     'X-CSRF-Token': '{{ csrf_token() }}',
                 },
                 data:{
-                    data:itens
+                    itens:itens
                 },
                 success:function(data){
                     swal({

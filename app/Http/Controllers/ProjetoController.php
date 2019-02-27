@@ -1333,20 +1333,29 @@ sisprojeto_detalhe.id_projeto = '.$id);
     {
             $dadosArray = $request->itens;
 
-         return $dadosArray[0]['id'];
+         //return $dadosArray[0]['id'];
 
-        foreach ($dadosArray as $res->alue){
+        $tamanho = 0;
+        foreach ($dadosArray as $r){
+            $tamanho ++;
+        }
 
-          $prodet = ProjetoDetalhe::find($res->id);
 
-        $prodet->predecessora = $res->pred;
-        $prodet->data_inicio = $res->dataini;
-        $prodet->id_responsavel = $res->idenvolvido;
-        $prodet->horas_estimadas = $res->hestima;
-        $prodet->horas_fim = $res->hfim;
-        $prodet->save();
 
-    }
+        for ($i = 0; $i < $tamanho; $i++) {
+            $variavel = $dadosArray[$i]['id'];
+            $prodet = ProjetoDetalhe::find($dadosArray[$i]['id']);
+
+            $prodet->predecessora =  $dadosArray[$i]['pred'];
+            $prodet->data_inicio =  $dadosArray[$i]['dataini'];
+            $prodet->id_responsavel =  $dadosArray[$i]['idenvolvido'];
+
+            $prodet->horas_estimadas =  $dadosArray[$i]['hestima'];
+            $prodet->horas_fim = $dadosArray[$i]['hfim'];
+            $prodet->save();
+        }
+
+
 
         $mensagem="Projeto salvado";
 
