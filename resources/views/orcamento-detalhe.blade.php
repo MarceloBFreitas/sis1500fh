@@ -151,7 +151,7 @@
 
 
 
-            if(horasestimadas == "" ){
+            if(horasestimadas == "" || descricao=="" ){
                 swal({
                     title: "Campos não preenchidos",
                     text: "Por favor, verifique se todos os campos foram preenchidos",
@@ -346,7 +346,7 @@
 
     <div class="container">
         <br>
-        <button onclick="adicionaratividadeModal()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Tipo Atividade</button>
+        <button onclick="adicionaratividadeModal()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Atividade</button>
         <button onclick="adicionargrupoModal()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Grupo de Atividade</button>
 
 

@@ -1302,7 +1302,7 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
         $mensagem="Projeto Programado";
 
-        $tipo = "succes";
+        $tipo = "success";
         $response = array(
             'tipo' => $tipo,
             'msg' => $mensagem,
@@ -1331,7 +1331,7 @@ sisprojeto_detalhe.id_projeto = '.$id);
     }
     public function salvarmudancas(Request $request)
     {
-            $dadosArray = $request->itens;
+        $dadosArray = $request->itens;
 
          //return $dadosArray[0]['id'];
 
@@ -1357,13 +1357,12 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
 
 
-        $mensagem="Projeto salvado";
+        $mensagem="Projeto Atualizado";
 
-        $tipo = "succes";
+        $tipo = "success";
         $response = array(
             'tipo' => $tipo,
             'msg' => $mensagem,
-
         );
 
         return response()->json($response);

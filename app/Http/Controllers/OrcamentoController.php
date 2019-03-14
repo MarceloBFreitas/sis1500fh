@@ -34,7 +34,7 @@ class OrcamentoController extends Controller
                                                 sisescopo_orcamento.gestao as eo_horagestao,
                                                 sisescopo_orcamento.objetivo,
                                                 sisescopo_orcamento.status as situacao
-                                                from sisescopo_orcamento');
+                                                from sisescopo_orcamento where sisescopo_orcamento.status = 0');
 
         $cli = Cliente::all();
 

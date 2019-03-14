@@ -4,6 +4,15 @@
 
 @section('content_header')
 
+
+    <?php
+
+            function formatadata($data){
+                $dataar = explode('-',$data);
+                return $dataar[2]."/".$dataar[1]."/".$dataar[0];
+            }
+    ?>
+
     <h1><i class="glyphicon glyphicon-check"></i> Projeto {{$projeto->projeto}}</h1>
     <div class="container" >
         <div class="container collapse in" id="menutopo" >
@@ -172,19 +181,28 @@
                 },
                 success:function(data){
                     console.log(data);
-                    swal({
-                        title: data.msg,
-                        // text: 'Do you want to continue',
-                        type: data.tipo,
-                        timer: 4000
-                    });
 
-                    location.reload();
-
+                    if(data.tipo=='error'){
+                        swal({
+                            title: data.msg,
+                            // text: 'Do you want to continue',
+                            type: data.tipo,
+                            timer: 8000
+                        });
+                    }else{
+                        swal({
+                            title: data.msg,
+                            // text: 'Do you want to continue',
+                            type: data.tipo,
+                            timer: 8000
+                        });
+                        location.reload();
+                    }
 
                 }
             });
         }
+
 
         function visualizarTabeacheia(){
             if(contador==0){
@@ -786,6 +804,7 @@
                 <th class="text-center">Atividade</th>
                 <th class="text-center">Predecessora(s)</th>
                 <th class="text-center">Data inicial</th>
+                <th class="text-center">Data Fim</th>
                 <th class="text-center">Responsável</th>
                 <th class="text-center">Horas Reais</th>
                 <th class="text-center">Estimadas</th>
@@ -810,6 +829,9 @@
                     </td>
                     <td>
                         <input type="date" class="text-center datainifiltro" id="{{$projetodet->id_projetodetalhe}}datainicialfil" value="{{$projetodet->data_inicio}}">
+                    </td>
+                    <td>
+                        <input type="text" class="text-center datainifiltro" id="{{$projetodet->id_projetodetalhe}}datainicialfil" size="7" disabled value="<?=formatadata($projetodet->data_fim)?>">
                     </td>
                     <td  class="text-center">
                         <div class="form-group">
@@ -862,6 +884,7 @@
                 <th class="text-center">Atividade</th>
                 <th class="text-center">Predecessora(s)</th>
                 <th class="text-center">Data inicial</th>
+                <th class="text-center">Data Fim</th>
                 <th class="text-center">Responsável</th>
                 <th class="text-center">Horas Reais</th>
                 <th class="text-center">Estimadas</th>
@@ -887,6 +910,11 @@
                     <td>
                         <input type="date" class="text-center dataini" id="{{$projetodet->id_projetodetalhe}}datainicial" value="{{$projetodet->data_inicio}}" >
                     </td>
+
+                    <td>
+                        <input type="text" class="text-center dataini" id="{{$projetodet->id_projetodetalhe}}datafim" size="7" disabled value="<?=formatadata($projetodet->data_fim)?>" >
+                    </td>
+
                     <td  class="text-center">
                         <div class="form-group">
                             <select class="form-control func" id="sel1">
@@ -956,7 +984,6 @@
 
 
         <a href="#"><button onclick="explosao({{$projeto->id}})" class="btn btn-success"><span class="glyphicon glyphicon-calendar"></span> Programar Atividades</button></a>
-        <a href="/visualizar/{{$projeto->id}}"><button class="btn btn-warning"><span class="glyphicon glyphicon-tree-deciduous"></span> Visualizar Atividades</button></a>
         <a href="#"><button onclick="ModaltirarFoto()" class="btn btn-info"><span class="glyphicon glyphicon-camera"></span> Tirar Foto</button></a>
         <a href="/fotos-projeto/{{$projeto->id}}"><button  class="btn btn-default"><span class="glyphicon glyphicon-picture"></span> Fotos do Projeto</button></a>
        <?php if($projeto->status == 'execucao'){ ?>
