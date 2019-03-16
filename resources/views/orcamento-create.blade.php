@@ -174,13 +174,14 @@
                             _token : "<?php echo csrf_token() ?>"
                         },
                         success:function(data){
+                            console.log(data);
                             swal({
                                 title: data.msg,
                                 // text: 'Do you want to continue',
                                 type: data.tipo,
                                 timer: 2000
                             });
-                            location.reload();
+                            //location.reload();
                         }
                     });
 

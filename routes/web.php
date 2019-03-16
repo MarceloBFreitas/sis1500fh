@@ -58,7 +58,7 @@ Route::post('/adicionar-tipodetalhe-grupo','TipoAtividadesController@adicionarAt
 //orçamento-escopo
 
 Route::get('/escopo-orcamento','OrcamentoController@index')->name('home.orcamento.escopo');
-Route::get('/excluir-escopo/{id}','OrcamentoController@removerEscopo')->name('home.orcamento.escopo');
+Route::delete('/excluir-escopo/{id}','OrcamentoController@removerEscopo')->name('home.orcamento.escopo');
 
 Route::post('/criar-escopo-orcamento','OrcamentoController@adicionarOrcamentoEscopo')->name('criar.orcamento.escopo');
 Route::get('/configurar-orcamento/{id}','OrcamentoController@homeEditarOrcamento')->name('detalhes.orcamento.escopo');

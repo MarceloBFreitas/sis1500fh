@@ -202,7 +202,6 @@ class ProjetoController extends Controller
 
     public function projetoDetalhes($id){
 
-
         $projetodetalhesquery = DB::select('SELECT
   sisprojeto_detalhe.descricao descri,sisprojeto_detalhe.horas_estimadas horas_estimadas_det ,
    sisprojeto_detalhe.horas_fim horas_fim_det ,
@@ -238,7 +237,7 @@ WHERE sisprojeto_detalhe.id_projeto = '.$id);
 
         $projetodetalhesfiltradahorasfimquery = DB::select('SELECT
   sisprojeto_detalhe.descricao descri,sisprojeto_detalhe.horas_estimadas horas_estimadas_det ,
-   sisprojeto_detalhe.horas_estimadas horas_fim_det ,
+   sisprojeto_detalhe.horas_estimadas horas_fim_det ,sistipo_atividades.sigla as siglatp,sistipo_atividades.tipo tipotp,
   *,
   sisusers.name AS responsavel,
   sisusers.id AS userid,
@@ -269,11 +268,6 @@ LEFT JOIN sisusers
 WHERE 
 sisprojeto_detalhe.horas_fim >0 and
 sisprojeto_detalhe.id_projeto = '.$id);
-
-
-
-
-
 
         $projeto = Projeto::find($id);
 
@@ -614,6 +608,9 @@ sisprojeto_detalhe.id_projeto = '.$id);
         $projetodetalhe->horas_estimadas = str_replace(',','.',$request->horasestimadas);
         $projetodetalhe->horas_reais = 0.0;
         $projetodetalhe->horas_fim = str_replace(',','.',$request->horasestimadas);
+
+        $projetodetalhe->id_responsavel = $request->respmodal;
+        $projetodetalhe->predecessora = $request->predmodal;
 
 
 
@@ -1331,9 +1328,11 @@ sisprojeto_detalhe.id_projeto = '.$id);
     }
     public function salvarmudancas(Request $request)
     {
+
         $dadosArray = $request->itens;
 
-         //return $dadosArray[0]['id'];
+
+
 
         $tamanho = 0;
         foreach ($dadosArray as $r){
