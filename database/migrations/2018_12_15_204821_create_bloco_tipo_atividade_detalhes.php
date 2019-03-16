@@ -17,6 +17,7 @@ class CreateBlocoTipoAtividadeDetalhes extends Migration
             $table->increments('id');
             $table->integer('id_bloco');
             $table->integer('id_tipoatividade');
+            $table->float('horas')->nullable();
 
             $table->foreign('id_bloco')->references('id')->on('sisblocotipoatividade');
             $table->foreign('id_tipoatividade')->references('id')->on('sistipo_atividades');

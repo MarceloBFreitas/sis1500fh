@@ -246,6 +246,7 @@ class TipoAtividadesController extends Controller
         $blocotipodetalhe = new BlocoTipoAtividadeDetalhes();
         $blocotipodetalhe->id_bloco = $request->idgrupo;
         $blocotipodetalhe->id_tipoatividade = $request->atvid;
+        $blocotipodetalhe->horas = $request->horas;
 
         if(\Auth::user()->nivelacesso <3){
             $blocotipodetalhe->save();

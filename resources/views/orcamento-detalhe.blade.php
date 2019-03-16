@@ -57,6 +57,7 @@
         $(document).ready(function(){
             $('.datainput').mask('99/99/9999'); //Máscara para Data
             $('.valortable').mask("#.##0,00", {reverse: true});
+            $('.classhoras').mask("999.99");
             $('#orcamentodettable').DataTable(
                 {
                     "language": {
@@ -339,6 +340,50 @@
             }
 
         }
+        function salvardadostabela(){
+            var itens =  [];
+
+            $('#orcamentodettable tbody tr').each(function(index,tr){
+
+
+                var obj = {
+                    id:$(this).find(".classid").val(),
+                    desc:$(this).find(".classdescricao").val(),
+                    horas:$(this).find(".classhoras").val()
+                };
+
+
+                itens.push(obj);
+
+            });
+
+            console.log(itens);
+            $.ajax({
+                type:'post',
+                url:'/salvar-dados',
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                data:{
+                    itens:itens
+                },
+                success:function(data){
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+                    console.log(data);
+                    location.reload();
+
+
+                }
+            });
+
+
+
+        }
 
     </script>
 
@@ -355,6 +400,7 @@
         <table class="table table-striped"  id="orcamentodettable">
             <thead>
             <tr>
+                <th class="text-center">ID</th>
                 <th class="text-center">Sigla</th>
                 <th class="text-center">Atividade</th>
                 <th class="text-center">Tipo</th>
@@ -366,22 +412,18 @@
             <tbody>
             @foreach($atividades as $atv)
                 <tr class="item{{$atv->id}}">
+                    <td><input disabled size="3" class="text-center classid" value="{{$atv->id}}"></td>
                     <td>{{$atv->sigla}}</td>
                     <td>{{$atv->descricao}}</td>
                     <td>{{$atv->tipo}}</td>
                     <td>
-                        <input id="{{$atv->id}}descridettabela" type="text" class="form-control" value="{{$atv->descricao}}">
+                        <input id="{{$atv->id}}descridettabela" type="text" class="form-control classdescricao" value="{{$atv->descricao}}">
                     </td>
                     <td>
-                        <input id="{{$atv->id}}horasdettabela" type="text" class="form-control" value="<?php echo number_format ($atv->horas_estimadas,2);?>">
+                        <input id="{{$atv->id}}horasdettabela" type="text" class="form-control classhoras" value="<?php echo number_format ($atv->horas_estimadas,2);?>">
                     </td>
 
-                    <td> <button class="edit-modal btn btn-primary" title="Atualizar"
-                                 onclick="atualizarDetalhe({{$atv->id}})"
-                                    data-toggle="modal">
-                                <span class="glyphicon glyphicon-refresh"></span>
-                            </button>
-
+                    <td>
                         <button class="delete-modal btn btn-danger" title="Remover"
                                 onclick="removerDetalhe({{$atv->id}})">
                             <span  class="glyphicon glyphicon-trash"></span>
@@ -399,6 +441,8 @@
                     echo "disabled";
                 }
                 ?>> Converter em Projeto</button>
+        <button class="btn btn-success" onclick="salvardadostabela()"> <span  class="glyphicon glyphicon-save"></span>Salvar Dados da Tabela</button></a>
+
 
     </div>
 

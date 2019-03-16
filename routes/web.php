@@ -66,6 +66,8 @@ Route::post('/adicionar-atividade-orcamento','OrcamentoController@adicionarAtivi
 
 
 Route::post('/adicionar-grupo-atividades-bloco','OrcamentoController@adicionarBlocoEscopo');
+//salvar dados da tabela
+Route::post('/salvar-dados','OrcamentoController@salvardados');
 
 Route::post('/atualizar-atividade-orcamento/{id}','OrcamentoController@atualizarAtividadeEscopoOrcamento')->name('atualizar.atividade.escopo');
 Route::post('/atualizar-orcamento-escopo/{id}','OrcamentoController@atualizarOrcamentoEscopo')->name('atualizar.atividade.escopo');

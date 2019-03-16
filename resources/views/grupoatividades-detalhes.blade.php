@@ -12,6 +12,7 @@
 <script>
     $(document).ready(function(){
         $('.datainput').mask('99/99/9999'); //Máscara para Data
+        $('#horainput').mask('99.99');
         $('.valortable').mask("#.##0,00", {reverse: true});
         $('#consultortable').DataTable(
             {
@@ -58,7 +59,8 @@
                 },
                 data:{
                     atvid:id,
-                    idgrupo:{{$blocoatividade->id}}
+                    idgrupo:{{$blocoatividade->id}},
+                    horas: $('#horainput').val()
                 },
                 success:function(data){
                     swal({
@@ -125,20 +127,21 @@
     <table class="table table-striped"  id="consultortable">
         <thead>
         <tr>
-            <th class="text-center">Código</th>
             <th class="text-center">Sigla</th>
             <th class="text-center">Nome</th>
             <th class="text-center">Descrição</th>
+            <th class="text-center">Horas</th>
             <th class="text-center">Ações</th>
         </tr>
         </thead>
         <tbody>
         @foreach($atividadesatreladas as $atividadesatrelada)
         <tr class="item{{$atividadesatrelada->id}}">
-            <td class="text-center">{{$atividadesatrelada->id}}</td>
+
             <td class="text-center">{{$atividadesatrelada->sigla}}</td>
             <td class="text-center">{{$atividadesatrelada->nome}}</td>
             <td class="text-center">{{$atividadesatrelada->descricao}}</td>
+            <td class="text-center"><?=number_format($atividadesatrelada->horas, 2)." h" ?></td>
 
             <td class="text-center">
                 <button class="delete-modal btn btn-danger" title="Remover"
@@ -182,6 +185,12 @@
                     <option value="{{$tipos->id}}">{{$tipos->sigla}} - {{$tipos->nome}}</option>
                     @endforeach
                 </select>
+                <div class="col-md-6">
+                <label>Horas Estimadas</label>
+                    <input type="text" class="form-control" id="horainput" placeholder="Digite Horas Estimadas">
+                </div>
+               <div class="col-md-6"></div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>

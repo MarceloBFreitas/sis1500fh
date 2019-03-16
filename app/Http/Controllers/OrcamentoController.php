@@ -259,7 +259,7 @@ class OrcamentoController extends Controller
                 $orcamentodetalhe->id_atv = $consultadasatividade->idatv;
                 $orcamentodetalhe->id_eo = $iddoescopo;
                 $orcamentodetalhe->descricao = "";
-                $orcamentodetalhe->horas_estimadas =0.0;
+                $orcamentodetalhe->horas_estimadas =$consultadasatividade->horas;
                 $orcamentodetalhe->save();
             }
 
@@ -481,5 +481,40 @@ class OrcamentoController extends Controller
 
         );
         return response()->json($response);
+    }
+
+    public function salvardados(Request $request){
+
+        $dadosArray = $request->itens;
+
+        $tamanho = 0;
+        foreach ($dadosArray as $r){
+            $tamanho ++;
+        }
+
+        for ($i = 0; $i < $tamanho; $i++) {
+           // $variavel = $dadosArray[$i]['id'];
+
+            $orcdet = OrcamentoDetalhe::find($dadosArray[$i]['id']);
+
+
+            $orcdet->descricao =  $dadosArray[$i]['desc'];
+            $orcdet->horas_estimadas =  $dadosArray[$i]['horas'];
+
+            $orcdet->save();
+
+        }
+
+        $mensagem="Dados da Tabela Atualizados";
+
+        $tipo = "success";
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+        );
+
+        return response()->json($response);
+
+
     }
 }
