@@ -57,7 +57,7 @@ sisusers.id ='.auth()->user()->id);
         $lr->hora_fim_sugerida =  $projetodetalhe->horas_fim ;
         $lr->id_projetodetalhe = $projetodetalhe->id;
         $projetodetalhe->horas_fim =  $request->horasf ;
-        $lr->hora_fim_cadastrada =   $request->horasf - $request->qtd;
+        $lr->hora_fim_cadastrada =   $request->horasf;
         $projetodetalhe->horas_reais = $projetodetalhe->horas_reais + $re->qtd_horas;
         $projetodetalhe->save();
       // =  $projetodetalhe->horas_fim;
