@@ -58,8 +58,13 @@ sisusers.id ='.auth()->user()->id);
         $lr->id_projetodetalhe = $projetodetalhe->id;
 
         if($projetodetalhe->horas_fim == $request->horasf ){
+            $aux  =  $projetodetalhe->horas_fim - $request->qtd;
+                if($aux < 0){
+                    $projetodetalhe->horas_fim = 0;
+                }else{
+                    $projetodetalhe->horas_fim  = $projetodetalhe->horas_fim - $request->qtd;
+            }
 
-            $projetodetalhe->horas_fim  = $projetodetalhe->horas_fim - $request->qtd;
         }else{
             $projetodetalhe->horas_fim = $request->horasf;
         }
