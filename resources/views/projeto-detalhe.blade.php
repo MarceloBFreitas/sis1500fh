@@ -381,7 +381,8 @@
                 })
             }
         }
-        function removerprojetoDetalhe($id) {
+        function removerprojetoDetalhe(id) {
+            var horasestimadas =  $('#'+id+'horasesttabela').val();
             swal({
                 title: 'Confirmar Exclusão da Atividade?',
                 //text: 'Os projetos em que ele estiver envolvido também serão removidos, para desligamento de colaborador procure a guia Desligamento',
@@ -391,9 +392,18 @@
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.value) {
+                   if(horasestimadas > 0){
+                       swal({
+                           title: "Operação Inválida",
+                           text: "Atividades Com Registros de Horas já cadastrados, Não poderão ser excluidas",
+                           type: 'warning',
+                           timer: 4000
+                       });
+                   }else{
+
                     $.ajax({
                         type:'DELETE',
-                        url:'/excluir-detalhe-projeto/'+$id,
+                        url:'/excluir-detalhe-projeto/'+id,
                         data:{
                             _token : "<?php echo csrf_token() ?>"
                         },
@@ -407,6 +417,7 @@
                             location.reload();
                         }
                     });
+                   }
 
 
                 } else if (result.dismiss === swal.DismissReason.cancel) {
