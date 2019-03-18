@@ -95,7 +95,8 @@
         <tr>
             <th class="text-center">Sigla</th>
             <th class="text-center">Atividade</th>
-            <th class="text-center">Predecessora(s)</th>
+            <th class="text-center">Data Inicio</th>
+            <th class="text-center">Data Fim</th>
             <th class="text-center">Responsável</th>
             <th class="text-center">Horas Reais</th>
             <th class="text-center">Estimadas</th>
@@ -115,7 +116,10 @@
 
                     {{$projetodet->descri}}</td>
                 <td  class="text-center">
-                    {{$projetodet->predecessora}}
+                    {{$projetodet->data_inicio}}
+                </td>
+                <td>
+                    {{$projetodet->data_fim}}
                 </td>
                 <td  class="text-center">
                     <?php

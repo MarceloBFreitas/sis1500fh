@@ -28,6 +28,9 @@ class CreateTableBaseline extends Migration
             $table->float('horas_totais');
             $table->float('horas_fim')->nullable();
             $table->integer('planejado')->nullable();
+            $table->date('data_inicio')->nullable();
+            $table->date('data_fim')->nullable();
+
             $table->timestamps();
 
 

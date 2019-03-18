@@ -23,6 +23,8 @@ class CreateTableBaselineDetalhe extends Migration
             $table->float('horas_reais');
             $table->float('horas_fim');
             $table->integer('predecessora')->nullable();
+            $table->date('data_inicio')->nullable();
+            $table->date('data_fim')->nullable();
 
             $table->foreign('id_tpatv')->references('id')->on('sistipo_atividades');
             $table->foreign('id_baseline')->references('id')->on('sisbaseline');

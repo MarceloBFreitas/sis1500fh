@@ -622,7 +622,7 @@
                                 timer: 2000
                             });
                             console.log(data);
-                            location.reload();
+                            //location.reload();
                         }
                     });
                 } else if (result.dismiss === swal.DismissReason.cancel) {
@@ -783,7 +783,7 @@
                         timer: 2000
                     });
 
-                    //location.reload();
+                    location.reload();
                 }
             });
 
@@ -929,7 +929,7 @@
 
                                     ?>
 
-                                    <option selected >Adicionar envolvido</option>
+                                    <option selected value="">Adicionar envolvido</option>
                                     <?php } ?>
                                     @foreach($usuarios as $usuario)
                                         <option <?php if($projetodet->id_responsavel == $usuario->id){echo "selected";}?>
