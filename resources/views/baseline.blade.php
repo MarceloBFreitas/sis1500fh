@@ -146,6 +146,8 @@
         </tbody>
     </table>
 
+    <a href="/detalhe-projeto/{{$baseline->id_projeto}}"><button class="btn btn-default">Voltar</button></a>
+
 </div>
 
 
