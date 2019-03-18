@@ -414,7 +414,7 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
         if(\Auth::user()->nivelacesso <3){
             try{
-                DB::statement('ALTER TABLE [dbo].[sisprojeto_detalhe]  NOCHECK CON STRAINT [sisprojeto_detalhe_id_responsavel_foreign] ');
+                DB::statement('ALTER TABLE [dbo].[sisprojeto_detalhe]  NOCHECK CONSTRAINT [sisprojeto_detalhe_id_responsavel_foreign] ');
                 $projetodetalhe->delete();
                 DB::statement('ALTER TABLE [dbo].[sisprojeto_detalhe]  WITH CHECK CHECK CONSTRAINT [sisprojeto_detalhe_id_responsavel_foreign]');
                 $mensagem="Atividade Removida com Sucesso";
