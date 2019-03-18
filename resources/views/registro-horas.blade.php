@@ -102,13 +102,6 @@
             var desc= $('#iddesc').val();
 
 
-
-
-
-
-
-
-
             if(dia == "" || desc == ""){
                 swal({
                     title: 'Campo vazio',
@@ -117,6 +110,11 @@
                     timer: 2000
                 });
             }else{
+
+
+
+
+
                 var hfdomodal = $('#idhorasfim').val();
                 var id = $('#pegaid').val();
                 $('#idhorasfim').val('');

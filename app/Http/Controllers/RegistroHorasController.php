@@ -29,7 +29,9 @@ class RegistroHorasController extends Controller
    sisprojeto_detalhe 
 inner join sisprojetos on sisprojeto_detalhe.id_projeto = sisprojetos.id
 inner join sistipo_atividades on sistipo_atividades.id = sisprojeto_detalhe.id_tpatv
-inner join sisusers on sisusers.id  = sisprojeto_detalhe.id_responsavel  where sisusers.id ='.auth()->user()->id);
+inner join sisusers on sisusers.id  = sisprojeto_detalhe.id_responsavel  where 
+sisprojeto_detalhe.horas_fim > 0 and
+sisusers.id ='.auth()->user()->id);
 
 
         return view('registro-horas',['itensTabela'=>$itensTabela]);

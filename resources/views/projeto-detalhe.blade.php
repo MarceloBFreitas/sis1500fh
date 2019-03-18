@@ -178,6 +178,7 @@
         });
 
         function explosao(idprojeto){
+            $('#modalloading').modal('toggle');
             $.ajax({
                 type:'POST',
                 url:"/explosao/"+idprojeto,
@@ -185,6 +186,7 @@
                     'X-CSRF-Token': '{{ csrf_token() }}',
                 },
                 success:function(data){
+                    $('#modalloading').modal('toggle');
                     console.log(data);
 
                     if(data.tipo=='error'){
@@ -1111,6 +1113,20 @@
         </div>
     </div>
 
+
+
+
+    <!-- Modal loading -->
+    <div class="modal fade" id="modalloading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color: rgba(10,23,55,0.5) !important;">
+
+                <img class="center-block" src="{{asset('img/ajax-loader.gif')}}" alt="">
+                <h3 class="text-center" style="color: #ffffff !important;">Processando...</h3>
+
+            </div>
+        </div>
+    </div>
 
 
 @stop
