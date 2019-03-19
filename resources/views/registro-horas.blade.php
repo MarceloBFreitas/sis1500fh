@@ -203,10 +203,12 @@
 
                     <td>{{$itens->horas_fimdet}}</td>
 
-                    <td>
+                    <td> <?php if($itens->horas_fimdet > 0){ ?>
+
                         <button class="edit-modal btn btn-success" title="Adicionar" id="{{$itens->iddet}}" onclick="addhoras('{{$itens->iddet}}','{{$itens->horas_fimdet}}')">
                             <span class="glyphicon glyphicon-plus"></span>
                         </button>
+                        <?php } ?>
                         <a href="/horas/{{$itens->iddet}}">
                         <button  class="edit-modal btn btn-default" title="Vizualizar" >
                             <span class="glyphicon glyphicon-zoom-in"></span>
