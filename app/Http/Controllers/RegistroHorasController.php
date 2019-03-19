@@ -33,8 +33,16 @@ inner join sisusers on sisusers.id  = sisprojeto_detalhe.id_responsavel  where
 
 sisusers.id ='.auth()->user()->id);
 
+        $itensfinalizados = DB::select('select sisprojeto_detalhe.id iddet,sisprojeto_detalhe.horas_estimadas horas_estimadasdet, sisprojeto_detalhe.horas_reais horas_reaisdet,sisprojeto_detalhe.horas_fim horas_fimdet, *  from
+   sisprojeto_detalhe 
+inner join sisprojetos on sisprojeto_detalhe.id_projeto = sisprojetos.id
+inner join sistipo_atividades on sistipo_atividades.id = sisprojeto_detalhe.id_tpatv
+inner join sisusers on sisusers.id  = sisprojeto_detalhe.id_responsavel  where sisprojeto_detalhe.horas_fim > 0 and 
 
-        return view('registro-horas',['itensTabela'=>$itensTabela]);
+sisusers.id ='.auth()->user()->id);
+
+
+        return view('registro-horas',['itensTabela'=>$itensTabela,'itensabertostabela'=>$itensfinalizados]);
     }
 
     public function  salvar(Request $request){

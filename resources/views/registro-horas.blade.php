@@ -9,6 +9,8 @@
 
 @section('content')
     <script>
+        var contador = 0;
+
 
         $(document).ready(function(){
             $('#divfiltradatabela').css('display','none');
@@ -151,27 +153,35 @@
 
 
         }
+
+
         function visualizarTabeacheia(){
+
+
+
             if(contador==0){
-                $('#divgeraltabela').css('display','inline');
-                $('#divfiltradatabela').css('display','none');
-                $('#btvisualizarhorasfim').html(' <i class="glyphicon glyphicon-eye-close"></i> Visualizar Tudo');
-                contador++;
-            }else{
-                $('#btvisualizarhorasfim').html(' <i class="glyphicon glyphicon-eye-open"></i> Ocultar Com horas para fim menor que zero');
+
+                $('#btvisualizarhorasfim').html(' <i class="glyphicon glyphicon-eye-open"></i> Visualizar Somente Abertas');
                 $('#divgeraltabela').css('display','none');
                 $('#divfiltradatabela').css('display','inline');
+                contador++;
+            }else{
+                $('#divgeraltabela').css('display','inline');
+                $('#divfiltradatabela').css('display','none');
+                $('#btvisualizarhorasfim').html(' <i class="glyphicon glyphicon-eye-close"></i> Visualizar Todas Atividades');
+
                 contador = 0;
             }
 
         }
+
     </script>
 <div class="container">
     <input type="hidden" id="pegaid">
     <input type="hidden" id="pegahf">
     <button onclick="visualizarTabeacheia()" id="btvisualizarhorasfim" class="btn btn-primary"><i class="glyphicon glyphicon-eye-close"></i> Visualizar Tudo</button>
 
-<div id="divgeraltabela">
+<div id="divfiltradatabela">
         <table  class="table table-striped"  id="atividadetablehoras">
             <thead>
             <tr>
@@ -220,7 +230,9 @@
         </table>
 
 </div>
-<div id="divfiltradatabela" >
+
+<div id="divgeraltabela" >
+
         <table  class="table table-striped"  id="atividadetablehorasfiltro">
             <thead>
             <tr>
@@ -237,7 +249,7 @@
             </thead>
 
             <tbody>
-            @foreach($itensTabela as $itens)
+            @foreach($itensabertostabela as $itens)
                 <?php if($itens->horas_fimdet > 0){ ?>
                 <tr class="item{{$itens->id}}">
                     <td>{{$itens->cliente}}</td>
