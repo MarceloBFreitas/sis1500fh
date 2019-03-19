@@ -903,9 +903,24 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
 
     public function explosao($id){
+
+        $prd  = DB::select('SELECT * from sisprojeto_detalhe where sisprojeto_detalhe.id_projeto ='.$id);
+
+        foreach ($prd as $atv){
+            if($atv->horas_fim == 0){
+
+
+                $data = date("Y-m-d");
+
+               Db::update('update sisprojeto_detalhe  set sisprojeto_detalhe.data_inicio= '."'". $data."'".' where sisprojeto_detalhe.id ='.$atv->id);
+            }
+        }
+
         $projetosdetalhes = DB::select('  SELECT * from sisprojeto_detalhe where sisprojeto_detalhe.id_projeto ='.$id.'  order by predecessora,id');
         $mensagem = "Por favor, todas as atividades do projeto devem possuir um responsável";
         $tipo = "error";
+
+
 
 
         foreach ($projetosdetalhes as $pdetalhe){
@@ -1295,7 +1310,17 @@ sisprojeto_detalhe.id_projeto = '.$id);
             $prodet->save();
 
         }
+        $prd  = DB::select('SELECT * from sisprojeto_detalhe where sisprojeto_detalhe.id_projeto ='.$id);
 
+        foreach ($prd as $atv){
+            if($atv->horas_fim == 0){
+
+
+                $data = date("Y-m-d");
+
+                Db::update('update sisprojeto_detalhe  set sisprojeto_detalhe.data_inicio= '."'". $data."'".' where sisprojeto_detalhe.id ='.$atv->id);
+            }
+        }
 
         $mensagem="Projeto Programado";
 
