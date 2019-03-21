@@ -93,6 +93,7 @@
     <table class="table table-striped"  id="tableATT">
         <thead>
         <tr>
+            <th class="text-center">Situação</th>
             <th class="text-center">Sigla</th>
             <th class="text-center">Atividade</th>
             <th class="text-center">Data Inicio</th>
@@ -107,6 +108,25 @@
         <tbody>
         @foreach($basedet as $projetodet)
             <tr class="item{{$projetodet->idbase}}">
+                <td>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn <?php
+                        if($projetodet->situacao=="Normal"){
+                            echo 'btn-default';
+                        }
+                        if($projetodet->situacao=="Atraso do Cliente"){
+                            echo 'btn-warning';
+                        }
+
+                        if($projetodet->situacao=="Mudança de escopo"){
+                            echo 'btn-danger';
+                        }
+                        ?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <?= $projetodet->situacao?>
+                        </button>
+
+                    </div>
+                </td>
                 <td  class="text-center">
                     {{$projetodet->sigla}}<br>
                     {{$projetodet->tipo}}

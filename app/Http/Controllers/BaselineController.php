@@ -67,6 +67,7 @@ class BaselineController extends Controller
                 $basedet->horas_fim = $det->horas_fim;
                 $basedet->data_inicio = $det->data_inicio;
                 $basedet->data_fim  =  $det->data_fim;
+                $basedet->situacao = $det->situacao;
 
 
 
@@ -146,6 +147,7 @@ class BaselineController extends Controller
             $basedet->horas_fim = $det->horas_fim;
             $basedet->data_inicio = $det->data_inicio;
             $basedet->data_fim  =  $det->data_fim;
+            $basedet->situacao = $det->situacao;
 
 
 
