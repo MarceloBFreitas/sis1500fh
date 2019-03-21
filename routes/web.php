@@ -75,6 +75,8 @@ Route::post('/atualizar-orcamento-escopo/{id}','OrcamentoController@atualizarOrc
 Route::delete('/excluir-detalhe-orcamento/{id}','OrcamentoController@RemoverAtividadeEscopoOrcamento')->name('remover.atividade.escopo');
 Route::post('/criar-projeto/{id}','ProjetoController@criarProjeto')->name('criar.projeto');
 
+Route::post('/atualizar-situacao-projeto-detalhe','ProjetoController@atualizarsituacao');
+
 Route::get('/projetos','ProjetoController@index')->name('home.projetos');
 
 //Projeto Detalhe

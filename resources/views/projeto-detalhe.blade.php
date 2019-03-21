@@ -296,6 +296,23 @@
                 });
             }
         }
+        function atualizasituacaopdet(idpdet,tipo) {
+            //alert(tipo+ idpdet);
+
+            $.ajax({
+                type:'post',
+                url:'/atualizar-situacao-projeto-detalhe',
+                data:{
+                    _token : "<?php echo csrf_token() ?>",
+                    tipo:tipo,
+                    idpdet:idpdet
+                },
+                success:function(data){
+
+                    location.reload();
+                }
+            });
+        }
         function adicionaratividadeModal() {
             $("#modaladicionarAtividade").modal('toggle');
         }
@@ -861,6 +878,28 @@
                     <tr class="item{{$projetodet->id_projetodetalhe}}">
                         <td  class="text-center">
                             <input disabled class="text-center idfiltro "  value="{{$projetodet->id_projetodetalhe}}"  id="{{$projetodet->id_projetodetalhe}}filtro" size="5">
+
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn <?php
+                                if($projetodet->situacao=="Normal"){
+                                    echo 'btn-default';
+                                }
+                                if($projetodet->situacao=="Atraso do Cliente"){
+                                    echo 'btn-warning';
+                                }
+
+                                if($projetodet->situacao=="Mudança de escopo"){
+                                    echo 'btn-danger';
+                                }
+                                ?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <?= $projetodet->situacao?>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a onclick="atualizasituacaopdet(<?=$projetodet->id_projetodetalhe?>,'Normal')" href="#">Normal</a></li>
+                                    <li><a onclick="atualizasituacaopdet(<?=$projetodet->id_projetodetalhe?>,'Atraso do Cliente')"  href="#">Atraso do Cliente</a></li>
+                                    <li><a onclick="atualizasituacaopdet(<?=$projetodet->id_projetodetalhe?>,'Mudança de escopo')" href="#">Mudança de Escopo</a></li>
+                                </ul>
+                            </div>
                         </td>
 
                         <td  class="text-center">

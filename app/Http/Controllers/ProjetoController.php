@@ -55,6 +55,14 @@ class ProjetoController extends Controller
         return view('projetos',['projetos' =>$projetosquery]);
     }
 
+
+    public function atualizarsituacao(Request $request){
+
+        $pdetalhe = ProjetoDetalhe::find($request->idpdet);
+        $pdetalhe->situacao = $request->tipo;
+        $pdetalhe->save();
+    }
+
     public function criarProjeto($id){
 
        $mensagem="Erro no Controller, favor consultar API";
@@ -104,7 +112,7 @@ class ProjetoController extends Controller
                     $pdetalhe->horas_reais = 0;
                     $pdetalhe->horas_fim = $orc_det->horas_estimadas;
 
-
+                    $pdetalhe->situacao = "Normal";
                     $pdetalhe->save();
                 }
 
@@ -339,6 +347,7 @@ sisprojeto_detalhe.id_projeto = '.$id);
         $projeto->horas_estimadas = $horasestimadas;
         $projeto->horas_totais = $horastotais;
         $projeto->horas_fim = $horasfim;
+
 
         $projeto->save();
 

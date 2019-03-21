@@ -27,6 +27,7 @@ class CreateProjetoDetalhesTable extends Migration
             $table->string('explosao')->nullable();
 
             $table->String('predecessora')->nullable();
+            $table->String('situacao')->nullable();
 
             $table->foreign('id_tpatv')->references('id')->on('sistipo_atividades');
             $table->foreign('id_projeto')->references('id')->on('sisprojetos');
