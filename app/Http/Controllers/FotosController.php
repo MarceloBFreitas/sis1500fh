@@ -97,6 +97,9 @@ class FotosController extends Controller
                     $fotodetalhe->horas_reais= (empty($projetosdetalhe->horas_reais)?0:$projetosdetalhe->horas_reais);
                     $fotodetalhe->predecessora= (empty($projetosdetalhe->predecessora)?0:$projetosdetalhe->predecessora);
                     $fotodetalhe->horas_fim= (empty($projetosdetalhe->horas_fim)?0:$projetosdetalhe->horas_fim);
+                    $fotodetalhe->data_inicio= $projetosdetalhe->data_inicio;
+                    $fotodetalhe->data_fim= $projetosdetalhe->data_fim;
+                    $fotodetalhe->situacao = $projetosdetalhe->situacao;
                     $fotodetalhe->save();
                 }
 

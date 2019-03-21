@@ -23,7 +23,9 @@ class FotoDetalhes extends Migration
             $table->float('horas_reais');
             $table->float('horas_fim');
             $table->String('predecessora')->nullable();
-
+            $table->date('data_inicio')->nullable();
+            $table->date('data_fim')->nullable();
+            $table->String('situacao')->nullable();
             $table->foreign('id_tpatv')->references('id')->on('sistipo_atividades');
             $table->foreign('id_foto')->references('id')->on('sisfotos');
             $table->foreign('id_responsavel')->references('id')->on('sisusers');

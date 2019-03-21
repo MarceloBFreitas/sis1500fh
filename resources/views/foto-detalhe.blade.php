@@ -434,8 +434,11 @@
         <table class="table table-striped"  id="projetoodettable">
             <thead>
             <tr>
-                <th class="text-center">Sigla</th>
+
+                <th class="text-center">Situação</th>
                 <th class="text-center">Atividade</th>
+                <th class="text-center">Data Inicial</th>
+                <th class="text-center">Data Final</th>
                 <th class="text-center">Predecessora(s)</th>
                 <th class="text-center">Responsável</th>
                 <th class="text-center">Horas Reais</th>
@@ -447,17 +450,40 @@
             <tbody>
             @foreach($detalhesfoto as $projetodet)
                 <tr class="item{{$projetodet->id_fotodet}}">
+
                     <td  class="text-center">
-                        {{$projetodet->sigla}}<br>
-                        {{$projetodet->tipo}}
+
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn <?php
+                            if($projetodet->situacao=="Normal"){
+                                echo 'btn-default';
+                            }
+                            if($projetodet->situacao=="Atraso do Cliente"){
+                                echo 'btn-warning';
+                            }
+
+                            if($projetodet->situacao=="Mudança de escopo"){
+                                echo 'btn-danger';
+                            }
+                            ?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <?= $projetodet->situacao?>
+                            </button>
+
+                        </div>
                     </td>
 
                     <td  class="text-center">
                         <strong>ID:</strong>{{$projetodet->id_fotodet}}<br>
                         {{$projetodet->descricao}}</td>
+                    <td>
+                        <input type="date" id="{{$projetodet->id_fotodet}}dataini"  disabled value="{{$projetodet->data_inicio}}">
+                    </td>
+                    <td>
+                        <input type="date" id="{{$projetodet->id_fotodet}}datafim"  disabled value="{{$projetodet->data_fim}}">
+                    </td>
                     <td  class="text-center">
 
-                        <input type="text"  value="{{$projetodet->predecessora}}" id="{{$projetodet->id_fotodet}}tarefapred" size="10" placeholder="Tarefa(s)"><br>
+                        <input type="text" size="3" disabled value="{{$projetodet->predecessora}}" id="{{$projetodet->id_fotodet}}tarefapred" size="10" placeholder="Tarefa(s)"><br>
                     </td>
                     <td  class="text-center">
                         <?php
@@ -472,10 +498,10 @@
                         {{$projetodet->horas_reais}}
                     </td>
                     <td  class="text-center">
-                        <input size="6" id="{{$projetodet->id_fotodet}}horasesttabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas}}">
+                        <input size="6" disabled id="{{$projetodet->id_fotodet}}horasesttabela" type="text" class="form-control" value="{{$projetodet->horas_estimadas}}">
                     </td>
                     <td  class="text-center">
-                        <input size="6" id="{{$projetodet->id_fotodet}}horafimtabela" type="text" class="form-control" value="{{$projetodet->horas_fim}}">
+                        <input size="6"  disabled id="{{$projetodet->id_fotodet}}horafimtabela" type="text" class="form-control" value="{{$projetodet->horas_fim}}">
                     </td>
 
 
