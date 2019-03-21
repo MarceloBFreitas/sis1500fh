@@ -237,7 +237,7 @@ WHERE sisprojeto_detalhe.id_projeto = '.$id);
 
         $projetodetalhesfiltradahorasfimquery = DB::select('SELECT
   sisprojeto_detalhe.descricao descri,sisprojeto_detalhe.horas_estimadas horas_estimadas_det ,
-   sisprojeto_detalhe.horas_estimadas horas_fim_det ,sistipo_atividades.sigla as siglatp,sistipo_atividades.tipo tipotp,
+   sisprojeto_detalhe.horas_fim horas_fim_det ,sistipo_atividades.sigla as siglatp,sistipo_atividades.tipo tipotp,
   *,
   sisusers.name AS responsavel,
   sisusers.id AS userid,
