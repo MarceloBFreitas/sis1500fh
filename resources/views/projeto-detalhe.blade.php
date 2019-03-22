@@ -75,8 +75,16 @@
                     <div class="row btn-warning">
                         <p class="text-center">PLANEJADO</p>
                     </div>
-                    <label for="">Horas Totais</label>
-                    <input type="text" disabled value="<?php echo $projeto->horas_totais + $projeto->horas_estimadas;?>" class="form-control">
+                    <label for="">Horas Planejadas</label>
+                    <input type="text" disabled value="{{$projeto->horas_estimadas}}" class="form-control">
+                    <label for="">Custo Planejado</label>
+                    <input type="text" disabled value="<?php
+                    if($custoprojetado=="ND"){
+                        echo "N/D";
+                    }else{
+                        echo 'R$ '.number_format($custoplanejado,2);
+                    }?>" class="form-control">
+
                     <label for="">Valor Planejado</label>
                     <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_planejado,2);?>" class="form-control">
 
@@ -87,8 +95,10 @@
                     </div>
                     <label for="">Horas Registradas</label>
                     <input type="text" disabled value="<?php echo $projeto->horas_totais;?>" class="form-control">
-                    <label for="">Custo</label>
+                    <label for="">Custo Real</label>
                     <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->custo_total,2);?>" class="form-control">
+                    <label for="">Valor Real</label>
+                    <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_total,2);?>" class="form-control">
 
                 </div>
                 <div class="col-md-3">
@@ -97,17 +107,26 @@
                     </div>
                     <label for="">Horas Fim</label>
                     <input type="text" disabled value="{{$projeto->horas_fim}}" class="form-control">
+
+                    <label for="">Custo Projetado</label>
+                    <input type="text" disabled value="<?php echo 'R$ '.number_format($custoparafinal,2);?>" class="form-control">
+
+                    <label for="">Valor Projetado</label>
+                    <input type="text" disabled value="<?php echo 'R$ '.number_format($valorprojetado,2);?>" class="form-control">
                 </div>
 
                 <div class="col-md-3">
                     <div class="row btn-dropbox">
                         <p class="text-center">TOTAL PROJETADO</p>
                     </div>
-                    <label for="">Horas Planejadas</label>
-                    <input type="text" disabled value="{{$projeto->horas_estimadas}}" class="form-control">
-                    <label for="">Valor Real</label>
-                    <input type="text" disabled value="<?php echo 'R$ '.number_format($projeto->valor_total,2);?>" class="form-control">
+                    <label for="">Horas Fim</label>
+                    <input type="text" disabled value="{{$projeto->horas_fim+$projeto->horas_totais}}" class="form-control">
 
+                    <label for="">Custo Total</label>
+                    <input type="text" disabled value="<?php echo 'R$ '.number_format($custoparafinal+$projeto->custo_total,2);?>" class="form-control">
+
+                    <label for="">Valor</label>
+                    <input type="text" disabled value="<?php echo 'R$ '.number_format($valorprojetado+$projeto->valor_total,2);?>" class="form-control">
                 </div>
 
 

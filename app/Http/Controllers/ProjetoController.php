@@ -241,8 +241,6 @@ INNER JOIN sisprojetos
 LEFT JOIN sisusers
   ON sisusers.id = sisprojeto_detalhe.id_responsavel
 WHERE sisprojeto_detalhe.id_projeto = '.$id);
-
-
         $projetodetalhesfiltradahorasfimquery = DB::select('SELECT
   sisprojeto_detalhe.descricao descri,sisprojeto_detalhe.horas_estimadas horas_estimadas_det ,
    sisprojeto_detalhe.horas_fim horas_fim_det ,sistipo_atividades.sigla as siglatp,sistipo_atividades.tipo tipotp,
@@ -276,7 +274,6 @@ LEFT JOIN sisusers
 WHERE 
 sisprojeto_detalhe.horas_fim >0 and
 sisprojeto_detalhe.id_projeto = '.$id);
-
         $projeto = Projeto::find($id);
 
         $projetodetalhes = DB::select(' select *,
@@ -338,17 +335,12 @@ sisprojeto_detalhe.id_projeto = '.$id);
         }
 
         $horasfim = $horasestimadas - $horastotais;
-
         $projeto->custo_total = $custototal;
         $projeto->valor_total = $valortotal;
-
         $projeto->valor_planejado = $valoestimado;
-
         $projeto->horas_estimadas = $horasestimadas;
         $projeto->horas_totais = $horastotais;
         $projeto->horas_fim = $horasfim;
-
-
         $projeto->save();
 
 
@@ -372,7 +364,43 @@ sisprojeto_detalhe.id_projeto = '.$id);
 
         }
 
+
+
+        $custoplanejado = 0;
+        $atividadesemresponsavel = 0;
+        $custoparafinal=0;
+        $valorprojetado = 0;
+        foreach($projetodetalhes as $pdet){
+            if($pdet->id_responsavel ==""){
+                $atividadesemresponsavel= $atividadesemresponsavel+1;
+            }else{
+
+                if(!$pdet->custohoragestor==""){
+                    $custoplanejado = $custoplanejado+($pdet->custohoragestor*$pdet->horas_estimadas);
+                    $custoparafinal= $custoparafinal+($pdet->custohoragestor * ($pdet->horas_estimadas -$pdet->horas_reais));
+                    $valorprojetado = $valorprojetado + ($projeto->gestao * ($pdet->horas_estimadas -$pdet->horas_reais) );
+                }else{
+                    $custoplanejado = $custoplanejado+($pdet->custohoraconsultor*$pdet->horas_estimadas);
+                    $custoparafinal= $custoparafinal+($pdet->custohoragestor * ($pdet->horas_estimadas -$pdet->horas_reais));
+                    $valorprojetado = $valorprojetado + ($projeto->tecn * ($pdet->horas_estimadas -$pdet->horas_reais) );
+                }
+
+            }
+        }
+
+
+
+        $custoprojetado = "";
+        if($atividadesemresponsavel>0){
+            $custoprojetado = "ND";
+        }
+
+
         return view('projeto-detalhe',[
+            'valorprojetado' => $valorprojetado,
+            'custoparafinal' => $custoparafinal,
+            'custoplanejado' =>$custoplanejado,
+            'custoprojetado' => $custoprojetado,
             'projetodetalhesquery' => $projetodetalhesquery,
             'projeto' =>$projeto,
             'consultores' => $consultores,
