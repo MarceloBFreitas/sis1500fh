@@ -152,35 +152,11 @@ return [
             'icon'        => 'check',
             'submenu' => [
                 [
-                    'text' => 'Objetivos',
-                    'url'  => '/atividades',
+                    'text' => 'Projeto',
+                    'url'  => '/valida-projeto',
                     'icon' => 'check',
                 ],
-                [
-                    'text' => 'Prazos',
-                    'url'  => '/grupo-atividades',
-                    'icon' => 'check',
-                ],
-                [
-                    'text' => 'Escopo',
-                    'url'  => '/grupo-atividades',
-                    'icon' => 'check',
-                ],
-                [
-                    'text' => 'Esforço',
-                    'url'  => '/grupo-atividades',
-                    'icon' => 'check',
-                ],
-                [
-                    'text' => 'Pendências',
-                    'url'  => '/grupo-atividades',
-                    'icon' => 'check',
-                ],
-                [
-                    'text' => 'Orçamento',
-                    'url'  => '/grupo-atividades',
-                    'icon' => 'check',
-                ],
+
             ]
         ],
 

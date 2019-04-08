@@ -126,30 +126,30 @@
                 type:'POST',
                 url:"{{URL::route('salvar.horas')}}",
                 headers: {
-                    'X-CSRF-Token': '{{ csrf_token() }}',
-                },
-                data:{
-                    id:id,
+                'X-CSRF-Token': '{{ csrf_token() }}',
+            },
+            data:{
+                id:id,
                     dia:dia,
                     qtd:qtd,
                     desc:desc,
                     horasf:hfdomodal,
-                },
-                success:function(data){
-                    swal({
-                        title: data.msg,
-                        // text: 'Do you want to continue',
-                        type: data.tipo,
-                        timer: 2000
-                    });
+            },
+            success:function(data){
+                swal({
+                    title: data.msg,
+                    // text: 'Do you want to continue',
+                    type: data.tipo,
+                    timer: 2000
+                });
 
-                    location.reload();
+                location.reload();
 
-
-                }
-            });
 
             }
+        });
+
+        }
 
 
         }

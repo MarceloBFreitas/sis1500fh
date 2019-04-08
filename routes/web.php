@@ -115,10 +115,25 @@ Route::put('/excluir-foto/{id}','FotosController@remover')->name('excluir.fotos'
 
 
 
+
 // chamar view orçamento
 Route::get('/orcamento/{id}','OrcamentoController@show')->name('home.orcamentos');
 Route::get('/orcamento-pesquisa','OrcamentoController@index')->name('home.orcamento');
 Route::post('/Registrar-orcamento','OrcamentoController@criaorc')->name('home.orcamentocria');
+
+
+//tela validação
+Route::get('/valida-projeto','ValidaController@index')->name('home.valida');
+Route::get('/escopo/{id}','ValidaController@addescopo')->name('home.escopo-valida');
+
+Route::Post('/trastipo','ValidaController@trastipo')->name('home.trastipo');
+Route::Post('/add','ValidaController@add')->name('home.add');
+
+
+
+
+
+
 
 //metodo que adiciona um novo cliente
 Route::post('/Registrar-cliente','OrcamentoController@criacli')->name('cadastrar.cliente');

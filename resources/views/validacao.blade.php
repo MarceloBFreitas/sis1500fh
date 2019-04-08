@@ -42,6 +42,21 @@
             );
 
         });
+
+        function addescopo(id) {
+
+
+            $.ajax({
+                type:'GET',
+                url:'/escopo/'+id,
+                data:{
+                    _token : "<?php echo csrf_token() ?>"
+                },
+
+            });
+
+
+        }
     </script>
     <div class="container">
 
@@ -49,24 +64,44 @@
         <table class="table table-striped"  id="consultortable">
             <thead>
             <tr>
-                <th class="text-center">teste</th>
-                <th class="text-center">teste</th>
-                <th class="text-center">tee</th>
-                <th class="text-center">te</th>
-                <th class="text-center">t</th>
+                <th class="text-center">Cliente</th>
+                <th class="text-center">Projeto</th>
+                <th class="text-center">Validar</th>
+
             </tr>
             </thead>
             <tbody>
+            @foreach($projeto as $pjt)
 
-            <tr class="">
-                <td>t</td>
-                <td>te</td>
-                <td>tee</td>
-                <td>test</td>
-                <td>teste</td>
+                <tr class="">
+                <td class="text-center">{{$pjt->cliente}}</td>
+                <td class="text-center">{{$pjt->projeto}}</td>
+                <td class="text-center">
+                    <a href="/escopo/{{$pjt->id}}">
+                        <button  class="edit-modal btn btn-social"  onclick="" title="Escopo" >
+                            Escopo
+                        </button>
+                    </a>
+                    <a href="">
+                        <button  class="edit-modal btn btn-success"  onclick="" title="Orçamento" >
+                            Orçamento
+                        </button>
+                    </a>
+                    <a href="">
+                        <button  class="edit-modal btn btn-info"  onclick="" title="Produtividade" >
+                            Produtividade
+                        </button>
+                    </a>
+                    <a href="">
+                        <button  class="edit-modal btn btn-danger"  onclick="" title="Pendencias Cliente" >
+                            Pendencias Cliente
+                        </button>
+                    </a>
 
 
-            </tr>
+                </td>
+
+                </tr>
             @endforeach
             </tbody>
         </table>
@@ -78,55 +113,9 @@
 
 
 
-    <!-- Validar Escopo -->
-    <div class="modal fade" id="modalescopo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Validar Escopo</h4>
-                </div>
-                <div class="modal-body">
-                    /////
-
-                    <table class="table table-striped"  id="consultortable">
-                        <thead>
-                        <tr>
-                            <th class="text-center">teste</th>
-                            <th class="text-center">teste</th>
-                            <th class="text-center">tee</th>
-                            <th class="text-center">te</th>
-                            <th class="text-center">t</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                            <tr class="">
-                                <td>t</td>
-                                <td>te</td>
-                                <td>tee</td>
-                                <td>test</td>
-                                <td>teste</td>
 
 
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
 
-                    ////
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                    @if(Auth::user()->nivelacesso <3)
-                        <button type="button" onclick="" class="btn btn-primary">Salvar Alterações</button>
-                    @endif
-
-                </div>
-            </div>
-        </div>
-    </div>
 
 
 
