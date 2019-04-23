@@ -129,6 +129,9 @@ Route::get('/escopo/{id}','ValidaController@addescopo')->name('home.escopo-valid
 Route::Post('/trastipo','ValidaController@trastipo')->name('home.trastipo');
 Route::Post('/add','ValidaController@add')->name('home.add');
 
+Route::Post('/addprodutividade','ValidaController@addprod')->name('home.addprod');
+Route::Post('/adddata','ValidaController@adddata')->name('home.add');
+
 
 
 

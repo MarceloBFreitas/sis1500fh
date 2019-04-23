@@ -78,25 +78,11 @@
                 <td class="text-center">{{$pjt->projeto}}</td>
                 <td class="text-center">
                     <a href="/escopo/{{$pjt->id}}">
-                        <button  class="edit-modal btn btn-social"  onclick="" title="Escopo" >
-                            Escopo
+                        <button  class="edit-modal btn btn-social"  onclick="" title="Validar este projeto" >
+                            Validar este projeto
                         </button>
                     </a>
-                    <a href="">
-                        <button  class="edit-modal btn btn-success"  onclick="" title="Orçamento" >
-                            Orçamento
-                        </button>
-                    </a>
-                    <a href="">
-                        <button  class="edit-modal btn btn-info"  onclick="" title="Produtividade" >
-                            Produtividade
-                        </button>
-                    </a>
-                    <a href="">
-                        <button  class="edit-modal btn btn-danger"  onclick="" title="Pendencias Cliente" >
-                            Pendencias Cliente
-                        </button>
-                    </a>
+
 
 
                 </td>
