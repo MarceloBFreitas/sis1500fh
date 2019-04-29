@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Baseline;
 use App\BaselineDetalhe;
+use App\validaOrcamento;
+use App\validaObjetivo;
 use App\Projeto;
 use App\ProjetoDetalhe;
 use App\ValidaData;
 use App\ValidaEscopo;
+use App\PendenciasCliente;
 use App\ValidaProdutividade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,16 +24,35 @@ class ValidaController extends Controller
 
     public function index()
     {
-        $projeto = DB::select('select * from sisprojetos');
+        $projeto = DB::select('select sisprojetos.id as pjid, * from sisprojetos left join sisgestores on sisprojetos.id_gestor = sisgestores.gest_id 
+   left join sisusers on sisusers.id = sisgestores.user_id');
         $projetoDet = DB::select('select * from sisprojeto_detalhe');
+
+
         $id=0;
 
         return view('validacao',['projeto'=>$projeto,'pdet'=>$projetoDet,'id'=>$id]);
+    }
+    public function itendpendencia(Request $request){
+
+        $pdet = ProjetoDetalhe::find($request->id);
+
+        $datafim = $pdet->data_fim;
+        $datainicio = $pdet->data_inicio;
+
+        $response = array(
+            'datafim' => $datafim,
+            'datainicio' => $datainicio
+
+        );
+        return response()->json($response);
     }
 
     public function addescopo($id)
 
     {
+
+        $orcamentos = DB::select('select * from sis_validaorcamento where sis_validaorcamento.id_projeto = '.$id);
         $produtividade = DB::select(' select sis_validaProdutividade.cliente cli,* from sis_validaProdutividade inner join sisprojetos on sisprojetos.id = sis_validaProdutividade.id_projeto where sis_validaProdutividade.id_projeto ='.$id);
 
         $projeto = Projeto::find($id);
@@ -43,18 +65,22 @@ class ValidaController extends Controller
 
         $escopo = DB::select('select * from sis_validaEscopo');
         $baseline ='';
-
+        $valorbase='';
         $base = DB::select('Select * from sisbaseline where sisbaseline.id_projeto ='.$id);
         foreach ($base as $b){
             $baseline = $b->id;
+            $valorbase = $b->valor_planejado;
         }
+
 
         $basefim = DB::select(' select MAX(sisbaseline_detalhe.data_fim) as datafim from sisbaseline_detalhe where sisbaseline_detalhe.id_baseline ='.$baseline);
 
         $foto = db::select(' select * from sisfotos where sisfotos.id_projeto = '.$id.' AND DATEPART(WEEK,sisfotos.data_foto) = DATEPART(WEEK,GETDATE ( ))-1 and DATEPART(Year,sisfotos.data_foto) =  DATEPART(Year,GETDATE())');
         $idfoto='';
+        $valorfoto='';
         foreach ($foto as $f){
             $idfoto = $f->id;
+            $valorfoto = $f->valor_planejado;
         }
 
         $fotodet = db::select('  select max(sisfoto_detalhe.data_fim) as datafim from sisfoto_detalhe where sisfoto_detalhe.id='.$idfoto);
@@ -74,9 +100,12 @@ class ValidaController extends Controller
         foreach ($fotodet as $df){
             $datafimfoto = $df->datafim;
         }
+        $validaobj = DB::select('select * from sis_validaobjetivo where sis_validaobjetivo.id_projeto ='.$id);
+        $validapendencias = DB::select(' select * from sis_validaPendencias inner join sisprojeto_detalhe on sisprojeto_detalhe.id = sis_validaPendencias.id_atv_det 
+	  where sis_validaPendencias.id_projeto = '.$id);
 
 
-        return view('escopo',['validadata'=>$validadata,'datafimfoto'=>$datafimfoto,'datafimatual'=>$datafimatual,'datafimbase'=>$datafimbase,'projeto'=>$projeto,'pdet'=>$projetoDet,'escopo'=>$escopo,'produtividade'=>$produtividade]);
+        return view('escopo',['validaobj'=>$validaobj,'orcamentos'=>$orcamentos,'validapendencia'=>$validapendencias,'valorfoto'=>$valorfoto,'valorbase'=>$valorbase,'validadata'=>$validadata,'datafimfoto'=>$datafimfoto,'datafimatual'=>$datafimatual,'datafimbase'=>$datafimbase,'projeto'=>$projeto,'pdet'=>$projetoDet,'escopo'=>$escopo,'produtividade'=>$produtividade]);
     }
 
     public function trastipo(Request $request)
@@ -131,7 +160,32 @@ class ValidaController extends Controller
         );
         return response()->json($response);
     }
+    public function addobj(Request $request){
+         $ob = new Validaobjetivo();
+         $ob->cliente = $request->cliente;
+         $ob->id_projeto = $request->projeto;
+         $ob->data = $request->data;
+         $ob->tema = $request->tema;
+         $ob->resultado = $request->resultado;
+         $ob->comentario = $request->comentario;
+         $ob->status = $request->status;
+         $ob->mensuracao = $request->mensuracao;
+         $ob->mensuracao_data = $request->mensuracaodata;
 
+
+         $ob->save();
+
+        $mensagem="Validação de Objetivo Adicionada";
+        $tipo="success";
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+        return response()->json($response);
+
+
+    }
 
     public function addprod(Request $request){
 
@@ -197,6 +251,61 @@ class ValidaController extends Controller
 
 
 
+    }
+
+    public function addorcamento(Request $request){
+
+
+        $pen = new validaOrcamento();
+
+        $pen->cliente = $request->cliente;
+        $pen->valor_base = $request->valorbase;
+        $pen->valor_foto = $request->valorfoto;
+        $pen->valor_Atual = $request->valoratual;
+        $pen->id_projeto = $request->projeto;
+        $pen->data = $request->data;
+        $pen->tema = $request->tema;
+        $pen->status = $request->status;
+
+        $pen->comentario = $request->comentario;
+
+        $pen->save();
+        $mensagem="Validação de Orçamento Adicionada";
+        $tipo="success";
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+        return response()->json($response);
+    }
+
+    public function addpendencia(Request $request){
+
+        $pen = new PendenciasCliente();
+
+                $pen->cliente = $request->cliente;
+                $pen->tipo_atv = $request->atvdet;
+                $pen->data_fim = $request->datafim;
+                $pen->data_inicio = $request->datainicio;
+                $pen->id_projeto = $request->projeto;
+                $pen->data = $request->data;
+                $pen->tema = $request->tema;
+                $pen->status = $request->status;
+                $pen->id_atv_det = $request->atvdet;
+                $pen->comentario = $request->comentario;
+
+        $pen->save();
+
+
+        $mensagem="Validação de Pendências de Cliente Adicionada";
+        $tipo="success";
+        $response = array(
+            'tipo' => $tipo,
+            'msg' => $mensagem,
+
+        );
+        return response()->json($response);
     }
 
 }

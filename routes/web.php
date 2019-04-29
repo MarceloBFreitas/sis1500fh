@@ -130,7 +130,18 @@ Route::Post('/trastipo','ValidaController@trastipo')->name('home.trastipo');
 Route::Post('/add','ValidaController@add')->name('home.add');
 
 Route::Post('/addprodutividade','ValidaController@addprod')->name('home.addprod');
+Route::Post('/addorc','ValidaController@addorcamento')->name('home.orca');
+
 Route::Post('/adddata','ValidaController@adddata')->name('home.add');
+Route::Post('/addpen','ValidaController@addpendencia')->name('home.add');
+
+
+Route::Post('/trasitens','ValidaController@itendpendencia')->name('home.itens');
+Route::Post('/objetivoadd','ValidaController@addobj')->name('home.obj');
+
+
+
+
 
 
 

@@ -64,6 +64,8 @@
         <table class="table table-striped"  id="consultortable">
             <thead>
             <tr>
+
+                <th class="text-center">Gestor</th>
                 <th class="text-center">Cliente</th>
                 <th class="text-center">Projeto</th>
                 <th class="text-center">Validar</th>
@@ -74,11 +76,12 @@
             @foreach($projeto as $pjt)
 
                 <tr class="">
+                <td class="text-center">{{$pjt->name}}</td>
                 <td class="text-center">{{$pjt->cliente}}</td>
                 <td class="text-center">{{$pjt->projeto}}</td>
                 <td class="text-center">
-                    <a href="/escopo/{{$pjt->id}}">
-                        <button  class="edit-modal btn btn-social"  onclick="" title="Validar este projeto" >
+                    <a href="/escopo/{{$pjt->pjid}}">
+                        <button  class="btn btn-success"  onclick="" title="Validar este projeto" >
                             Validar este projeto
                         </button>
                     </a>

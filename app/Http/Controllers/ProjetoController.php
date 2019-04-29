@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cliente;
 use App\Consultor;
+use App\Alertavalidacao;
 use App\ExplosaoAtv;
 use App\Gestor;
 use App\OrcamentoEscopo;
@@ -188,6 +189,17 @@ class ProjetoController extends Controller
 
                 $mensagem="Projeto Criado com Sucesso";
                 $tipo="success";
+
+                $alerta = new Alertavalidacao();
+                $alerta->escopo = 0;
+                $alerta->objetivo =0;
+                $alerta->data =0;
+                $alerta->orcamento=0;
+                $alerta->produtividade=0;
+                $alerta->pendencias=0;
+
+
+
             }else{
                 $mensagem="Você não tem autorização para este recurso";
                 $tipo="error";

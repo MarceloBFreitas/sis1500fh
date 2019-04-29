@@ -8,7 +8,7 @@
     <div class="container">
         
 
-        <button onclick="chamaescopo()" class="btn-success glyphicon-check"> Adicionar Validação</button>
+        <button onclick="chamaescopo()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
 
 
         <div class="container">
@@ -62,6 +62,38 @@
             $('.datainput').mask('99/99/9999'); //Máscara para Data
             $('.valortable').mask("#.##0,00", {reverse: true});
             $('#projetosdettable').DataTable(
+                {
+                    "language": {
+                        "sEmptyTable": "Nenhum registro encontrado",
+                        "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                        "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                        "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                        "sInfoPostFix": "",
+                        "sInfoThousands": ".",
+                        "sLengthMenu": "_MENU_ resultados por página",
+                        "sLoadingRecords": "Carregando...",
+                        "sProcessing": "Processando...",
+                        "sZeroRecords": "Nenhum registro encontrado",
+                        "sSearch": "Pesquisar",
+                        "oPaginate": {
+                            "sNext": "Próximo",
+                            "sPrevious": "Anterior",
+                            "sFirst": "Primeiro",
+                            "sLast": "Último"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Ordenar colunas de forma ascendente",
+                            "sSortDescending": ": Ordenar colunas de forma descendente"
+                        }
+                    }
+                }
+            );
+
+        });
+        $(document).ready(function(){
+            $('.datainput').mask('99/99/9999'); //Máscara para Data
+            $('.valortable').mask("#.##0,00", {reverse: true});
+            $('#validaobj').DataTable(
                 {
                     "language": {
                         "sEmptyTable": "Nenhum registro encontrado",
@@ -246,6 +278,29 @@
             });
 
         }
+        function trasitenspendencia(id) {
+
+
+
+            $.ajax({
+                type:'POST',
+                url:"/trasitens",
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                data:{
+                    id:id,
+
+                },
+                success:function(data){
+                    $('#iddatainiciopendencia').val(data.datainicio);
+                    $('#iddatafimpendencia').val(data.datafim);
+
+
+                }
+            });
+
+        }
         function add(id) {
           var cli =  $('#cli').val();
             var estima =    $('#idestima').val();
@@ -307,9 +362,19 @@
             $("#modalprod").modal('toggle');
 
         }
+        function chamapendencias() {
+            $("#modalPendencias").modal('toggle');
+        }
         function chamadata() {
             $("#modaldatas").modal('toggle');
 
+        }
+        function chamaobj() {
+            modalobjetivo
+            $("#modalobjetivo").modal('toggle');
+        }
+        function addorca() {
+            $("#modalorca").modal('toggle')
         }
         function addprod($id) {
 
@@ -398,6 +463,144 @@
                 }
             });
         }
+        function addpendencia($id) {
+            var cliente =  $('#clipen').val();
+            var projeto =  $id;
+            var datainicio =  $('#iddatainiciopendencia').val();
+            var datafim =  $('#iddatafimpendencia').val();
+            var tipo =  $('#idtipo').val();
+            var data =  $('#iddiapen').val();
+            var tema =  $('#temapen').val();
+            var status =  $('#statuspen').val();
+            var comentario =  $('#iddescpen').val();
+            var atv =  $('#sel1pen').val();
+
+            $.ajax({
+                type:'POST',
+                url:"/addpen",
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                data:{
+                    cliente:cliente,
+                    tipo:tipo,
+                    datafim:datafim,
+                    datainicio:datainicio,
+                    projeto:projeto,
+                    data:data,
+                    tema:tema,
+                    status:status,
+                    atvdet:atv,
+                    comentario:comentario
+
+                },
+                success:function(data){
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+
+                    location.reload();
+
+
+                }
+            });
+        }
+        function addorcamentos(id) {
+            var cliente =  $('#cliorc').val();
+            var projeto =  id;
+            var valorbase =  $('#valorbaseorc').val();
+            var valorfoto =  $('#valorfotoorc').val();
+            var valortotal =  $('#valoratualorc').val();
+
+            var data =  $('#diaorc').val();
+            var tema =  $('#temaorc').val();
+            var status =  $('#statusorc').val();
+            var comentario =  $('#iddescorc').val();
+            console.log('wwwwww');
+
+            $.ajax({
+                type:'POST',
+                url:"/addorc",
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                data:{
+                    cliente:cliente,
+
+                    valorbase:valorbase,
+                    valorfoto:valorfoto,
+                    valoratual:valortotal,
+                    projeto:projeto,
+                    data:data,
+                    tema:tema,
+                    status:status,
+                    comentario:comentario
+
+                },
+                success:function(data){
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+
+                    location.reload();
+
+
+                }
+            });
+        }
+        function addobj(id) {
+            var cliente =  $('#cliobj').val();
+            var projeto =  id;
+
+            var resultado =  $('#resulobj').val();
+
+            var data =  $('#diaobj').val();
+            var tema =  $('#temaobj').val();
+            var status =  $('#statusobj').val();
+            var comentario =  $('#comentobj').val();
+            var mensuracaodata =  $('#mendata').val();
+            var mensuracao =  $('#mendesc').val();
+
+
+            $.ajax({
+                type:'POST',
+                url:"/objetivoadd",
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                data:{
+                    cliente:cliente,
+                    mensuracaodata:mensuracaodata,
+                    mensuracao:mensuracao,
+                    resultado:resultado,
+                    projeto:projeto,
+                    data:data,
+                    tema:tema,
+                    status:status,
+                    comentario:comentario
+
+                },
+                success:function(data){
+                    swal({
+                        title: data.msg,
+                        // text: 'Do you want to continue',
+                        type: data.tipo,
+                        timer: 2000
+                    });
+
+                    location.reload();
+
+
+                }
+            });
+
+        }
 
     </script>
 
@@ -405,7 +608,7 @@
 
     <h3>Gestão de Produtividade</h3><br>
 
-    <button onclick="chamaprod()" class="btn-success glyphicon-check"> Adicionar Validação</button>
+    <button onclick="chamaprod()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
     <table class="table table-striped"  id="gestaoprodutividade">
         <thead>
 
@@ -442,7 +645,7 @@
 
 
     <h3>Validação de Datas</h3><br>
-    <button onclick="chamadata()" class="btn-success glyphicon-check"> Adicionar Validação</button>
+    <button onclick="chamadata()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
     <table class="table table-striped"  id="validadata">
         <thead>
         <tr>
@@ -479,50 +682,50 @@
 
 
     <h3>Pendências de Cliente</h3><br>
-    <button onclick="" class="btn-success glyphicon-check"> Adicionar Validação</button>
+    <button onclick="chamapendencias()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
     <table class="table table-striped"  id="pencli">
         <thead>
         <tr>
             <th class="text-center">Cliente</th>
             <th class="text-center">Projeto</th>
             <th class="text-center">Atividade</th>
-            <th class="text-center">Horas Planejadas</th>
-            <th class="text-center">Horas fim</th>
+            <th class="text-center">Data Inicio</th>
+            <th class="text-center">Data fim</th>
             <th class="text-center">Status</th>
             <th class="text-center">Tema</th>
-            <th class="text-center">Descrição</th>
+            <th class="text-center">Comentario</th>
             <th class="text-center">Dia</th>
         </tr>
         </thead>
         <tbody>
-
+        @foreach($validapendencia as $pen)
         <tr>
-            <td>BIC</td>
-            <td>Assistente Virtual</td>
-            <td>Criar BOOT</td>
-            <td>20</td>
-            <td>Horas Reais</td>
-            <td>data </td>
-            <td>tema</td>
-            <td>Comentario</td>
-            <td>status</td>
+            <td class="text-center">{{$pen->cliente}}</td>
+            <td class="text-center">{{$projeto->projeto}}</td>
+            <td class="text-center">{{$pen->descricao}}</td>
+            <td class="text-center">{{$pen->data_inicio}}</td>
+            <td class="text-center">{{$pen->data_fim}}</td>
+            <td class="text-center">{{$pen->status}}</td>
+            <td class="text-center">{{$pen->tema}}</td>
+            <td class="text-center">{{$pen->comentario}}</td>
+            <td class="text-center">{{$pen->data}}</td>
 
         </tr>
-
+@endforeach
         </tbody>
     </table><br><br><br><br>
 
 
     <h3>Validação de Orçamento</h3><br>
-    <button onclick="" class="btn-success glyphicon-check"> Adicionar Validação</button>
+    <button onclick="addorca()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
     <table class="table table-striped"  id="validorca">
         <thead>
         <tr>
             <th class="text-center">Cliente</th>
             <th class="text-center">Projeto</th>
-            <th class="text-center">Atividade</th>
-            <th class="text-center">Horas Planejadas</th>
-            <th class="text-center">Horas fim</th>
+            <th class="text-center">Valor Baseline</th>
+            <th class="text-center">Valor Foto</th>
+            <th class="text-center">Valor Atual</th>
             <th class="text-center">Status</th>
             <th class="text-center">Tema</th>
             <th class="text-center">Descrição</th>
@@ -530,35 +733,34 @@
         </tr>
         </thead>
         <tbody>
-
+        @foreach($orcamentos as $or)
         <tr>
-            <td>BIC</td>
-            <td>Assistente Virtual</td>
-            <td>Criar BOOT</td>
-            <td>20</td>
-            <td>Horas Reais</td>
-            <td>data </td>
-            <td>tema</td>
-            <td>Comentario</td>
-            <td>status</td>
+            <td class="text-center">{{$or->cliente}}</td>
+            <td class="text-center">{{$projeto->projeto}}</td>
+            <td class="text-center">{{$or->valor_base}}</td>
+            <td class="text-center">{{$or->valor_foto}}</td>
+            <td class="text-center">{{$or->valor_Atual}}</td>
+            <td class="text-center">{{$or->status}}</td>
+            <td class="text-center">{{$or->tema}}</td>
+            <td class="text-center">{{$or->comentario}}</td>
+            <td class="text-center">{{$or->data}}</td>
+
 
         </tr>
-
+    @endforeach
         </tbody>
     </table><br><br><br><br>
 
 
 
     <h3>Validação de Objetivo</h3><br>
-    <button onclick="" class="btn-success glyphicon-check"> Adicionar Validação</button>
+    <button onclick="chamaobj()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
     <table class="table table-striped"  id="validaobj">
         <thead>
         <tr>
             <th class="text-center">Cliente</th>
             <th class="text-center">Projeto</th>
-            <th class="text-center">Atividade</th>
-            <th class="text-center">Horas Planejadas</th>
-            <th class="text-center">Horas fim</th>
+            <th class="text-center">Resultado</th>
             <th class="text-center">Status</th>
             <th class="text-center">Tema</th>
             <th class="text-center">Descrição</th>
@@ -566,20 +768,19 @@
         </tr>
         </thead>
         <tbody>
-
+        @foreach($validaobj as $obj)
         <tr>
-            <td>BIC</td>
-            <td>Assistente Virtual</td>
-            <td>Criar BOOT</td>
-            <td>20</td>
-            <td>Horas Reais</td>
-            <td>data </td>
-            <td>tema</td>
-            <td>Comentario</td>
-            <td>status</td>
+            <td class="text-center">{{$obj->cliente}}</td>
+            <td class="text-center">{{$projeto->projeto}}</td>
+            <td class="text-center">{{$obj->resultado}}</td>
+            <td class="text-center">{{$obj->status}}</td>
+            <td class="text-center">{{$obj->tema}}</td>
+            <td class="text-center">{{$obj->comentario}}</td>
+            <td class="text-center">{{$obj->data}}</td>
+
 
         </tr>
-
+        @endforeach
         </tbody>
     </table><br><br><br><br>
 
@@ -739,6 +940,74 @@
         </div>
     </div>
 
+    <!-- Modal validação Orcamento -->
+    <div class="modal fade" id="modalorca" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Adicionar  Validação</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-6">
+                        <label for="comment">Cliente</label> <input class="form-control" value="{{$projeto->cliente}}" type="text" disabled  id="cliorc" >
+                        <label for="comment">Projeto:</label><input class="form-control" value="{{$projeto->projeto}}" type="text" disabled  id="projetoorc" >
+                        <label for="comment">Dia</label><input class="form-control" type="date" id="diaorc" size="5" >
+                    </div>
+                    <div class="col-md-6">
+                        <label for="comment">Valor Baseline</label> <input class="form-control" value="{{$valorbase}}" type="text" disabled  id="valorbaseorc" >
+                        <label for="comment">Valor Foto</label><input class="form-control" value="{{$valorfoto}}" type="text" disabled  id="valorfotoorc" >
+                        <label for="comment">Valor Atual</label><input class="form-control" value="{{$projeto->valor_total}}" type="text" disabled  id="valoratualorc" >
+
+                    </div>
+                    <div class="col-md-6">
+                        <label for="comment">Tema</label>
+                        <select class="form-control funcfiltro" id="temaorc">
+
+
+                            <option selected value="" >Adicionar tema</option>
+                            <option>Produtividade</option>
+                            <option>Objetivo</option>
+                            <option>Atraso</option>
+                            <option>Pendencia cliente</option>
+                            <option selected>Orçamento</option>
+                            <option>Mudança Escopo</option>
+
+                        </select>
+
+                    </div>
+                    <div class="col-md-6"><br>
+
+
+                        <label for="comment">Status</label>
+                        <select class="form-control funcfiltro" id="statusorc">
+
+
+                            <option selected value="" >Adicionar Status</option>
+                            <option>Pendente</option>
+                            <option>Finalizado</option>
+
+                        </select>
+                    </div>
+
+
+                    <label for="comment">Comentatio</label>
+                    <textarea class="form-control" rows="5" id="iddescorc"></textarea>
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    @if(Auth::user()->nivelacesso <3)
+                        <button type="button" onclick="addorcamentos({{$projeto->id}})" class="btn btn-primary">Adicionar Validação</button>
+                    @endif
+
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -812,5 +1081,154 @@
         </div>
     </div>
 
+
+    <!-- Modal validação pendencias do cliente -->
+    <div class="modal fade" id="modalPendencias" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Adicionar Validação</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-6">
+                        <label for="comment">Cliente</label> <input class="form-control" value="{{$projeto->cliente}}" type="text" disabled  id="clipen" >
+                        <label for="comment">Data inicio:</label><input class="form-control" value="" type="date" disabled  id="iddatainiciopendencia" >
+                    </div>
+                    <div class="col-md-6">
+                        <label for="comment">Projeto</label> <input class="form-control"  value="{{$projeto->projeto}}" type="text" disabled  id="proj" >
+                        <label for="comment">Data Fim:</label><input class="form-control" value="" type="date" disabled  id="iddatafimpendencia" >
+
+                    </div>
+                    <div class="col-md-6">
+                        <label for="comment">Dia</label><input class="form-control" type="date" id="iddiapen" size="5" >
+                        <label for="comment">Tipo Atividade</label><input  value="Pendencia Cliente" disabled class="form-control" type="Text" id="idtipo" >
+                    </div>
+                    <div class="col-md-6">
+                        <label for="comment">Atividade</label>
+                        <select class="form-control funcfiltro"  onchange="trasitenspendencia(this.value);" id="sel1pen">
+
+
+                            <option selected >Adicionar Atividade</option>
+
+                            @foreach($pdet as $pd)
+                                <?php if($pd->situacao == 'Atraso do Cliente'){ ?>
+                                <option
+                                        value="{{$pd->id}}" id="e{{$pd->id}}e">{{$pd->descricao}}</option>
+                                <?php } ?>{{$pd->id}}
+                            @endforeach
+                        </select>
+                        <label for="comment">Status</label>
+                        <select class="form-control funcfiltro" id="statuspen">
+
+
+                            <option selected value="" >Adicionar Status</option>
+                            <option>Pendente</option>
+                            <option>Finalizado</option>
+
+                        </select>
+
+                        <label for="comment">Tema</label>
+                        <select class="form-control funcfiltro" id="temapen">
+
+
+                            <option selected value="" >Adicionar tema</option>
+                            <option>Produtividade</option>
+                            <option>Objetivo</option>
+                            <option>Atraso</option>
+                            <option selected>Pendencia cliente</option>
+                            <option>Orçamento</option>
+                            <option>Mudança Escopo</option>
+
+                        </select>
+
+                    </div>
+                    <label for="comment">Comentatio</label> <textarea class="form-control" rows="5" id="iddescpen"></textarea>
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    @if(Auth::user()->nivelacesso <3)
+                        <button type="button" onclick="addpendencia({{$projeto->id}})" class="btn btn-primary">Adicionar</button>
+                    @endif
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal validação Objetivo -->
+    <div class="modal fade" id="modalobjetivo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Adicionar Validação</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-6">
+                        <label for="comment">Cliente</label> <input class="form-control" value="{{$projeto->cliente}}" type="text" disabled  id="cliobj" >
+                        <label for="comment">Projeto</label> <input class="form-control"  value="{{$projeto->projeto}}" type="text" disabled  id="proj" >
+                        <label for="comment">Data Mensuração</label> <input class="form-control"  value="{{$projeto->mensuracao_data}}" type="text" disabled  id="mendata" >
+
+                    </div>
+                    <div class="col-md-6">
+
+
+                        <label for="comment">Status</label>
+                        <select class="form-control funcfiltro" id="statusobj">
+
+
+                            <option selected value="" >Adicionar Status</option>
+                            <option>Pendente</option>
+                            <option>Finalizado</option>
+
+                        </select>
+                        <label for="comment">Mensuração</label> <input class="form-control"  value="{{$projeto->mensuracao_descricao}}" type="text" disabled  id="mendesc" >
+
+                        <label for="comment">Tema</label>
+                        <select class="form-control funcfiltro" id="temaobj">
+
+
+                            <option selected value="" >Adicionar tema</option>
+                            <option>Produtividade</option>
+                            <option>Objetivo</option>
+                            <option>Atraso</option>
+                            <option selected>Pendencia cliente</option>
+                            <option>Orçamento</option>
+                            <option>Mudança Escopo</option>
+
+                        </select>
+                        <label for="comment">Dia</label><input class="form-control " type="date" id="diaobj" size="5" >
+
+                    </div>
+                    <div class="col-md-6">
+
+
+                    </div>
+                    <div class="col-md-6">
+
+
+                    </div>
+                    <label for="comment">Resultado</label><input  value=""  class="form-control" type="Text" id="resulobj" >
+                    <label for="comment">Comentatio</label> <textarea class="form-control" rows="5" id="comentobj"></textarea>
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    @if(Auth::user()->nivelacesso <3)
+                        <button type="button" onclick="addobj({{$projeto->id}})" class="btn btn-primary">Adicionar</button>
+                    @endif
+
+                </div>
+            </div>
+        </div>
+    </div>
 
 @stop
