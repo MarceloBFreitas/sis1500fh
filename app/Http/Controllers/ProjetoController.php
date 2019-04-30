@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cliente;
 use App\Consultor;
-use App\Alertavalidacao;
+use App\Alertavalida;
 use App\ExplosaoAtv;
 use App\Gestor;
 use App\OrcamentoEscopo;
@@ -59,9 +59,30 @@ class ProjetoController extends Controller
 
     public function atualizarsituacao(Request $request){
 
+
         $pdetalhe = ProjetoDetalhe::find($request->idpdet);
+        $idpro = 0;
+        $idpro = $pdetalhe->id_projeto;
+
         $pdetalhe->situacao = $request->tipo;
         $pdetalhe->save();
+
+        $va = DB::select('select * from sis_alertavalidacao where sis_alertavalidacao.id_projeto ='.$idpro);
+        $id =0;
+        foreach ($va as $v){
+            $id =  $v->id;
+        }
+
+
+        $valida = alertavalida::find($id);
+
+        if($request->tipo == 'Atraso do Cliente'){
+            $valida->pendencias =1;
+        }
+        if($request->tipo == 'Mudança de escopo'){
+            $valida->escopo =1;
+        }
+        $valida->save();
     }
 
     public function criarProjeto($id){
@@ -190,13 +211,16 @@ class ProjetoController extends Controller
                 $mensagem="Projeto Criado com Sucesso";
                 $tipo="success";
 
-                $alerta = new Alertavalidacao();
+                $alerta = new Alertavalida();
                 $alerta->escopo = 0;
                 $alerta->objetivo =0;
                 $alerta->data =0;
                 $alerta->orcamento=0;
                 $alerta->produtividade=0;
                 $alerta->pendencias=0;
+                $alerta->id_projeto = $projeto->id;
+                $alerta->save();
+
 
 
 

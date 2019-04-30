@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Baseline;
 use App\BaselineDetalhe;
 use App\validaOrcamento;
+use App\Alertavalida;
 use App\validaObjetivo;
 use App\Projeto;
 use App\ProjetoDetalhe;
@@ -24,8 +25,8 @@ class ValidaController extends Controller
 
     public function index()
     {
-        $projeto = DB::select('select sisprojetos.id as pjid, * from sisprojetos left join sisgestores on sisprojetos.id_gestor = sisgestores.gest_id 
-   left join sisusers on sisusers.id = sisgestores.user_id');
+        $projeto = DB::select('  select sisprojetos.id as pjid,  * from sisprojetos left join sisgestores on sisprojetos.id_gestor = sisgestores.gest_id 
+   left join sisusers on sisusers.id = sisgestores.user_id inner join sis_alertavalidacao on sis_alertavalidacao.id_projeto = sisprojetos.id');
         $projetoDet = DB::select('select * from sisprojeto_detalhe');
 
 
@@ -149,6 +150,18 @@ class ValidaController extends Controller
         $vescopo->comentario = $request->desc;
         $vescopo->status = $request->status;
 
+
+        $va = DB::select('select * from sis_alertavalidacao where sis_alertavalidacao.id_projeto ='.$request->idprojeto);
+        $id =0;
+        foreach ($va as $v){
+            $id =  $v->id;
+        }
+
+
+        $valida = Alertavalida::find($id);
+
+        $valida->escopo = 0;
+        $valida->save();
         $vescopo->save();
         $mensagem="Validação do Escopo Adicionada";
         $tipo="success";
@@ -296,6 +309,17 @@ class ValidaController extends Controller
                 $pen->comentario = $request->comentario;
 
         $pen->save();
+        $va = DB::select('select * from sis_alertavalidacao where sis_alertavalidacao.id_projeto ='.$request->projeto);
+        $id =0;
+        foreach ($va as $v){
+            $id =  $v->id;
+        }
+
+
+        $valida = alertavalida::find($id);
+
+        $valida->pendencias = 0;
+        $valida->save();
 
 
         $mensagem="Validação de Pendências de Cliente Adicionada";

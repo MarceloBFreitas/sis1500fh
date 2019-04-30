@@ -80,12 +80,20 @@
                 <td class="text-center">{{$pjt->cliente}}</td>
                 <td class="text-center">{{$pjt->projeto}}</td>
                 <td class="text-center">
-                    <a href="/escopo/{{$pjt->pjid}}">
+                <?php if($pjt->pendencias == 1 or $pjt->escopo == 1) { ?>
+                      <a href="/escopo/{{$pjt->pjid}}">
+                        <button  class="btn btn-danger"  onclick="" title="Validar este projeto" >
+                            Validar este projeto
+                        </button>
+                    </a>
+                    <?php } else { ?>
+
+                     <a href="/escopo/{{$pjt->pjid}}">
                         <button  class="btn btn-success"  onclick="" title="Validar este projeto" >
                             Validar este projeto
                         </button>
                     </a>
-
+                    <?php } ?>
 
 
                 </td>
