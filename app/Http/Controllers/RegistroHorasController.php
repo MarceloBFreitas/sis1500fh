@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Consultor;
 
 use App\Gestor;
+use App\Alertavalida;
 use App\Logregistros;
 use App\Projeto;
 use App\ProjetoDetalhe;
@@ -82,15 +83,26 @@ sisusers.id ='.auth()->user()->id);
         $projetodetalhe->save();
       // =  $projetodetalhe->horas_fim;
 
-
-        $mensagem = "Você não tem autorização para realizar essa ação";
-        $tipo = "error";
-
-
-
-
             $re->save();
             $lr->id_registro = $re->id;
+
+            $proj = Projeto::find($projetodetalhe->id_projeto);
+             if($proj->horas_estimadas < $proj->horas_totais){
+
+                 $va = DB::select('select * from sis_alertavalidacao where sis_alertavalidacao.id_projeto ='.$projetodetalhe->id_projeto);
+                 $id =0;
+                 foreach ($va as $v){
+                     $id =  $v->id;
+                 }
+
+
+                 $valida = alertavalida::find($id);
+
+
+                 $valida->produtividade =1;
+
+                 $valida->save();
+             }
 
 
             $lr->save();

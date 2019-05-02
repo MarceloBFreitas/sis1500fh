@@ -188,6 +188,20 @@ class ValidaController extends Controller
 
          $ob->save();
 
+        $va = DB::select('select * from sis_alertavalidacao where sis_alertavalidacao.id_projeto ='.$request->projeto);
+        $id =0;
+        foreach ($va as $v){
+            $id =  $v->id;
+        }
+
+
+        $valida = alertavalida::find($id);
+
+
+        $valida->objetivo =0;
+
+        $valida->save();
+
         $mensagem="Validação de Objetivo Adicionada";
         $tipo="success";
         $response = array(
@@ -215,6 +229,20 @@ class ValidaController extends Controller
 
 
         $prod->save();
+
+        $va = DB::select('select * from sis_alertavalidacao where sis_alertavalidacao.id_projeto ='.$request->projeto);
+        $id =0;
+        foreach ($va as $v){
+            $id =  $v->id;
+        }
+
+
+        $valida = alertavalida::find($id);
+
+
+        $valida->produtividade =0;
+
+        $valida->save();
         $mensagem="Validação de Produtividade Adicionada";
         $tipo="success";
         $response = array(
