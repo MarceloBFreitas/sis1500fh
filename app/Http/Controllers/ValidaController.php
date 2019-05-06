@@ -25,6 +25,19 @@ class ValidaController extends Controller
 
     public function index()
     {
+
+        $validaobj = DB::select(' select sis_alertavalidacao.id idvalida ,* from sisprojetos inner join sis_alertavalidacao on sisprojetos.id = sis_alertavalidacao.id_projeto');
+
+        foreach ($validaobj as $v){
+            if($v->mensuracao_data < date('d/m/y')) {
+                $validacaoobj = Alertavalida::find($v->idvalida);
+                $validacaoobj->objetivo = 1;
+
+            }
+
+        }
+
+
         $projeto = DB::select('  select sisprojetos.id as pjid,  * from sisprojetos left join sisgestores on sisprojetos.id_gestor = sisgestores.gest_id 
    left join sisusers on sisusers.id = sisgestores.user_id inner join sis_alertavalidacao on sis_alertavalidacao.id_projeto = sisprojetos.id');
         $projetoDet = DB::select('select * from sisprojeto_detalhe');
@@ -52,6 +65,15 @@ class ValidaController extends Controller
     public function addescopo($id)
 
     {
+        $alertavalidacao = DB::select('select * from sis_alertavalidacao where sis_alertavalidacao.id_projeto ='.$id);
+        foreach ($alertavalidacao as $av){
+
+            $alertavalidacao = Alertavalida::find($av->id);
+        }
+
+
+
+
 
         $orcamentos = DB::select('select * from sis_validaorcamento where sis_validaorcamento.id_projeto = '.$id);
         $produtividade = DB::select(' select sis_validaProdutividade.cliente cli,* from sis_validaProdutividade inner join sisprojetos on sisprojetos.id = sis_validaProdutividade.id_projeto where sis_validaProdutividade.id_projeto ='.$id);
@@ -64,7 +86,7 @@ class ValidaController extends Controller
 
 
 
-        $escopo = DB::select('select * from sis_validaEscopo');
+        $escopo = DB::select('  select * from sis_validaEscopo inner join sisprojeto_detalhe on sisprojeto_detalhe.id = sis_validaEscopo.id_atv_det where sis_validaEscopo.id_projeto ='.$id);
         $baseline ='';
         $valorbase='';
         $base = DB::select('Select * from sisbaseline where sisbaseline.id_projeto ='.$id);
@@ -92,11 +114,12 @@ class ValidaController extends Controller
         $datafimfoto='';
         $datafimatual='';
         foreach ($projetoDetf as $df){
-            $datafimbase = $df->datafim;
+            $datafimatual = $df->datafim;
+
         }
 
         foreach ($basefim as $df){
-            $datafimatual = $df->datafim;
+            $datafimbase = $df->datafim;
         }
         foreach ($fotodet as $df){
             $datafimfoto = $df->datafim;
@@ -106,7 +129,7 @@ class ValidaController extends Controller
 	  where sis_validaPendencias.id_projeto = '.$id);
 
 
-        return view('escopo',['validaobj'=>$validaobj,'orcamentos'=>$orcamentos,'validapendencia'=>$validapendencias,'valorfoto'=>$valorfoto,'valorbase'=>$valorbase,'validadata'=>$validadata,'datafimfoto'=>$datafimfoto,'datafimatual'=>$datafimatual,'datafimbase'=>$datafimbase,'projeto'=>$projeto,'pdet'=>$projetoDet,'escopo'=>$escopo,'produtividade'=>$produtividade]);
+        return view('escopo',['alertavalidacao'=>$alertavalidacao,'validaobj'=>$validaobj,'orcamentos'=>$orcamentos,'validapendencia'=>$validapendencias,'valorfoto'=>$valorfoto,'valorbase'=>$valorbase,'validadata'=>$validadata,'datafimfoto'=>$datafimfoto,'datafimatual'=>$datafimatual,'datafimbase'=>$datafimbase,'projeto'=>$projeto,'pdet'=>$projetoDet,'escopo'=>$escopo,'produtividade'=>$produtividade]);
     }
 
     public function trastipo(Request $request)

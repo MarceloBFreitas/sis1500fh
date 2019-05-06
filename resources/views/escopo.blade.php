@@ -4,55 +4,8 @@
 
 @section('content_header')
 
-    <h1>Gestão De Escopo</h1><br>
-    <div class="container">
-        
-
-        <button onclick="chamaescopo()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
 
 
-        <div class="container">
-
-
-            <table class="table table-striped"  id="projetosdettable">
-                <thead>
-                <tr>
-                    <th class="text-center">Cliente</th>
-                    <th class="text-center">Projeto</th>
-                    <th class="text-center">Atividade</th>
-                    <th class="text-center">Horas Planejadas</th>
-                    <th class="text-center">Horas fim</th>
-                    <th class="text-center">Status</th>
-                    <th class="text-center">Tema</th>
-                    <th class="text-center">Descrição</th>
-                    <th class="text-center">Dia</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($escopo as $es)
-                    <tr>
-                        <td>{{$es->cliente}}</td>
-                        <td>{{$projeto->projeto}}</td>
-                        <td>{{$es->id_atv_det}}</td>
-                        <td>{{$es->horas_plan}}</td>
-                        <td>{{$es->horas_fim}}</td>
-                        <td>{{$es->status}}</td>
-                        <td>{{$es->tema}}</td>
-                        <td>{{$es->comentario}}</td>
-                        <td>{{$es->data}}</td>
-
-                    </tr>
-                @endforeach
-                </tbody>
-            </table><br><br><br><br>
-
-        </div>
-
-
-
-
-
-    </div>
 @stop
 
 @section('content')
@@ -606,9 +559,135 @@
 
 <div class="container">
 
+
+
+
+    <h3>Validação de Objetivo</h3><br>
+    <?php if( $alertavalidacao->objetivo==1) { ?>
+    <button onclick="chamaobj()" class="btn btn-danger glyphicon-check"> Adicionar Validação</button>
+    <?php } else { ?>
+
+    <button onclick="chamaobj()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
+    <?php } ?>
+    <table class="table table-striped"  id="validaobj">
+        <thead>
+        <tr>
+            <th class="text-center">Cliente</th>
+            <th class="text-center">Projeto</th>
+            <th class="text-center">Resultado</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Tema</th>
+            <th class="text-center">Descrição</th>
+            <th class="text-center">Dia</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($validaobj as $obj)
+            <tr>
+                <td class="text-center">{{$obj->cliente}}</td>
+                <td class="text-center">{{$projeto->projeto}}</td>
+                <td class="text-center">{{$obj->resultado}}</td>
+                <td class="text-center">{{$obj->status}}</td>
+                <td class="text-center">{{$obj->tema}}</td>
+                <td class="text-center">{{$obj->comentario}}</td>
+                <td class="text-center">{{$obj->data}}</td>
+
+
+            </tr>
+        @endforeach
+        </tbody>
+    </table><br><br><br><br>
+
+
+
+    <h3>Validação de Datas</h3><br>
+        <?php if( $alertavalidacao->data==1) { ?>
+        <button onclick="chamadata()" class="btn btn-danger glyphicon-check"> Adicionar Validação</button>
+        <?php } else { ?>
+
+        <button onclick="chamadata()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
+        <?php } ?>
+    <table class="table table-striped"  id="validadata">
+        <thead>
+        <tr>
+            <th class="text-center">Cliente</th>
+            <th class="text-center">Projeto</th>
+            <th class="text-center">Data Fim Baseline</th>
+            <th class="text-center">Data Fim Atual</th>
+            <th class="text-center">Data Foto</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Tema</th>
+            <th class="text-center">Descrição</th>
+            <th class="text-center">Dia</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        @foreach($validadata as $vd)
+            <tr>
+                <td class="text-center">{{$vd->cliente}}</td>
+                <td class="text-center">{{$projeto->projeto}}</td>
+                <td class="text-center">{{$vd->data_fim_base}}</td>
+                <td class="text-center">{{$vd->data_fim_atual}}</td>
+                <td class="text-center">{{$vd->fim_semana}}</td>
+                <td class="text-center">{{$vd->status}}</td>
+                <td class="text-center">{{$vd->tema}}</td>
+                <td class="text-center">{{$vd->comentario}}</td>
+                <td class="text-center">{{$vd->data}}</td>
+
+            </tr>
+        @endforeach
+        </tbody>
+    </table><br><br><br><br>
+
+
+    <h3>Gestão De Escopo</h3><br>
+        <?php if( $alertavalidacao->escopo==1) { ?>
+        <button onclick="chamaescopo()" class="btn btn-danger glyphicon-check"> Adicionar Validação</button>
+        <?php } else { ?>
+
+        <button onclick="chamaescopo()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
+        <?php } ?>
+    <table class="table table-striped"  id="projetosdettable">
+        <thead>
+        <tr>
+            <th class="text-center">Cliente</th>
+            <th class="text-center">Projeto</th>
+            <th class="text-center">Atividade</th>
+            <th class="text-center">Horas Planejadas</th>
+            <th class="text-center">Horas fim</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Tema</th>
+            <th class="text-center">Descrição</th>
+            <th class="text-center">Dia</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($escopo as $es)
+            <tr>
+                <td>{{$es->cliente}}</td>
+                <td>{{$projeto->projeto}}</td>
+                <td>{{$es->descricao}}</td>
+                <td>{{$es->horas_plan}}</td>
+                <td>{{$es->horas_fim}}</td>
+                <td>{{$es->status}}</td>
+                <td>{{$es->tema}}</td>
+                <td>{{$es->comentario}}</td>
+                <td>{{$es->data}}</td>
+
+            </tr>
+        @endforeach
+        </tbody>
+    </table><br><br><br><br>
+
     <h3>Gestão de Produtividade</h3><br>
 
-    <button onclick="chamaprod()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
+        <?php if( $alertavalidacao->produtividade==1) { ?>
+        <button onclick="chamaprod()" class="btn btn-danger glyphicon-check"> Adicionar Validação</button>
+        <?php } else { ?>
+
+        <button onclick="chamaprod()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
+        <?php } ?>
     <table class="table table-striped"  id="gestaoprodutividade">
         <thead>
 
@@ -644,45 +723,14 @@
     </table> <br><br><br><br>
 
 
-    <h3>Validação de Datas</h3><br>
-    <button onclick="chamadata()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
-    <table class="table table-striped"  id="validadata">
-        <thead>
-        <tr>
-            <th class="text-center">Cliente</th>
-            <th class="text-center">Projeto</th>
-            <th class="text-center">Data Fim Baseline</th>
-            <th class="text-center">Data Fim Atual</th>
-            <th class="text-center">Data Foto</th>
-            <th class="text-center">Status</th>
-            <th class="text-center">Tema</th>
-            <th class="text-center">Descrição</th>
-            <th class="text-center">Dia</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        @foreach($validadata as $vd)
-        <tr>
-        <td class="text-center">{{$vd->cliente}}</td>
-        <td class="text-center">{{$projeto->projeto}}</td>
-        <td class="text-center">{{$vd->data_fim_base}}</td>
-        <td class="text-center">{{$vd->data_fim_atual}}</td>
-        <td class="text-center">{{$vd->fim_semana}}</td>
-        <td class="text-center">{{$vd->status}}</td>
-        <td class="text-center">{{$vd->tema}}</td>
-        <td class="text-center">{{$vd->comentario}}</td>
-        <td class="text-center">{{$vd->data}}</td>
-
-        </tr>
-@endforeach
-        </tbody>
-    </table><br><br><br><br>
-
-
 
     <h3>Pendências de Cliente</h3><br>
-    <button onclick="chamapendencias()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
+        <?php if( $alertavalidacao->pendencias==1) { ?>
+        <button onclick="chamapendencias()" class="btn btn-danger glyphicon-check"> Adicionar Validação</button>
+        <?php } else { ?>
+
+        <button onclick="chamapendencias()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
+        <?php } ?>
     <table class="table table-striped"  id="pencli">
         <thead>
         <tr>
@@ -717,7 +765,12 @@
 
 
     <h3>Validação de Orçamento</h3><br>
-    <button onclick="addorca()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
+        <?php if( $alertavalidacao->orcamento==1) { ?>
+        <button onclick="addorca()" class="btn btn-danger glyphicon-check"> Adicionar Validação</button>
+        <?php } else { ?>
+
+        <button onclick="addorca()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
+        <?php } ?>
     <table class="table table-striped"  id="validorca">
         <thead>
         <tr>
@@ -753,36 +806,7 @@
 
 
 
-    <h3>Validação de Objetivo</h3><br>
-    <button onclick="chamaobj()" class="btn btn-success glyphicon-check"> Adicionar Validação</button>
-    <table class="table table-striped"  id="validaobj">
-        <thead>
-        <tr>
-            <th class="text-center">Cliente</th>
-            <th class="text-center">Projeto</th>
-            <th class="text-center">Resultado</th>
-            <th class="text-center">Status</th>
-            <th class="text-center">Tema</th>
-            <th class="text-center">Descrição</th>
-            <th class="text-center">Dia</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($validaobj as $obj)
-        <tr>
-            <td class="text-center">{{$obj->cliente}}</td>
-            <td class="text-center">{{$projeto->projeto}}</td>
-            <td class="text-center">{{$obj->resultado}}</td>
-            <td class="text-center">{{$obj->status}}</td>
-            <td class="text-center">{{$obj->tema}}</td>
-            <td class="text-center">{{$obj->comentario}}</td>
-            <td class="text-center">{{$obj->data}}</td>
 
-
-        </tr>
-        @endforeach
-        </tbody>
-    </table><br><br><br><br>
 
 
 
@@ -842,13 +866,12 @@
                         <select class="form-control funcfiltro" id="tema">
 
 
-                            <option selected value="" >Adicionar tema</option>
                             <option>Produtividade</option>
                             <option>Objetivo</option>
                             <option>Atraso</option>
                             <option>Pendencia cliente</option>
                             <option>Orçamento</option>
-                            <option>Mudança Escopo</option>
+                            <option selected>Mudança Escopo</option>
 
                         </select>
 
@@ -900,8 +923,8 @@
                         <select class="form-control funcfiltro" id="temaprod">
 
 
-                            <option selected value="" >Adicionar tema</option>
-                            <option>Produtividade</option>
+
+                            <option selected>Produtividade</option>
                             <option>Objetivo</option>
                             <option>Atraso</option>
                             <option>Pendencia cliente</option>
@@ -965,7 +988,7 @@
                         <select class="form-control funcfiltro" id="temaorc">
 
 
-                            <option selected value="" >Adicionar tema</option>
+
                             <option>Produtividade</option>
                             <option>Objetivo</option>
                             <option>Atraso</option>
@@ -1041,10 +1064,10 @@
                         <select class="form-control funcfiltro" id="temadata">
 
 
-                            <option selected value="" >Adicionar tema</option>
+
                             <option>Produtividade</option>
                             <option>Objetivo</option>
-                            <option>Atraso</option>
+                            <option selected>Atraso</option>
                             <option>Pendencia cliente</option>
                             <option>Orçamento</option>
                             <option>Mudança Escopo</option>
@@ -1132,7 +1155,7 @@
                         <select class="form-control funcfiltro" id="temapen">
 
 
-                            <option selected value="" >Adicionar tema</option>
+
                             <option>Produtividade</option>
                             <option>Objetivo</option>
                             <option>Atraso</option>
@@ -1193,11 +1216,10 @@
                         <select class="form-control funcfiltro" id="temaobj">
 
 
-                            <option selected value="" >Adicionar tema</option>
                             <option>Produtividade</option>
-                            <option>Objetivo</option>
+                            <option selected>Objetivo</option>
                             <option>Atraso</option>
-                            <option selected>Pendencia cliente</option>
+                            <option >Pendencia cliente</option>
                             <option>Orçamento</option>
                             <option>Mudança Escopo</option>
 

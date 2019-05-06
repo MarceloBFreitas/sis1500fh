@@ -887,19 +887,7 @@ sisprojeto_detalhe.id_projeto = '.$id);
         $pro->save();
         $mensagem="projeto finalizado";
         $tipo="success";
-        $va = DB::select('select * from sis_alertavalidacao where sis_alertavalidacao.id_projeto ='.$request->id);
-        $id =0;
-        foreach ($va as $v){
-            $id =  $v->id;
-        }
 
-
-        $valida = alertavalida::find($id);
-
-
-        $valida->objetivo =1;
-
-        $valida->save();
 
         $response = array(
             'tipo' => $tipo,
